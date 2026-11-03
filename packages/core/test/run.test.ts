@@ -52,6 +52,7 @@ describe("generateReport", () => {
     const steps: ProgressStep[] = [];
     const report = await generateReport("722731-2026", deps(), (s) => steps.push(s));
     expect(report.status).toBe("pending_verification");
+    expect(report.partial).toBe(false);
     expect(report.signals).toHaveLength(8);
     expect(report.riskScore).toBeGreaterThan(0);
     expect(report.summary).toContain("competition-restriction");
@@ -88,6 +89,31 @@ describe("generateReport", () => {
     const report = await generateReport("722731-2026", deps({ serv }));
     expect(report.droppedEvidence).toBe(1);
     expect(report.signals.find((s) => s.id === "S2_BRAND_LOCK")?.fired).toBe(false);
+  });
+
+  it("fails the report when every signal group is unavailable", async () => {
+    const refusing: LlmClient = {
+      async chat(req) {
+        if (req.jsonSchema?.name?.startsWith("signals_")) return { ...ok(""), content: null, refusal: "I can't share that.", guardRefused: true, usage: { promptTokens: 0, completionTokens: 0 } };
+        return servStub.chat(req);
+      },
+    };
+    const report = await generateReport("722731-2026", deps({ serv: refusing }));
+    expect(report.status).toBe("failed");
+    expect(report.error).toMatch(/signal evaluation unavailable/);
+  });
+
+  it("marks the report partial when some groups are unavailable", async () => {
+    const flaky: LlmClient = {
+      async chat(req) {
+        if (req.jsonSchema?.name === "signals_C") return { ...ok(""), content: null, refusal: "I can't share that.", guardRefused: true, usage: { promptTokens: 0, completionTokens: 0 } };
+        return servStub.chat(req);
+      },
+    };
+    const report = await generateReport("722731-2026", deps({ serv: flaky }));
+    expect(report.status).toBe("pending_verification");
+    expect(report.partial).toBe(true);
+    expect(report.signals.filter((s) => s.reason === "evaluation unavailable")).toHaveLength(2);
   });
 
   it("fails cleanly when the notice does not exist on TED", async () => {

@@ -4,13 +4,22 @@
 Formularz: https://openserv.typeform.com/submissions02
 
 ## Przed startem kodowania
-- [ ] Pre-rejestracja (daje $5 kredytów SERV): https://openserv.typeform.com/registerhack02
-- [ ] Konto + klucz SERV: https://console.openserv.ai → Settings → Keys → wpisać do `.env`
-- [ ] Doładować konto SERV (żądania są odrzucane, gdy saldo nie pokrywa szacowanego sufitu)
-- [ ] Jeśli track Dolphin: wallet + Telegram → kupon `API10` ($10) → klucz; zapytać na Discordzie OpenServ o kupon hackathonowy
-- [ ] Jeśli track Reppo: klucz w https://eval.reppo.xyz (tworzy człowiek), sprawdzić saldo kredytów; w devie używać `Sandbox: true`
-- [ ] Jeśli track Kite: `irm https://cli.gokite.ai/install.ps1 | iex` → `kpass signup init` → passkey w https://agentpassport.ai → `kpass sandbox on` → `kpass faucet drop --token pieUSD`
+- [x] Pre-rejestracja (daje $5 kredytów SERV): https://openserv.typeform.com/registerhack02 (track Dolphin zaznaczony; finalnie zgłaszamy Open)
+- [x] Konto + klucz SERV: https://console.openserv.ai → Settings → Keys → wpisać do `.env`
+- [x] Doładować konto SERV (żądania są odrzucane, gdy saldo nie pokrywa szacowanego sufitu)
+- [x] Dolphin: wallet + Telegram → kupon `API10` ($10) → klucz (zmierzony: za wolny na primary, zostaje jako bulk)
+- [ ] **Reppo: klucz w https://eval.reppo.xyz (tworzy człowiek) → `REPPO_EVAL_API_KEY` w `.env`; bez niego cron zwraca `skipped`**
+- [ ] **Kite: `irm https://cli.gokite.ai/install.ps1 | iex` → `kpass signup init` → passkey w https://agentpassport.ai → `kpass sandbox on` → `kpass faucet drop --token pieUSD` → test na `passport.dev.gokite.ai/x402/test`**
 - [ ] Dołączyć do Discorda OpenServ (https://discord.com/invite/9u724WsWCU) — tam ogłoszą podział nagród i detale tracków
+
+## Stan builda (4 XI)
+- [x] `packages/core` pipeline + 62 testy; live run na NBP 722731-2026: 27 s, $0.009, S2 BRAND_LOCK high
+- [x] `apps/web` UI + API + worker Reppo (17 testów), zweryfikowane w przeglądarce
+- [x] `apps/x402` paywall (5 testów)
+- [ ] Neon Postgres (`DATABASE_URL`) + `drizzle-kit push`
+- [ ] Deploy `apps/web` i `apps/x402` na Vercel, env, cron
+- [ ] 5 raportów referencyjnych z prawdziwą ewaluacją Reppo
+- [ ] Zakup przez `kpass` na testnecie (fallback: Base mainnet USDC do 10 XI)
 
 ## Wymagania twarde (cytaty ze strony)
 - [ ] **"SERV Reasoning must be part of your build."** — i ma to być widoczne (system prompt → graf, marker tools, sufiksy -serv-kronos/-serv-multipath)

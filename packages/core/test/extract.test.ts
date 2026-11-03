@@ -73,7 +73,30 @@ describe("extractFacts", () => {
     expect(res.audit).toHaveLength(1);
     expect(primary.requests[0]?.jsonObject).toBeUndefined();
     expect(primary.requests[0]?.jsonSchema?.name).toBe("tender_facts");
-    expect(primary.requests[0]?.tools?.map((t) => t.function.name)).toEqual(["serv_disable_content_filter"]);
+    expect(primary.requests[0]?.tools?.map((t) => t.function.name)).toEqual(["serv_prompt_guard", "serv_disable_content_filter"]);
+  });
+
+  it("drops extracted list items and the incumbent name that are not verbatim in the source", async () => {
+    const tampered = {
+      ...facts,
+      noticeLanguage: "POL",
+      participationConditions: [],
+      technicalRequirements: ["Integracja z Systemem DarkTrace", "wraz z integracją z Systemem DarkTrace oraz przygotowaniem"],
+      notes: ["a sentence the model made up"],
+      brandOrProductNames: ["DarkTrace", "Fortinet"],
+      incumbentSystemMentioned: "DarkTrace",
+    };
+    const source = "Description: Usług instalacyjno-wdrożeniowych wraz z integracją z Systemem DarkTrace oraz przygotowaniem dokumentacji.";
+    const primary = new StubClient(() => ok(JSON.stringify(tampered)));
+    const fallback = new StubClient(() => {
+      throw new Error("must not be called");
+    });
+    const res = await extractFacts(source, "POL", { primary, fallback, primaryModel: "p", fallbackModel: "f" });
+    expect(res.facts.technicalRequirements).toEqual(["wraz z integracją z Systemem DarkTrace oraz przygotowaniem"]);
+    expect(res.facts.notes).toEqual([]);
+    expect(res.facts.brandOrProductNames).toEqual(["DarkTrace"]);
+    expect(res.facts.incumbentSystemMentioned).toBe("DarkTrace");
+    expect(res.audit[0]?.note).toContain("3 non-verbatim");
   });
 
   it("falls back when the primary returns JSON that does not match the schema", async () => {

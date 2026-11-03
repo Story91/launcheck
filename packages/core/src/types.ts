@@ -77,6 +77,10 @@ export type ReportStatus = z.infer<typeof ReportStatus>;
 
 export const ReppoVerdict = z.object({
   evalId: z.string(),
+  /** True when the verdict came from Reppo's free sandbox lane (placeholder, not an independent review). */
+  sandbox: z.boolean().optional(),
+  /** Consecutive failed polls of a pending evaluation (worker bookkeeping). */
+  pollFailures: z.number().optional(),
   status: z.enum(["PENDING", "SETTLED", "FAILED"]),
   score: z.number().nullable(),
   decision: z.enum(["accept", "revise", "reject"]).nullable(),
@@ -101,6 +105,8 @@ export const Report = z.object({
   audit: z.array(AuditEntry),
   costUsd: z.number(),
   droppedEvidence: z.number(),
+  /** Some signal groups could not be evaluated; never sellable. */
+  partial: z.boolean().default(false),
   error: z.string().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),

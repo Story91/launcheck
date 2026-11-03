@@ -21,7 +21,7 @@ Real data, real decisions, auditable steps: on a live notice from the Polish cen
 
 - **Reppo Evaluation API**: each report is submitted as an `artifact` with three criteria (verbatim quotes, neutral tone, severity rules). `accept` → verified, `revise` → disputed (shown with critique), `reject` → withheld. One pending evaluation per account, so a cron worker queues submissions.
 - **Kite Agent Passport / x402**: `apps/x402` wraps the report endpoint with the Kite x402 template (Pieverse facilitator, pieUSD on Kite testnet). Unverified reports answer 409, so the paywall never settles for nothing. Buyer: `kpass session execute`.
-- **Dolphin**: wired as a 1M-context bulk extractor; measured too slow for the default path (Day-1 results in the plan), kept for large attachments.
+- **Dolphin**: wired as an alternative 1M-context extractor (`DOLPHIN_PRIMARY=true`); measured too slow for the default path (Day-1 results in the plan), so the default extractor is SERV `gemini-3.1-flash-lite`.
 
 ## Track
 
@@ -32,6 +32,8 @@ Open Track.
 Per-report x402 sales to agents (no account needed), subscriptions for SMEs bidding in a CPV range, licences for newsrooms and NGOs. Cost of goods is about $0.01 per report.
 
 ## Limitations
+
+- Stability on gpt-6-luna: in 10 live runs on the same notice, 9 produced the same verdict (30/100, named-brand high + no-lots low); 1 missed the brand signal (5/100). Reports are therefore sold only after independent review, and a report whose signal groups failed is marked partial and never sold.
 
 - Reports use the TED notice; full tender documentation on buyer platforms is not fetched yet.
 - Poland first; other member states work best-effort with a reduced-confidence note.

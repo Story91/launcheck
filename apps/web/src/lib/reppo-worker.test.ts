@@ -16,6 +16,7 @@ const report = (over: Partial<Report>): Report => ({
   audit: [],
   costUsd: 0,
   droppedEvidence: 0,
+  partial: false,
   error: null,
   createdAt: "2026-11-04T00:00:00.000Z",
   updatedAt: "2026-11-04T00:00:00.000Z",
@@ -35,9 +36,10 @@ const verdict = (over: Partial<ReppoVerdict>): ReppoVerdict => ({
   ...over,
 });
 
-function fakeReppo(opts: { submit?: () => Promise<{ evalId: string }>; get?: (id: string) => Promise<ReppoVerdict> }) {
+function fakeReppo(opts: { submit?: () => Promise<{ evalId: string }>; get?: (id: string) => Promise<ReppoVerdict>; sandbox?: boolean }) {
   const calls = { submit: 0, get: 0 };
   const client = {
+    sandbox: opts.sandbox ?? false,
     async submit() {
       calls.submit++;
       return (opts.submit ?? (async () => ({ evalId: "ev-1" })))();
@@ -118,6 +120,27 @@ describe("runReppoTick", () => {
     for (let i = 0; i < MAX_REPPO_ATTEMPTS; i++) await runReppoTick(store, client);
     expect((await store.get("722731-2026"))?.status).toBe("unverified");
     expect(await store.nextReppo()).toBeNull();
+  });
+
+  it("marks the verdict as sandbox when the client runs in sandbox mode", async () => {
+    const store = new MemoryReportStore();
+    await store.upsert(report({}));
+    await store.enqueueReppo("722731-2026");
+    await runReppoTick(store, fakeReppo({ sandbox: true }).client);
+    expect((await store.get("722731-2026"))?.reppo?.sandbox).toBe(true);
+  });
+
+  it("survives a failing poll, counts it, and gives up after MAX_REPPO_ATTEMPTS", async () => {
+    const store = new MemoryReportStore();
+    await store.upsert(report({ reppo: verdict({}) }));
+    const { client } = fakeReppo({ get: async () => { throw new Error("502"); } });
+    expect(await runReppoTick(store, client)).toEqual({});
+    expect((await store.get("722731-2026"))?.reppo?.pollFailures).toBe(1);
+    for (let i = 1; i < MAX_REPPO_ATTEMPTS; i++) await runReppoTick(store, client);
+    const stored = await store.get("722731-2026");
+    expect(stored?.status).toBe("unverified");
+    expect(stored?.reppo?.status).toBe("FAILED");
+    expect(await store.findReppoPending()).toBeNull();
   });
 
   it("skips queued ids whose report is missing or no longer pending", async () => {

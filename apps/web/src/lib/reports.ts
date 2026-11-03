@@ -1,34 +1,23 @@
 import { generateReport, type PipelineDeps, type Report } from "@tenderhound/core";
-import type { ReportStore } from "@/lib/store";
+import type { ReportStore, StoredReport } from "@/lib/store";
 
 type Generate = typeof generateReport;
 
-const SELLABLE: ReadonlySet<Report["status"]> = new Set(["verified", "disputed"]);
 export const RETRY_AFTER_SECONDS = 60;
+/** A `generating` row older than this is considered abandoned (crash, timeout) and may be claimed again. */
+export const STALE_GENERATION_MS = 5 * 60_000;
 
-function placeholder(noticeId: string, now = new Date().toISOString()): Report {
-  return {
-    noticeId,
-    status: "generating",
-    noticeLanguage: null,
-    buyerPlatform: null,
-    facts: null,
-    signals: [],
-    riskScore: 0,
-    summary: null,
-    reppo: null,
-    audit: [],
-    costUsd: 0,
-    droppedEvidence: 0,
-    error: null,
-    createdAt: now,
-    updatedAt: now,
-  };
+/** Only complete reports with a real (non-sandbox) independent verdict are sold. */
+export function isSellable(report: Report): boolean {
+  if (report.status !== "verified" && report.status !== "disputed") return false;
+  if (report.partial) return false;
+  if (report.reppo?.sandbox) return false;
+  return true;
 }
 
 /**
- * Runs the pipeline for a notice unless a non-failed report already exists.
- * Progress steps are written to the store as they happen; a finished report is queued for Reppo.
+ * Claims the notice atomically and runs the pipeline. Progress writes are serialised and awaited before the final
+ * write, so a late progress update can never clobber a finished report. Returns "exists" when another run owns it.
  */
 export async function startGeneration(
   noticeId: string,
@@ -37,24 +26,35 @@ export async function startGeneration(
   generate: Generate = generateReport,
   onProgress?: (step: string) => void,
 ): Promise<"started" | "exists"> {
-  const existing = await store.get(noticeId);
-  if (existing && existing.status !== "failed") return "exists";
+  if (!(await store.claimGeneration(noticeId, STALE_GENERATION_MS))) return "exists";
 
-  await store.upsert({ ...placeholder(noticeId), progress: "queued" });
-  let latest: Report = placeholder(noticeId);
-  const report = await generate(noticeId, deps, (step, detail) => {
+  let chain: Promise<void> = Promise.resolve();
+  const report = await generate(noticeId, deps, (step) => {
     onProgress?.(step);
-    void store.upsert({ ...latest, progress: step, ...(detail && step === "failed" ? { error: detail } : {}) });
+    chain = chain.then(() => store.setProgress(noticeId, step)).catch((e) => console.error("progress write failed", e));
   });
-  latest = report;
+  await chain;
   await store.upsert({ ...report, progress: report.status === "failed" ? "failed" : "done" });
   if (report.status === "pending_verification") await store.enqueueReppo(noticeId);
   return "started";
 }
 
+/** What the public API and page may show. Withheld reports keep their verdict but lose signals, quotes and summary. */
+export function publicView(report: StoredReport): StoredReport {
+  if (report.status !== "withheld") return report;
+  return { ...report, signals: [], summary: null, facts: report.facts ? { ...report.facts, notes: [], technicalRequirements: [], participationConditions: [] } : null };
+}
+
 export interface InternalResponse {
   status: 200 | 401 | 404 | 409;
   body: unknown;
+}
+
+function secretsMatch(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
 }
 
 /** x402 upstream contract: 200 only for sellable reports, 409 otherwise so the paywall never settles for nothing. */
@@ -64,10 +64,10 @@ export async function internalReportResponse(
   providedSecret: string | null,
   expectedSecret: string,
 ): Promise<InternalResponse> {
-  if (!providedSecret || providedSecret !== expectedSecret) return { status: 401, body: { error: "unauthorized" } };
+  if (!providedSecret || !secretsMatch(providedSecret, expectedSecret)) return { status: 401, body: { error: "unauthorized" } };
   const report = await store.get(noticeId);
   if (!report) return { status: 404, body: { error: "report not found" } };
-  if (!SELLABLE.has(report.status)) return { status: 409, body: { status: report.status, retryAfterSeconds: RETRY_AFTER_SECONDS } };
+  if (!isSellable(report)) return { status: 409, body: { status: report.status, retryAfterSeconds: RETRY_AFTER_SECONDS } };
   const { progress: _p, ...publicReport } = report;
   return { status: 200, body: publicReport };
 }

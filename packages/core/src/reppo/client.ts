@@ -49,7 +49,8 @@ interface ReppoEvalResponse {
 export class ReppoClient {
   private readonly apiKey: string;
   private readonly baseUrl: string;
-  private readonly sandbox: boolean;
+  /** Public so callers can tag verdicts that came from the free sandbox lane. */
+  readonly sandbox: boolean;
   private readonly fetchImpl: typeof fetch;
   private readonly now: () => Date;
 

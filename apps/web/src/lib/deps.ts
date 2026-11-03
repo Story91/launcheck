@@ -22,7 +22,9 @@ export function buildPipelineDeps(): PipelineDeps {
 export function buildReppoClient(): ReppoClient | null {
   const apiKey = process.env.REPPO_EVAL_API_KEY;
   if (!apiKey) return null;
-  return new ReppoClient({ apiKey, baseUrl: process.env.REPPO_EVAL_BASE_URL, sandbox: process.env.REPPO_SANDBOX !== "false" });
+  // Explicit REPPO_SANDBOX wins; otherwise production uses real evaluations and everything else the free sandbox.
+  const sandbox = process.env.REPPO_SANDBOX !== undefined ? process.env.REPPO_SANDBOX !== "false" : process.env.VERCEL_ENV !== "production";
+  return new ReppoClient({ apiKey, baseUrl: process.env.REPPO_EVAL_BASE_URL, sandbox });
 }
 
 export function internalSecret(): string {

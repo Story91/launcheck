@@ -73,6 +73,16 @@ describe("ServClient", () => {
     expect(res.costUsd).toBeCloseTo((100 * 0.13 + 20 * 0.65) / 1e6, 10);
   });
 
+  it("attaches an abort signal (timeout) to every request", async () => {
+    let signal: AbortSignal | null | undefined;
+    const fetchImpl = (async (_url: string, init: RequestInit) => {
+      signal = init.signal;
+      return new Response(JSON.stringify(okBody("hi")), { status: 200 });
+    }) as unknown as typeof fetch;
+    await new ServClient({ apiKey: "k", fetchImpl }).chat({ model: "m", system: "s", user: "u" });
+    expect(signal).toBeInstanceOf(AbortSignal);
+  });
+
   it("throws LlmError(http) with status on non-2xx", async () => {
     const { fetchImpl } = fakeFetch(() => ({ status: 400, body: { error: { message: "A system prompt is required." } } }));
     await expect(new ServClient({ apiKey: "k", fetchImpl }).chat({ model: "m", system: "s", user: "u" })).rejects.toThrowError(

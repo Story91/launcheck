@@ -5,7 +5,7 @@ import { flattenEforms } from "../ted/flatten";
 import type { AuditEntry, Report } from "../types";
 import { extractFacts } from "./extract";
 import { scoreSignals } from "./score";
-import { evaluateSignals } from "./signals";
+import { UNAVAILABLE_REASON, evaluateSignals } from "./signals";
 import { summarize } from "./summary";
 import { verifyEvidence } from "./verify";
 
@@ -41,6 +41,7 @@ function emptyReport(noticeId: string, createdAt: string): Report {
     audit: [],
     costUsd: 0,
     droppedEvidence: 0,
+    partial: false,
     error: null,
     createdAt,
     updatedAt: createdAt,
@@ -83,8 +84,12 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
     const evaluated = await evaluateSignals(extracted.facts, { serv: deps.serv, model: deps.servModel, fallbackModel: deps.fallbackModel });
     report.audit.push(...evaluated.audit);
 
+    const unavailable = evaluated.signals.filter((s) => s.reason === UNAVAILABLE_REASON).length;
+    if (unavailable === evaluated.signals.length) throw new Error("signal evaluation unavailable on all groups (model refused or returned degenerate output twice)");
+    report.partial = unavailable > 0;
+
     onProgress("verify");
-    const verified = verifyEvidence(evaluated.signals, flat.text, JSON.stringify(extracted.facts));
+    const verified = verifyEvidence(evaluated.signals, flat.text);
     report.signals = verified.signals;
     report.droppedEvidence = verified.dropped;
     report.riskScore = scoreSignals(verified.signals);

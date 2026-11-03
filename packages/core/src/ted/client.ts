@@ -1,5 +1,6 @@
 const TED_SEARCH_URL = "https://api.ted.europa.eu/v3/notices/search";
 const USER_AGENT = "TenderHound/0.1";
+const TED_TIMEOUT_MS = 30_000;
 
 export class NoticeNotFoundError extends Error {
   constructor(public readonly noticeId: string) {
@@ -51,6 +52,7 @@ export async function searchNotices(
       limit: opts.limit ?? 10,
       page: 1,
     }),
+    signal: AbortSignal.timeout(TED_TIMEOUT_MS),
   });
   if (!res.ok) throw new Error(`TED search failed: HTTP ${res.status}`);
   const json = (await res.json()) as { notices?: Record<string, unknown>[] };
@@ -65,6 +67,7 @@ export async function searchNotices(
 export async function fetchNoticeXml(noticeId: string, fetchImpl: typeof fetch = fetch): Promise<string> {
   const res = await fetchImpl(`https://ted.europa.eu/en/notice/${noticeId}/xml`, {
     headers: { "User-Agent": USER_AGENT },
+    signal: AbortSignal.timeout(TED_TIMEOUT_MS),
   });
   if (res.status === 404) throw new NoticeNotFoundError(noticeId);
   if (!res.ok) throw new Error(`TED notice download failed: HTTP ${res.status}`);

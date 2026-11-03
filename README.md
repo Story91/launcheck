@@ -8,7 +8,7 @@ Built for [SERV Hackathon 02](https://www.openserv.ai/hackathon-2) (OpenServ, 2â
 
 1. You give it a TED publication number (or pick one of the recent Polish IT notices on the home page).
 2. It downloads the eForms XML from TED, extracts the facts (buyer, value, deadline, criteria, conditions, named products) and evaluates **eight competition-restriction signals**: short deadline, named brand or incumbent system, over-specification, experience tied to one supplier, low price weight with subjective criteria, disproportionate financial conditions, no lots across a broad scope, unusual organisational requirements.
-3. Every signal that fires must cite a quote that the code verifies **verbatim** against the source. Quotes that are not in the notice are dropped and the signal is unfired.
+3. Every signal that fires must cite a quote that the code verifies **verbatim against the notice text** (never against model output). Quotes that are not in the notice are dropped and the signal is unfired; extracted facts are filtered the same way before the signal step sees them.
 4. The report is published immediately as *pending independent verification*, then sent to **Reppo's Evaluation API**; the verdict becomes *verified*, *disputed* or *withheld*.
 5. Verified reports are sold per call over **x402** on the Kite network; an agent with a **Kite Agent Passport** buys one inside the spending limits its owner approved.
 
@@ -25,7 +25,7 @@ Every model call goes through `https://inference-api.openserv.ai` (default model
 - **Audit trail**: each step records model, prompt version, the `x-openserv-request-id` header (links to the OpenServ console), tokens, cost and latency. A report costs about $0.01.
 - Degenerate output (all signals "none" with identical reasons) and prompt-guard refusals are detected and retried once on `gpt-5.4-mini`.
 
-Dolphin (DeepSeek V4.1 Flash, 1M context) is wired as a bulk extractor for very large notices; by default extraction runs on SERV `gemini-3.1-flash-lite` (see `docs/superpowers/plans/2026-11-03-tenderhound.md`, "Day-1 results").
+Dolphin (DeepSeek V4.1 Flash, 1M context) is wired as an alternative extractor (`DOLPHIN_PRIMARY=true`); by default extraction runs on SERV `gemini-3.1-flash-lite` (see `docs/superpowers/plans/2026-11-03-tenderhound.md`, "Day-1 results").
 
 ## Repository
 
@@ -41,7 +41,7 @@ docs/           research, spec, plan, submission materials
 ```bash
 pnpm install
 cp .env.example .env        # fill SERV_API_KEY at minimum
-pnpm test                   # 84 unit tests, no network
+pnpm test                   # 102 unit tests, no network
 pnpm --filter @tenderhound/core test:live   # one real run against TED + SERV
 pnpm --filter @tenderhound/web dev           # http://localhost:3000 (in-memory store without DATABASE_URL)
 ```

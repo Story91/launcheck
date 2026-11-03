@@ -21,7 +21,11 @@ export interface OpenAiCompatibleOptions {
   fetchImpl?: typeof fetch;
   /** Header that carries the provider's request id, if any. */
   requestIdHeader?: string | null;
+  /** Per-request timeout; SERV multipath + shadow agent can take 40–60 s. */
+  timeoutMs?: number;
 }
+
+export const DEFAULT_LLM_TIMEOUT_MS = 120_000;
 
 interface OpenAiChatResponse {
   model?: string;
@@ -36,12 +40,14 @@ export class OpenAiCompatibleClient implements LlmClient {
   protected readonly baseUrl: string;
   protected readonly fetchImpl: typeof fetch;
   protected readonly requestIdHeader: string | null;
+  protected readonly timeoutMs: number;
 
   constructor(opts: OpenAiCompatibleOptions & { baseUrl: string }) {
     this.apiKey = opts.apiKey;
     this.baseUrl = opts.baseUrl.replace(/\/$/, "");
     this.fetchImpl = opts.fetchImpl ?? fetch;
     this.requestIdHeader = opts.requestIdHeader === undefined ? null : opts.requestIdHeader;
+    this.timeoutMs = opts.timeoutMs ?? DEFAULT_LLM_TIMEOUT_MS;
   }
 
   async chat(req: ChatRequest): Promise<ChatResult> {
@@ -66,6 +72,7 @@ export class OpenAiCompatibleClient implements LlmClient {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${this.apiKey}` },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(this.timeoutMs),
     });
     const durationMs = Date.now() - t0;
     const json = (await res.json().catch(() => ({}))) as OpenAiChatResponse;

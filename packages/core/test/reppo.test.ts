@@ -93,6 +93,7 @@ describe("reportToArtifact", () => {
     audit: [],
     costUsd: 0.01,
     droppedEvidence: 0,
+    partial: false,
     error: null,
     createdAt: "",
     updatedAt: "",

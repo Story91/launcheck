@@ -1,4 +1,4 @@
-import { integer, jsonb, numeric, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, numeric, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const reports = pgTable("reports", {
   noticeId: text("notice_id").primaryKey(),
@@ -13,6 +13,7 @@ export const reports = pgTable("reports", {
   audit: jsonb("audit").notNull().default([]),
   costUsd: numeric("cost_usd", { precision: 12, scale: 6 }).notNull().default("0"),
   droppedEvidence: integer("dropped_evidence").notNull().default(0),
+  partial: boolean("partial").notNull().default(false),
   error: text("error"),
   progress: text("progress"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

@@ -1,6 +1,6 @@
 import type { PipelineDeps, Report } from "@tenderhound/core";
 import { describe, expect, it } from "vitest";
-import { internalReportResponse, startGeneration } from "@/lib/reports";
+import { internalReportResponse, publicView, startGeneration } from "@/lib/reports";
 import { MemoryReportStore } from "@/lib/store";
 
 const baseReport = (over: Partial<Report>): Report => ({
@@ -16,6 +16,7 @@ const baseReport = (over: Partial<Report>): Report => ({
   audit: [],
   costUsd: 0.01,
   droppedEvidence: 0,
+  partial: false,
   error: null,
   createdAt: "2026-11-04T00:00:00.000Z",
   updatedAt: "2026-11-04T00:00:00.000Z",
@@ -63,6 +64,48 @@ describe("startGeneration", () => {
     expect(await store.nextReppo()).toBeNull();
   });
 
+  it("returns exists for a second concurrent start of the same notice (atomic claim)", async () => {
+    const store = new MemoryReportStore();
+    let runs = 0;
+    const generate = async (id: string) => {
+      runs++;
+      await new Promise((r) => setTimeout(r, 10));
+      return baseReport({ noticeId: id });
+    };
+    const [a, b] = await Promise.all([
+      startGeneration("722731-2026", store, deps, generate as never),
+      startGeneration("722731-2026", store, deps, generate as never),
+    ]);
+    expect([a, b].sort()).toEqual(["exists", "started"]);
+    expect(runs).toBe(1);
+  });
+
+  it("never lets a progress write land after the final report write", async () => {
+    const store = new MemoryReportStore();
+    const writes: string[] = [];
+    const origSet = store.setProgress.bind(store);
+    const origUpsert = store.upsert.bind(store);
+    store.setProgress = async (id, step) => {
+      await new Promise((r) => setTimeout(r, 5));
+      writes.push(`progress:${step}`);
+      return origSet(id, step);
+    };
+    store.upsert = async (r) => {
+      writes.push(`upsert:${r.status}`);
+      return origUpsert(r);
+    };
+    const generate = async (id: string, _d: PipelineDeps, onProgress?: (s: string) => void) => {
+      onProgress?.("ingest");
+      onProgress?.("signals");
+      onProgress?.("done");
+      return baseReport({ noticeId: id });
+    };
+    await startGeneration("722731-2026", store, deps, generate as never);
+    expect(writes.at(-1)).toBe("upsert:pending_verification");
+    expect(writes.filter((w) => w.startsWith("progress:"))).toEqual(["progress:ingest", "progress:signals", "progress:done"]);
+    expect((await store.get("722731-2026"))?.status).toBe("pending_verification");
+  });
+
   it("writes progress steps to the store while generating", async () => {
     const store = new MemoryReportStore();
     let seenDuringRun: string | null | undefined;
@@ -102,6 +145,14 @@ describe("internalReportResponse", () => {
     expect((await internalReportResponse(store, "722731-2026", secret, secret)).status).toBe(200);
   });
 
+  it("refuses to sell a partial report or one whose verdict came from the Reppo sandbox", async () => {
+    const store = new MemoryReportStore();
+    await store.upsert(baseReport({ status: "verified", partial: true }));
+    expect((await internalReportResponse(store, "722731-2026", secret, secret)).status).toBe(409);
+    await store.upsert(baseReport({ status: "verified", partial: false, reppo: { evalId: "e", sandbox: true, status: "SETTLED", score: 0, decision: "accept", confidence: null, critique: null, evidenceBasis: null, submittedAt: "", settledAt: "" } }));
+    expect((await internalReportResponse(store, "722731-2026", secret, secret)).status).toBe(409);
+  });
+
   it("returns 409 with status and retryAfterSeconds for every other status", async () => {
     const store = new MemoryReportStore();
     for (const status of ["generating", "pending_verification", "withheld", "unverified", "failed"] as const) {
@@ -110,5 +161,26 @@ describe("internalReportResponse", () => {
       expect(res.status).toBe(409);
       expect(res.body).toEqual({ status, retryAfterSeconds: 60 });
     }
+  });
+});
+
+describe("publicView", () => {
+  it("redacts signals, summary and quotes of a withheld report but keeps the verdict", () => {
+    const r = baseReport({
+      status: "withheld",
+      summary: "secret",
+      signals: [{ id: "S2_BRAND_LOCK", fired: true, severity: "high", reason: "r", evidence: ["q"] }],
+      reppo: { evalId: "e", status: "SETTLED", score: 10, decision: "reject", confidence: "high", critique: "bad", evidenceBasis: null, submittedAt: "", settledAt: "" },
+    });
+    const v = publicView({ ...r, progress: "done" });
+    expect(v.signals).toEqual([]);
+    expect(v.summary).toBeNull();
+    expect(v.reppo?.critique).toBe("bad");
+    expect(v.status).toBe("withheld");
+  });
+
+  it("returns other reports unchanged", () => {
+    const r = { ...baseReport({ status: "verified", summary: "ok" }), progress: "done" };
+    expect(publicView(r)).toEqual(r);
   });
 });
