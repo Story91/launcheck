@@ -134,6 +134,17 @@ export class DrizzleReportStore implements ReportStore {
   }
 }
 
+declare global {
+  // eslint-disable-next-line no-var
+  var __tenderhoundMemoryStore: MemoryReportStore | undefined;
+}
+
+/** Drizzle/Neon in production; an in-process memory store when DATABASE_URL is unset (local dev and demos only). */
 export function reportStore(): ReportStore {
-  return new DrizzleReportStore();
+  if (process.env.DATABASE_URL) return new DrizzleReportStore();
+  if (!globalThis.__tenderhoundMemoryStore) {
+    console.warn("[tenderhound] DATABASE_URL not set — using in-memory report store (data is lost on restart)");
+    globalThis.__tenderhoundMemoryStore = new MemoryReportStore();
+  }
+  return globalThis.__tenderhoundMemoryStore;
 }
