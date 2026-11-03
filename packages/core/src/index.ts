@@ -14,3 +14,5 @@ export * from "./prompts/signals-a.v1";
 export * from "./prompts/signals-b.v1";
 export * from "./prompts/signals-c.v1";
 export * from "./pipeline/signals";
+export * from "./pipeline/verify";
+export * from "./pipeline/score";
