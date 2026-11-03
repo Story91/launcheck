@@ -6,7 +6,7 @@ export type StoredReport = Report & { progress: string | null };
 
 export interface ReportStore {
   get(id: string): Promise<StoredReport | null>;
-  upsert(r: Report & { progress?: string }): Promise<void>;
+  upsert(r: Report & { progress?: string | null }): Promise<void>;
   enqueueReppo(id: string): Promise<void>;
   nextReppo(): Promise<{ noticeId: string; attempts: number } | null>;
   dequeueReppo(id: string): Promise<void>;
@@ -23,7 +23,7 @@ export class MemoryReportStore implements ReportStore {
     const r = this.reports.get(id);
     return r ? structuredClone(r) : null;
   }
-  async upsert(r: Report & { progress?: string }) {
+  async upsert(r: Report & { progress?: string | null }) {
     const prev = this.reports.get(r.noticeId);
     this.reports.set(r.noticeId, { ...r, progress: r.progress ?? prev?.progress ?? null });
   }
@@ -80,7 +80,7 @@ export class DrizzleReportStore implements ReportStore {
     const rows = await db().select().from(schema.reports).where(eq(schema.reports.noticeId, id)).limit(1);
     return rows[0] ? rowToReport(rows[0]) : null;
   }
-  async upsert(r: Report & { progress?: string }) {
+  async upsert(r: Report & { progress?: string | null }) {
     const values = {
       noticeId: r.noticeId,
       status: r.status,

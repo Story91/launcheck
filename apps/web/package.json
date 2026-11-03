@@ -27,6 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vercel/config": "^0.14.1",
     "@vitejs/plugin-react": "^4.3.0",
     "dotenv": "^16.4.0",
     "drizzle-kit": "^0.31.0",
