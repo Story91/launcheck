@@ -1,0 +1,5 @@
+{"signals":[
+ {"id":"S2_BRAND_LOCK","fired":false,"severity":"none","reason":"Nie oznaczono tego sygnału jako aktywnego.","evidence":[]},
+ {"id":"S3_OVER_SPECIFICATION","fired":false,"severity":"none","reason":"Nie oznaczono tego sygnału jako aktywnego.","evidence":[]},
+ {"id":"S4_EXPERIENCE_LOCK","fired":false,"severity":"none","reason":"Nie oznaczono tego sygnału jako aktywnego.","evidence":[]}
+]}

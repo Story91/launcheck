@@ -1,0 +1,5 @@
+{"signals":[
+ {"id":"S1_SHORT_DEADLINE","fired":false,"severity":"none","reason":"30 days to the deadline does not meet the threshold for an open procedure.","evidence":[]},
+ {"id":"S5_PRICE_WEIGHT_LOW","fired":false,"severity":"none","reason":"Price carries 100% of the award weight.","evidence":[]},
+ {"id":"S7_NO_LOTS_LARGE_SCOPE","fired":true,"severity":"low","reason":"The procurement is not divided into lots while the CPV codes span software supply and several IT service divisions.","evidence":["48000000","72250000"]}
+]}

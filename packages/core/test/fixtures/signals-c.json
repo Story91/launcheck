@@ -1,0 +1,4 @@
+{"signals":[
+ {"id":"S6_DISPROPORTIONATE_CONDITIONS","fired":false,"severity":"none","reason":"The bid deposit of 63 000 PLN is about 2% of the estimated value; no turnover or reference thresholds are stated.","evidence":[]},
+ {"id":"S8_UNUSUAL_NOTES","fired":true,"severity":"low","reason":"Bidding requires an account on a specific procurement platform.","evidence":["posiadanie konta na platformie MarketPlanet"]}
+]}
