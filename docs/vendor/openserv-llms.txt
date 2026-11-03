@@ -1,0 +1,97 @@
+# OpenServ Docs
+
+- [What is SERV?](https://docs.openserv.ai/what-is-serv/index.md): AI Infrastructure for Enterprises, Banks, Governments & the Autonomous Economy.
+- [$SERV Token](https://docs.openserv.ai/what-is-serv/the-serv-token.md)
+- [Why SERV Reasoning](https://docs.openserv.ai/serv-reasoning/why.md): Better results from the models you already use.
+- [Quickstart](https://docs.openserv.ai/serv-reasoning/introduction.md): Make your first SERV Reasoning request with the OpenAI SDK, the Anthropic SDK, or raw HTTP.
+- [Day One with SERV](https://docs.openserv.ai/serv-reasoning/day-one.md): Production-ready defaults to get reliable results quickly, without overengineering your first integration.
+- [Playground](https://docs.openserv.ai/serv-reasoning/playground.md): Compare any model with and without SERV Reasoning side by side. No code required.
+- [SERV Tools](https://docs.openserv.ai/serv-reasoning/tools.md): Control prompt-injection protection, the system-prompt content filter, and shadow-agent validation through tool definitions, in any SDK.
+- [Models](https://docs.openserv.ai/serv-reasoning/models.md): The models available through SERV, with pricing and context windows.
+- [Resources](https://docs.openserv.ai/serv-reasoning/index.md): Better reasoning on LLMs.
+- [Overview](https://docs.openserv.ai/serv-reasoning/api/index.md): Base URL, authentication, endpoints, and errors for the SERV Reasoning API.
+- [Chat completions](https://docs.openserv.ai/serv-reasoning/api/chat-completions.md): POST /v1/chat/completions — OpenAI-format chat completions through SERV.
+- [Responses](https://docs.openserv.ai/serv-reasoning/api/responses.md): POST /v1/responses — OpenAI Responses format, with streamed reasoning summaries.
+- [Messages](https://docs.openserv.ai/serv-reasoning/api/messages.md): POST /v1/messages — Anthropic Messages format through SERV.
+- [Endpoint compatibility](https://docs.openserv.ai/serv-reasoning/api/compatibility.md): Which models work on which SERV endpoint.
+- [Guided tutorials](https://docs.openserv.ai/serv-reasoning/tutorials/index.md): Go from account creation to a monitored SERV Reasoning integration.
+- [Create an account](https://docs.openserv.ai/serv-reasoning/tutorials/account.md): Sign up, sign in, and choose your SERV Reasoning organization.
+- [Add credits and create an API key](https://docs.openserv.ai/serv-reasoning/tutorials/credits-and-api-keys.md): Buy credits for your organization and create an API key.
+- [Use the Playground](https://docs.openserv.ai/serv-reasoning/tutorials/playground.md): Compare models with and without SERV Reasoning before integrating.
+- [Make your first API request](https://docs.openserv.ai/serv-reasoning/tutorials/first-request.md): Send your first SERV Reasoning request with the OpenAI SDK.
+- [Block prompt-extraction attempts](https://docs.openserv.ai/serv-reasoning/tutorials/prompt-guard.md): Check requests for attempts to extract or override protected instructions.
+- [Control the content filter](https://docs.openserv.ai/serv-reasoning/tutorials/content-filter.md): Detect generated reasoning-prompt content in model output.
+- [Validate output with Shadow Agent](https://docs.openserv.ai/serv-reasoning/tutorials/shadow-agent.md): Validate difficult model outputs and revise failed drafts.
+- [Return structured JSON](https://docs.openserv.ai/serv-reasoning/tutorials/structured-outputs.md): Request JSON that follows your application’s schema.
+- [Choose reasoning effort](https://docs.openserv.ai/serv-reasoning/tutorials/reasoning-effort.md): Set how much reasoning a supported model should perform.
+- [Stream a response](https://docs.openserv.ai/serv-reasoning/tutorials/streaming.md): Read SERV response chunks over server-sent events.
+- [Control prompt caching](https://docs.openserv.ai/serv-reasoning/tutorials/prompt-caching.md): Reuse a generated reasoning prompt or force SERV to regenerate it.
+- [Use application tools](https://docs.openserv.ai/serv-reasoning/tutorials/tools.md): Combine your own function tools with SERV features.
+- [Audit reasoning prompts with Kronos](https://docs.openserv.ai/serv-reasoning/tutorials/kronos.md): Audit and repair SERV's generated reasoning prompt before inference.
+- [Use Multipath for branching instructions](https://docs.openserv.ai/serv-reasoning/tutorials/multipath.md): Make complex, branching system prompts easier for the model to follow.
+- [Choose an API endpoint](https://docs.openserv.ai/serv-reasoning/tutorials/choose-an-endpoint.md): Select the endpoint that matches your client and model.
+- [Monitor usage and billing](https://docs.openserv.ai/serv-reasoning/tutorials/usage-and-billing.md): Track request cost, latency, tokens, and feature outcomes.
+- [Migrate an existing integration](https://docs.openserv.ai/serv-reasoning/tutorials/migrate-existing-integration.md): Move an OpenAI or Anthropic integration to SERV Reasoning.
+- [SDK Integration](https://docs.openserv.ai/serv-reasoning/sdk-integration.md): Endpoints and parameter mappings for the OpenAI and Anthropic SDKs.
+- [SDK Migration](https://docs.openserv.ai/serv-reasoning/sdk-migration.md): Migrate Python, the Vercel AI SDK, LangChain, and other clients to SERV.
+- [Research](https://docs.openserv.ai/serv-reasoning/research.md): Summary of the BRAID paper, the research behind SERV Reasoning.
+- [The Reasoning Problem](https://docs.openserv.ai/blog/the-reasoning-problem.md): Why free-form chain of thought is the wrong medium for reasoning, and what a bounded graph does differently.
+- [Changelog](https://docs.openserv.ai/changelog/overview.md): Product updates and new features across OpenServ.
+- [Build](https://docs.openserv.ai/build/index.md): Choose your path to build with OpenServ's Agent Infrastructure
+- [Quickstart Guide (No Code)](https://docs.openserv.ai/no-code/index.md): Get set up fast with Workflows, Agents, and Connect.
+- [What is OpenServ?](https://docs.openserv.ai/no-code/what-is-openserv.md): The platform vision, components, and value for non-developers.
+- [What is an Agent?](https://docs.openserv.ai/no-code/what-is-agent.md): A high-level overview of agents in OpenServ.
+- [Workflows](https://docs.openserv.ai/no-code/workflows/index.md): Design and manage end-to-end processes.
+- [Create Workflow](https://docs.openserv.ai/no-code/workflows/create-workflow.md): Create your first workflow step by step.
+- [Templates](https://docs.openserv.ai/no-code/workflows/templates.md): Prebuilt workflow templates to accelerate setup.
+- [Your Workflows](https://docs.openserv.ai/no-code/workflows/your-workflows.md): View and manage workflows you own.
+- [Your Templates](https://docs.openserv.ai/no-code/workflows/your-templates.md): Manage and share your own templates.
+- [Agents](https://docs.openserv.ai/no-code/agents/index.md): Discover, build, and manage agents.
+- [Browse Agents](https://docs.openserv.ai/no-code/agents/browse-agents.md): Explore available agents and capabilities.
+- [Add Agent](https://docs.openserv.ai/no-code/agents/add-agent.md): Add an existing agent to your workspace.
+- [Your Agents](https://docs.openserv.ai/no-code/agents/your-agents.md): Manage agents you own or maintain.
+- [Build Agent](https://docs.openserv.ai/no-code/agents/build-agent.md): Create a new agent tailored to your needs.
+- [Connect](https://docs.openserv.ai/no-code/connect/index.md): Connect to integrations, MCPs, and manage secrets.
+- [MCPs](https://docs.openserv.ai/no-code/connect/mcps.md): Use Model Context Protocol providers.
+- [Secrets](https://docs.openserv.ai/no-code/connect/secrets.md): Store and manage secrets securely.
+- [Integrations](https://docs.openserv.ai/no-code/connect/integrations.md): Configure and manage integrations.
+- [Workflow Basics](https://docs.openserv.ai/no-code/workflow-basics.md): Understand how to build your own workflow
+- [Beginner Workflows](https://docs.openserv.ai/no-code/examples/beginner-workflows.md): Learn workflows by example.
+- [Guides Overview](https://docs.openserv.ai/no-code/guides/overview.md): High-level guidance for non-developers.
+- [FAQ](https://docs.openserv.ai/no-code/guides/faq.md): Common questions and answers.
+- [Quickstart Guide (Code)](https://docs.openserv.ai/vibecode/index.md): Start building with the SDKs and REST API.
+- [OpenServ Skills](https://docs.openserv.ai/vibecode/skills.md): Official OpenServ skills for coding agents.
+- [Using OpenServ Skills in any IDE](https://docs.openserv.ai/vibecode/any-ide.md): Guide for using OpenServ skills in any IDE or coding agent.
+- [OpenClaw](https://docs.openserv.ai/vibecode/openclaw/index.md): An OS gateway for AI agents across messaging platforms.
+- [OpenClaw Quickstart](https://docs.openserv.ai/vibecode/openclaw/quickstart.md): Quickstart guide for building with OpenClaw using OpenServ skills.
+- [Marketplace Workflows (No Custom agent)](https://docs.openserv.ai/vibecode/openclaw/marketplace-workflows.md): Orchestrate existing AI agents without writing code.
+- [Marketplace Agents + x402 (Monetization)](https://docs.openserv.ai/vibecode/openclaw/marketplace-agents-x402.md): Wrap any marketplace agent behind a crypto paywall.
+- [Custom OpenServ Agents (Runless Pattern)](https://docs.openserv.ai/vibecode/openclaw/openserv-client.md): Build agents that use platform-managed LLM calls. Define a system prompt and capabilities — no custom code needed.
+- [Custom External Agents (Runnable Pattern)](https://docs.openserv.ai/vibecode/openclaw/openserv-sdk.md): Build agents with custom code, API integrations, and platform-delegated LLM calls using run() functions.
+- [Telegram Integration](https://docs.openserv.ai/vibecode/openclaw/telegram-integration.md): Connect your agents and workflows to Telegram. Telegram has its own trigger type — the only integration that can directly trigger workflows from messages.
+- [Twitter/X Integration](https://docs.openserv.ai/vibecode/openclaw/twitter-integration.md): Connect your agents and workflows to Twitter/X. Attach your twitter-v2 connection to tasks so agents can post tweets, read mentions, and interact on your behalf.
+- [Fullstack App Integration](https://docs.openserv.ai/vibecode/openclaw/fullstack-app.md): Connect any web app to OpenServ workflows. A prompting guide for linking agent triggers to your frontend and backend.
+- [ERC-8004 On-Chain Identity](https://docs.openserv.ai/vibecode/openclaw/erc8004-identity.md): How to register your autonomous agents on-chain for discoverability, professional branding, and x402 monetization.
+- [SDK Overview](https://docs.openserv.ai/vibecode/sdk/index.md): How to install and use the SDK.
+- [TypeScript SDK](https://docs.openserv.ai/vibecode/sdk/typescript.md): OpenServ TypeScript SDK for building agents and integrations.
+- [Build a Custom Agent](https://docs.openserv.ai/vibecode/build-custom-agent.md): A guided build with video and steps.
+- [Build a Fullstack Agentic App](https://docs.openserv.ai/vibecode/build-fullstack-app.md): From zero to a working fullstack agentic app.
+- [Trading Data Agent](https://docs.openserv.ai/vibecode/examples/trading-data-agent.md): Example agent — coming soon.
+- [Hyperliquid Agent](https://docs.openserv.ai/vibecode/examples/hyperliquid-agent.md): Example agent — coming soon.
+- [Polymarket Agent](https://docs.openserv.ai/vibecode/examples/polymarket-agent.md): Example agent — coming soon.
+- [Overview](https://docs.openserv.ai/launch/index.md): The SERV Launchpad brings AI-native projects to market without presales, VCs, or back-room deals.
+- [For Builders](https://docs.openserv.ai/launch/for-builders.md): How to launch a token on the SERV Launchpad.
+- [For Buyers](https://docs.openserv.ai/launch/for-buyers.md): How to qualify for early access and what to expect during a launch on Base and Solana.
+- [Programmatic Fundraising](https://docs.openserv.ai/launch/programmatic-fundraising.md): Raise capital as your token price grows, not before.
+- [Staking](https://docs.openserv.ai/launch/staking.md)
+- [Agent Launches](https://docs.openserv.ai/launch/agent-launches.md)
+- [AI Cofounder Suite](https://docs.openserv.ai/run/index.md): The "Run" from Build, Launch, Run is the operational execution layer every startup in the SERV ecosystem inherits. It is a team of AI cofounders that are used to autonomously manage + run the time intensive activities every startup needs to carry out.
+- [Guided tutorials](https://docs.openserv.ai/serv-reasoning/tutorials.md): Go from account creation to a monitored SERV Reasoning integration.
+
+## Optional
+
+- [GitHub](https://github.com/openserv-labs)
+- [Homepage](https://openserv.ai)
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

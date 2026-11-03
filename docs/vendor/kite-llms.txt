@@ -1,0 +1,90 @@
+# Kite Developer Docs
+
+> Kite is agentic payment infrastructure. Kite Agent Passport gives AI agents identity, delegated payment authority, and onchain settlement.
+
+## Endpoints
+
+- Sharded full content (per collection):
+  - https://docs.gokite.ai/llms/docs.txt
+  - https://docs.gokite.ai/llms/changelog.txt
+  - https://docs.gokite.ai/llms/api-reference.txt
+  - https://docs.gokite.ai/llms/blog.txt
+- Full corpus (capped at 2 MiB): https://docs.gokite.ai/llms-full.txt
+- MCP server (read-only): https://docs.gokite.ai/mcp
+- Sitemap: https://docs.gokite.ai/sitemap.xml
+
+
+## Pages
+
+- [Give your AI agent a wallet you control](https://docs.gokite.ai/) — Kite Agent Passport lets autonomous AI agents pay for services on your behalf — with their own identity, a funded wallet, spending rules you set, and verifiable receipts. Here's the problem it solves and how it works.
+- [Architecture & Design Pillars](https://docs.gokite.ai/about/architecture-and-design-pillars.md)
+- [Core Concepts & Terminology](https://docs.gokite.ai/about/core-concepts-and-terminology.md) — Core concepts and terminology for Kite's agent-native infrastructure
+- [About Kite](https://docs.gokite.ai/about.md) — Kite's mission, architecture, use cases, core concepts, whitepapers and tokenomics.
+- [Introduction & Mission](https://docs.gokite.ai/about/introduction-and-mission.md) — Why AI agents need new infrastructure, and how Kite gives them identity, payments, governance, and verification — the foundation behind Kite Agent Passport.
+- [Key Use Cases & Players](https://docs.gokite.ai/about/key-use-cases-and-players.md) — Key use cases and players in the agentic economy enabled by Kite's infrastructure
+- [MiCA Whitepaper](https://docs.gokite.ai/about/mica-whitepaper.md)
+- [Tokenomics](https://docs.gokite.ai/about/tokenomics.md) — Economic design and distribution framework of KITE token, powering the agentic AI economy
+- [Whitepaper](https://docs.gokite.ai/about/whitepaper-references.md)
+- [LayerZero Integration on Kite AI](https://docs.gokite.ai/kite-chain/10-layerzero-kite-integration.md)
+- [Indexing Kite AI with Goldsky](https://docs.gokite.ai/kite-chain/11-goldsky-kite-integration.md) — Index Kite AI with Goldsky for high-performance blockchain data infrastructure
+- [Kite Integration with Lucid](https://docs.gokite.ai/kite-chain/12-lucid-kite-integration.md) — Kite Integration with Lucid - Native yield-generating USDC liquidity for the Kite ecosystem
+- [Security at Kite](https://docs.gokite.ai/kite-chain/6-reference.md) — Kite Security, a secure-by-design and DevSecOps-driven approach
+- [Stablecoin Gasless Transfer: Integration Guide](https://docs.gokite.ai/kite-chain/9-gasless-integration.md)
+- [Kite Passport](https://docs.gokite.ai/passport.md) — Let your agent pay for paid services under spending limits you approve with a passkey.
+- [Install the CLI and agent skills](https://docs.gokite.ai/passport/install.md) — Install the Kite Passport CLI and set up skills for your agent to enable payment flows.
+- [Service Provider Guide](https://docs.gokite.ai/passport/seller.md) — Guide for service providers to accept payments from Kite Agent Passport agents via x402 or MPP.
+- [Build with an LLM](https://docs.gokite.ai/reference/build-with-an-llm.md) — Access Kite documentation for AI agents and LLMs
+- [Error Codes](https://docs.gokite.ai/reference/error-codes.md) — Session spending errors and recovery actions for Kite Passport agents.
+- [Reference](https://docs.gokite.ai/reference.md) — Reference documentation for Kite Passport — command-line tools, agent skills, error codes, and API specifications.
+- [kpass CLI](https://docs.gokite.ai/reference/kpass-cli.md) — CLI reference for kpass and ksearch — all commands for Kite Agent Passport.
+- [Passport Skills](https://docs.gokite.ai/reference/passport-skills.md) — The 16 user-group skills that teach AI agents how to authenticate, manage sessions, execute payments, and transfer tokens using kpass.
+- [Add Kite Tokens to an External Wallet](https://docs.gokite.ai/kite-chain/1-getting-started/add-kite-tokens-external-wallet.md) — Step-by-step instructions for adding KITE tokens to your external wallet.
+- [FAQs](https://docs.gokite.ai/kite-chain/1-getting-started/faqs.md) — Frequently Asked Questions
+- [Getting Started with Kite Chain](https://docs.gokite.ai/kite-chain/1-getting-started.md)
+- [Network Information](https://docs.gokite.ai/kite-chain/1-getting-started/network-information.md) — Chain IDs, endpoints, and environment details for Kite networks.
+- [Tools](https://docs.gokite.ai/kite-chain/1-getting-started/tools.md) — Explorers, wallets, and references for building on Kite.
+- [Blockchain Fundamentals](https://docs.gokite.ai/kite-chain/2-fundamentals/blockchain-fundamentals.md)
+- [Blockchain Fundamentals](https://docs.gokite.ai/kite-chain/2-fundamentals.md)
+- [Smart Contract Basics](https://docs.gokite.ai/kite-chain/2-fundamentals/smart-contract-basics.md)
+- [GoKite Account Abstraction SDK – Developer Guide](https://docs.gokite.ai/kite-chain/5-advanced/account-abstraction-sdk.md)
+- [Advanced Features](https://docs.gokite.ai/kite-chain/5-advanced.md)
+- [Multisig Wallet](https://docs.gokite.ai/kite-chain/5-advanced/multisig-wallet.md) — Ash Multisig Wallet for Kite AI L1
+- [Kite Node](https://docs.gokite.ai/kite-chain/7-kite-node.md)
+- [Mainnet Network Information](https://docs.gokite.ai/kite-chain/7-kite-node/mainnet-network-information.md)
+- [Mainnet Node Operations](https://docs.gokite.ai/kite-chain/7-kite-node/mainnet-node-operations.md)
+- [Stablecoin workflow and User Experience](https://docs.gokite.ai/kite-chain/8-kite-stablecoin/stablecoin-gasless-transfer.md)
+- [counter smart contract hardhat](https://docs.gokite.ai/kite-chain/3-developing/counter-smart-contract-hardhat.md)
+- [Counter Smart contract](https://docs.gokite.ai/kite-chain/3-developing/counter-smart-contract-remix.md) — Building & deploying a smart contract on KITE AI with Remix
+- [Developing Smart Contracts](https://docs.gokite.ai/kite-chain/3-developing.md)
+- [Building on Kite Chain - Network setting & tools](https://docs.gokite.ai/kite-chain/3-developing/setup-environment.md)
+- [Kite Mainnet Contracts List](https://docs.gokite.ai/kite-chain/3-developing/smart-contracts-list.md)
+- [Voting Smart contract](https://docs.gokite.ai/kite-chain/3-developing/voting-smart-contract.md) — Building & deploying a smart contract on KITE AI with Remix
+- [Allowance and sessions](https://docs.gokite.ai/passport/payments/allowance.md) — Two ways to pay for agent calls on Kite Passport. An allowance renews and covers everyday spending. A session covers one task.
+- [Funding Your Wallet](https://docs.gokite.ai/passport/payments/funding.md) — How to add funds to your Kite Passport wallet and check your balance.
+- [Payments](https://docs.gokite.ai/passport/payments.md) — How a Kite Passport agent pays for x402 services, from your allowance or from a spending session.
+- [Counter dApp](https://docs.gokite.ai/kite-chain/4-building-dapps/counter-dapp.md) — A sample counter dApp built with KITE AI testnet & React
+- [Building dApps](https://docs.gokite.ai/kite-chain/4-building-dapps.md)
+- [Token Minter](https://docs.gokite.ai/kite-chain/4-building-dapps/token-minter.md)
+- [Voting dApp](https://docs.gokite.ai/kite-chain/4-building-dapps/voting-dapp.md) — A sample voting dApp built with KITE AI testnet & React
+- [Merchant fee estimates in session preflight](https://docs.gokite.ai/changelog/2026/2026-05-19-backend-v1-1-0.md)
+- [Filter activity by date and merchant](https://docs.gokite.ai/changelog/2026/2026-05-19-cli-v1-3-4.md)
+- [request-session retries preflight on catalog errors](https://docs.gokite.ai/changelog/2026/2026-05-19-skills-v0-9-1.md)
+- [Estimated fees on session approval](https://docs.gokite.ai/changelog/2026/2026-05-19-web-v1-2-0.md)
+- [Submit agent feedback from the CLI](https://docs.gokite.ai/changelog/2026/2026-05-27-cli-1-3-20.md) — kpass CLI agents can now submit feedback with a new kpass feedback submit command, enabling programmatic reporting of issues and suggestions.
+- [Internal changelog workflow and dependency updates](https://docs.gokite.ai/changelog/2026/2026-05-28-cli-v1-3-21.md) — Release v1.3.21 of the Kite Passport CLI adds an automated changelog GitHub Actions workflow and bumps npm dependencies. No user-facing changes.
+- [Passkey security overhaul: step-up, recovery, login history, USD session caps](https://docs.gokite.ai/changelog/2026/2026-06-04-backend-v1-3-0.md) — Backend v1.3.0 ships action-bound step-up for high-risk operations, a recovery flow, login history with first-passkey risk holds, and USD-denominated session caps.
+- [Release 2026-06-11](https://docs.gokite.ai/changelog/2026/2026-06-11-release.md)
+- [Release 2026-06-17](https://docs.gokite.ai/changelog/2026/2026-06-17-release.md)
+- [Release 2026-06-23](https://docs.gokite.ai/changelog/2026/2026-06-23-release.md)
+- [Release 2026-07-01](https://docs.gokite.ai/changelog/2026/2026-07-01-release.md)
+- [Release 2026-07-08](https://docs.gokite.ai/changelog/2026/2026-07-08-release.md)
+- [Release 2026-07-15](https://docs.gokite.ai/changelog/2026/2026-07-15-release.md)
+- [Release 2026-07-22](https://docs.gokite.ai/changelog/2026/2026-07-22-release.md)
+- [Release 2026-07-29](https://docs.gokite.ai/changelog/2026/2026-07-29-release.md)
+- [Release 2026-10-09](https://docs.gokite.ai/changelog/2026/2026-10-09-release.md)
+- [Release 2026-10-13](https://docs.gokite.ai/changelog/2026/2026-10-13-release.md)
+- [Skills 3.5.7](https://docs.gokite.ai/changelog/2026/2026-10-13-skills-v3-5-7.md)
+- [Release 2026-10-15](https://docs.gokite.ai/changelog/2026/2026-10-15-release.md)
+- [Release 2026-10-30](https://docs.gokite.ai/changelog/2026/2026-10-30-release.md)
+- [API reference](https://docs.gokite.ai/api-reference.md) — How agents and apps call Kite Passport today.
+- [Blog](https://docs.gokite.ai/blog.md) — Placeholder.

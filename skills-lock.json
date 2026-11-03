@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "openserv-agent-sdk": {
+      "source": "openserv-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/openserv-agent-sdk/SKILL.md",
+      "computedHash": "e587312f43a61bed0dc29c11af6744dc3cef6c0f4d67a051f08bf03a9bd7ae88"
+    },
+    "openserv-client": {
+      "source": "openserv-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/openserv-client/SKILL.md",
+      "computedHash": "9c9c8daa6044dca418bfa08fda7e7420d68ddb2200cc31050a778ea779771773"
+    },
+    "openserv-ideaboard-api": {
+      "source": "openserv-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/openserv-ideaboard-api/SKILL.md",
+      "computedHash": "1e52b243fa9c5ff930d83ec64e6216262ebc3ab90da484f5e8de12f311fbc5d6"
+    },
+    "openserv-launch": {
+      "source": "openserv-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/openserv-launch/SKILL.md",
+      "computedHash": "02fabea66319fb33bfdfbf7e008f3c5884d33c77d361c3d283b24889d5c70ddf"
+    },
+    "openserv-multi-agent-workflows": {
+      "source": "openserv-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/openserv-multi-agent-workflows/SKILL.md",
+      "computedHash": "ca5e49ba77ee8021c200516fb3c6fc4560e4eda21f35f0f753a035b5753b3ab4"
+    }
+  }
+}

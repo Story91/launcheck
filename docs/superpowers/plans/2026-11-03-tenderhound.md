@@ -1,0 +1,341 @@
+# TenderHound Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** A deployed web app + paid API that turns a TED procurement notice id into an auditable "competition-restriction signals" report with verbatim quotes, an independent Reppo verdict, and x402 per-call sales to agents.
+
+**Architecture:** A framework-free `packages/core` pipeline (TED ingest → fact extraction → three short SERV signal calls → code-level quote verification → score/summary → Reppo verdict) is driven by a Next.js app (`apps/web`, Vercel, Neon Postgres) that runs generation in the background and polls status; a separate Express service (`apps/x402`, Kite template) paywalls the report JSON and proxies to the web app's internal endpoint. All LLM calls go through an `LlmClient` interface so core tests run on recorded fixtures.
+
+**Tech Stack:** TypeScript 5, Node 26, pnpm workspaces, Vitest, Zod, Next.js 16 (App Router) + Tailwind + shadcn/ui, Drizzle + Neon Postgres, Express 5 + `@x402/express` (Kite template), OpenAI-compatible HTTP via `fetch` (no SDK), SERV Reasoning API, Dolphin API, Reppo Evaluation API, Kite `kpass` CLI (buyer side only).
+
+**Spec:** `docs/superpowers/specs/2026-11-03-tenderhound-design.md`
+
+## Global Constraints
+
+- Every SERV request carries a system prompt; prompts live in `packages/core/src/prompts/*.v1.ts` as exported constants whose name ends in the version (`SIGNALS_A_V1`); system prompt text is stable, variable data goes in the user message.
+- Default SERV model `gpt-6-luna`; signal calls use model `${model}-serv-multipath`; fallback model `gpt-5.4-mini` only on degenerate/refused output.
+- Every structured SERV call sends `response_format: { type: "json_schema", json_schema: { name, strict: true, schema } }` and the marker tools `serv_disable_content_filter` + `serv_shadow_agent`; never `stream: true` with the shadow agent.
+- Every LLM call records an `AuditEntry` (step, model, promptVersion, requestId from header `x-openserv-request-id`, inputHash sha256, usage, costUsd, durationMs).
+- Evidence strings must be verbatim substrings of the source text after normalization; non-verbatim evidence is dropped, a signal with no remaining evidence becomes `fired=false, severity="none"`.
+- Risk score = sum(high 25, medium 12, low 5) over fired signals, capped at 100.
+- Copy rules: UI and summaries in English; never the words "rigged", "fraud", "corrupt"; the product phrase is "competition-restriction signals". Quotes stay in the notice language.
+- Report states: `generating | pending_verification | verified | disputed | withheld | unverified | failed`. x402 serves only `verified` and `disputed`; everything else returns HTTP 409 so the Kite template does not settle payment.
+- Secrets only in `.env` (gitignored); `.env.example` lists every variable. No keys in code, tests or chat.
+- Commits: Conventional Commits, English. Docs for the team in Polish, code and comments in English.
+
+## Review Focus
+
+1. **Unknown or malformed notice id** (`999999-2026`, `abc`): TED returns 404/empty → report ends `failed` with a human message, nothing billed, no crash. Test in Task 2 and Task 7.
+2. **Evidence with typographic differences** (curly quotes „”, NBSP, double spaces, trailing period): must still count as verbatim; a paraphrase must not. Test in Task 6.
+3. **Degenerate luna output** (all eight signals `none`, identical placeholder reasons, empty evidence): must be detected and retried once on `gpt-5.4-mini`, not published as "0/100 risk". Test in Task 5.
+4. **Prompt-guard refusal** (`content: null`, `refusal: "I can't share that."`, usage 0): must map to a retry on the fallback model, and to `failed` if it repeats; never parsed as JSON. Test in Task 3 and Task 5.
+5. **Report not sellable yet** (`generating`, `pending_verification`, `withheld`): the x402 upstream must answer 409, never 2xx, so an agent is not charged for nothing. Test in Task 10 and Task 13.
+
+---
+
+### Task 1: Monorepo scaffold and core package skeleton
+
+**Files:**
+- Create: `package.json`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `.npmrc`, `.editorconfig`
+- Create: `packages/core/package.json`, `packages/core/tsconfig.json`, `packages/core/vitest.config.ts`, `packages/core/src/index.ts`, `packages/core/src/types.ts`
+- Create: `packages/core/test/fixtures/722731-2026.xml` (copy of `scratch/ted-data/722731-2026.xml`), `packages/core/test/fixtures/722731-2026.facts.json` (copy of `scratch/ted-data/722731-2026.extracted.json`)
+- Test: `packages/core/test/types.test.ts`
+- Delete: `scratch/` (after copying fixtures), `scripts/smoke-serv.mjs` (superseded by Task 8)
+
+**Interfaces:**
+- Produces (in `types.ts`, all Zod schemas with inferred types exported):
+  - `TenderFacts`: `{ buyer: string; title: string; cpv: string[]; estimatedValue: string|null; currency: string|null; deadlineForTenders: string|null; publicationDate: string|null; daysToDeadline: number|null; procedureType: string|null; lots: number|null; awardCriteria: {name: string; weight: string|null}[]; participationConditions: string[]; technicalRequirements: string[]; brandOrProductNames: string[]; equivalenceClausePresent: boolean; incumbentSystemMentioned: string|null; contractDuration: string|null; notes: string[]; noticeLanguage: string }`
+  - `SignalId = "S1_SHORT_DEADLINE" | "S2_BRAND_LOCK" | "S3_OVER_SPECIFICATION" | "S4_EXPERIENCE_LOCK" | "S5_PRICE_WEIGHT_LOW" | "S6_DISPROPORTIONATE_CONDITIONS" | "S7_NO_LOTS_LARGE_SCOPE" | "S8_UNUSUAL_NOTES"`
+  - `Severity = "none" | "low" | "medium" | "high"`
+  - `Signal`: `{ id: SignalId; fired: boolean; severity: Severity; reason: string; evidence: string[] }`
+  - `AuditEntry`: `{ step: string; model: string; promptVersion: string; requestId: string|null; inputHash: string; usage: {promptTokens: number; completionTokens: number}; costUsd: number|null; durationMs: number; note?: string }`
+  - `ReportStatus` (the seven states from Global Constraints)
+  - `ReppoVerdict`: `{ evalId: string; status: "PENDING"|"SETTLED"|"FAILED"; score: number|null; decision: "accept"|"revise"|"reject"|null; confidence: string|null; critique: string|null; evidenceBasis: string|null; submittedAt: string; settledAt: string|null }`
+  - `Report`: `{ noticeId: string; status: ReportStatus; noticeLanguage: string|null; buyerPlatform: string|null; facts: TenderFacts|null; signals: Signal[]; riskScore: number; summary: string|null; reppo: ReppoVerdict|null; audit: AuditEntry[]; costUsd: number; droppedEvidence: number; error: string|null; createdAt: string; updatedAt: string }`
+  - `SEVERITY_POINTS = { none: 0, low: 5, medium: 12, high: 25 } as const`
+
+- [ ] **Step 1: Create workspace files.** `pnpm-workspace.yaml` lists `packages/*` and `apps/*`. Root `package.json` scripts: `test` (`pnpm -r test`), `typecheck` (`pnpm -r typecheck`), `lint`. `tsconfig.base.json`: `strict`, `module: NodeNext`, `target: ES2023`. Core `package.json`: `type: module`, deps `zod`; devDeps `vitest`, `typescript`, `@types/node`; scripts `test: vitest run`, `typecheck: tsc --noEmit`.
+- [ ] **Step 2: Copy fixtures** from `scratch/ted-data/` into `packages/core/test/fixtures/` with the names above; then delete `scratch/` and `scripts/smoke-serv.mjs`.
+- [ ] **Step 3: Write the failing test** `packages/core/test/types.test.ts`:
+
+```ts
+import { TenderFacts, Signal, SEVERITY_POINTS } from "../src/types";
+import facts from "./fixtures/722731-2026.facts.json";
+it("parses the recorded facts fixture", () => {
+  expect(TenderFacts.parse({ ...facts, noticeLanguage: "POL" }).buyer).toBe("Narodowy Bank Polski");
+});
+it("rejects a signal with unknown id", () => {
+  expect(() => Signal.parse({ id: "S9", fired: false, severity: "none", reason: "", evidence: [] })).toThrow();
+});
+it("severity points match the spec", () => {
+  expect(SEVERITY_POINTS).toEqual({ none: 0, low: 5, medium: 12, high: 25 });
+});
+```
+- [ ] **Step 4: Run** `pnpm --filter @tenderhound/core test` → FAIL (module not found).
+- [ ] **Step 5: Implement `types.ts`** with the schemas above; `index.ts` re-exports everything.
+- [ ] **Step 6: Run** the test → PASS. Run `pnpm typecheck` → clean.
+- [ ] **Step 7: Commit** `chore: scaffold pnpm monorepo and core types`.
+
+### Task 2: TED client and eForms flattener
+
+**Files:**
+- Create: `packages/core/src/ted/client.ts`, `packages/core/src/ted/flatten.ts`
+- Test: `packages/core/test/ted.test.ts`
+- Fixture: `packages/core/test/fixtures/ted-search.json` (record one real response of the search below, 3 notices, trimmed to the fields requested)
+
+**Interfaces:**
+- Produces:
+  - `searchNotices(query: string, opts?: { limit?: number; fetchImpl?: typeof fetch }): Promise<NoticeSummary[]>` where `NoticeSummary = { noticeId: string; title: string; buyer: string; deadline: string|null }`. Default query: `place-of-performance=POL AND classification-cpv=72* AND publication-date>=<today-30d>`. Endpoint `POST https://api.ted.europa.eu/v3/notices/search`, fields `publication-number, notice-title, buyer-name, deadline-receipt-tender-date-lot`.
+  - `fetchNoticeXml(noticeId: string, fetchImpl?): Promise<string>` from `https://ted.europa.eu/en/notice/${noticeId}/xml` with `User-Agent: TenderHound/0.1`; throws `NoticeNotFoundError` on 404 or on a body that lacks `<ContractNotice`.
+  - `flattenEforms(xml: string): { text: string; language: string; buyerPlatform: string|null }`. Keeps elements whose `languageID` equals the notice's main language (first `languageID` seen on a `cbc:Name` under `cac:ProcurementProject`) or `ENG`; skips tags `ID|UUID|SubTypeCode|ListName|Code|IssueDate|IssueTime|VersionID|CustomizationID|EndpointID|IdentificationCode`; emits `Tag: text` lines; drops consecutive duplicates. `buyerPlatform` = first `cbc:EndpointID`.
+  - `isValidNoticeId(id: string): boolean` matches `/^\d{1,6}-\d{4}$/`.
+
+- [ ] **Step 1: Write failing tests** in `ted.test.ts`: `flattenEforms` on the XML fixture returns `language === "POL"`, text containing `"Integracja z Systemem DarkTrace"` and `"Cena brutto oferty"`, `buyerPlatform === "https://e-zamowienia.nbp.pl/"`, and no line starting with `UUID:`; `isValidNoticeId("722731-2026")` true, `"abc"` false; `fetchNoticeXml("999999-2026", mockFetch404)` rejects with `NoticeNotFoundError`; `searchNotices` with a mocked fetch returning `ted-search.json` yields 3 summaries with `noticeId` like `"722731-2026"`.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement** `client.ts` and `flatten.ts` (port the regex flattener from the spike; main-language detection is the one addition).
+- [ ] **Step 4: Run** → PASS.
+- [ ] **Step 5: Commit** `feat(core): TED client and eForms flattener`.
+
+### Task 3: SERV client with marker tools, refusal handling and audit
+
+**Files:**
+- Create: `packages/core/src/llm/types.ts`, `packages/core/src/llm/serv.ts`, `packages/core/src/llm/markers.ts`, `packages/core/src/llm/pricing.ts`, `packages/core/src/llm/audit.ts`
+- Test: `packages/core/test/serv.test.ts`
+
+**Interfaces:**
+- Produces:
+  - `interface LlmClient { chat(req: ChatRequest): Promise<ChatResult> }`
+  - `ChatRequest = { model: string; system: string; user: string; jsonSchema?: { name: string; schema: object }; jsonObject?: boolean; tools?: MarkerTool[]; maxTokens?: number; temperature?: number }`
+  - `ChatResult = { content: string|null; refusal: string|null; guardRefused: boolean; usage: {promptTokens; completionTokens}; requestId: string|null; durationMs: number; model: string; costUsd: number|null }`
+  - `class ServClient implements LlmClient` — `new ServClient({ apiKey, baseUrl = "https://inference-api.openserv.ai", fetchImpl? })`; POSTs `${baseUrl}/v1/chat/completions`; sets `guardRefused = content==null && typeof refusal==="string" && usage.total_tokens===0`; reads `x-openserv-request-id`.
+  - `markers.ts`: `PROMPT_GUARD`, `DISABLE_CONTENT_FILTER`, `shadowAgent(hint: string, maxIterations = 2): MarkerTool`.
+  - `pricing.ts`: `estimateCostUsd(model: string, usage): number|null` with the table `gpt-6-luna 0.13/0.65, gpt-5.4-nano 0.25/1.6, gpt-5.4-mini 1.0/6.0, gemini-3.1-flash-lite 0.30/1.80, deepseek-ai/DeepSeek-V4.1-Flash 0.01/0.07` ($/M in/out); matches on `model.startsWith(key)` so `-serv-multipath` suffixes resolve.
+  - `audit.ts`: `makeAudit(step: string, promptVersion: string, input: string, res: ChatResult, note?: string): AuditEntry` (`inputHash` = sha256 hex of `input`).
+  - `class LlmError extends Error { kind: "http"|"refused"|"empty"|"parse"; status?: number }`.
+  - `parseJsonContent<T>(res: ChatResult, schema: ZodType<T>): T` — strips ``` fences, parses, validates; throws `LlmError("parse")`; throws `LlmError("refused")` when `guardRefused`.
+
+- [ ] **Step 1: Write failing tests** with a fake `fetchImpl`: (a) request body contains `messages[0].role === "system"`, `response_format.json_schema.strict === true`, and the three tool names when `tools` given; (b) a 200 body with `message.content === null, refusal: "I can't share that.", usage.total_tokens 0` → `guardRefused === true` and `parseJsonContent` throws `LlmError` with `kind "refused"`; (c) header `x-openserv-request-id: abc` → `requestId === "abc"`; (d) HTTP 400 → `LlmError` with `kind "http"` and `status 400`; (e) `estimateCostUsd("gpt-6-luna-serv-multipath", {promptTokens: 1_000_000, completionTokens: 0})` → `0.13`.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement** the five files.
+- [ ] **Step 4: Run** → PASS.
+- [ ] **Step 5: Commit** `feat(core): SERV client with marker tools, refusal handling and audit entries`.
+
+### Task 4: Dolphin client and fact extraction with fallback
+
+**Files:**
+- Create: `packages/core/src/llm/dolphin.ts`, `packages/core/src/prompts/extract.v1.ts`, `packages/core/src/pipeline/extract.ts`
+- Test: `packages/core/test/extract.test.ts`
+
+**Interfaces:**
+- Consumes: `LlmClient`, `ChatResult`, `parseJsonContent`, `makeAudit`, `TenderFacts`.
+- Produces:
+  - `class DolphinClient implements LlmClient` — same shape as `ServClient`, base `https://lighthouse.dphn.ai/run/text-v/v1`, model default `deepseek-ai/DeepSeek-V4.1-Flash`, sends `response_format: {type: "json_object"}` when `jsonObject` is true, `max_tokens` from `maxTokens` (default 3000); `requestId` is always `null`.
+  - `EXTRACT_V1: string` (system prompt: the spike's extraction prompt plus the fields `equivalenceClausePresent`, `incumbentSystemMentioned`, `noticeLanguage`), `EXTRACT_SCHEMA` (JSON schema mirroring `TenderFacts`, `additionalProperties: false`).
+  - `extractFacts(text: string, language: string, deps: { primary: LlmClient; fallback: LlmClient; primaryModel: string; fallbackModel: string }): Promise<{ facts: TenderFacts; audit: AuditEntry[] }>` — tries `primary` with `jsonObject: true`; on any `LlmError` or Zod failure tries `fallback` with `jsonSchema` + `DISABLE_CONTENT_FILTER`; audit has one entry per attempt (`step: "extract.primary"` / `"extract.fallback"`), failed attempts get `note: error.message`.
+
+- [ ] **Step 1: Write failing tests** with stub clients: (a) primary returns the facts fixture as JSON → result equals fixture, audit length 1, `step "extract.primary"`; (b) primary throws `LlmError("http", 402)` and fallback returns fixture → audit length 2, second step `"extract.fallback"`; (c) both fail → rejects with the fallback error.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement.**
+- [ ] **Step 4: Run** → PASS.
+- [ ] **Step 5: Commit** `feat(core): Dolphin client and fact extraction with SERV fallback`.
+
+### Task 5: Signal matrix in three short SERV calls, with degenerate-output retry
+
+**Files:**
+- Create: `packages/core/src/prompts/signals-a.v1.ts`, `signals-b.v1.ts`, `signals-c.v1.ts`, `packages/core/src/prompts/signals-shared.ts`, `packages/core/src/pipeline/signals.ts`
+- Test: `packages/core/test/signals.test.ts`
+- Fixtures: `packages/core/test/fixtures/signals-a.json`, `signals-b.json`, `signals-c.json` (recorded luna outputs for the NBP notice), `signals-degenerate.json` (eight `none` with identical reasons)
+
+**Interfaces:**
+- Consumes: `LlmClient`, `TenderFacts`, `Signal`, `shadowAgent`, `DISABLE_CONTENT_FILTER`, `parseJsonContent`, `makeAudit`.
+- Produces:
+  - `SIGNAL_GROUPS = { A: ["S1_SHORT_DEADLINE","S5_PRICE_WEIGHT_LOW","S7_NO_LOTS_LARGE_SCOPE"], B: ["S2_BRAND_LOCK","S3_OVER_SPECIFICATION","S4_EXPERIENCE_LOCK"], C: ["S6_DISPROPORTIONATE_CONDITIONS","S8_UNUSUAL_NOTES"] } as const`
+  - `SIGNALS_A_V1`, `SIGNALS_B_V1`, `SIGNALS_C_V1: string` — each system prompt: role ("independent public-procurement analyst, EU Directive 2014/24/EU"), the group's rules, output contract. Rules pinned here:
+    - S1: open procedure and `daysToDeadline` known: `< 30` → low, `< 15` → medium, `< 10` → high; unknown → none.
+    - S5: price weight `< 40%` AND non-price criteria lack a measurable scale → medium; price `≥ 40%` → none.
+    - S7: `lots` is null or 1 AND cpv codes span ≥ 2 different 2-digit divisions → low.
+    - S2: `brandOrProductNames` non-empty AND `equivalenceClausePresent === false` → high; `incumbentSystemMentioned` not null and integration required → high; equivalence clause present → none.
+    - S3: ≥ 3 technical requirements naming implementation details (model numbers, exact versions, dimensions) rather than functions → medium.
+    - S4: participation conditions require prior work for this buyer, or experience with the exact offered product/system, → high; generic experience → none.
+    - S6: deposit (wadium) `> 3%` of `estimatedValue`, or turnover/insurance `> 2×` value, or one reference contract `≥` value → medium; no numbers → none.
+    - S8: any note restricting who can bid not covered above (platform account requirement alone is low) → low.
+    - Output contract (shared text in `signals-shared.ts`): strict JSON `{ signals: Signal[] }` with exactly the group's ids; evidence = 1–3 verbatim quotes of input *values* (never JSON keys); non-fired → `severity "none"`, `evidence []`, one-line reason.
+  - `SIGNALS_SCHEMA(groupIds)` JSON schema builder with `id` enum restricted to the group.
+  - `evaluateSignals(facts: TenderFacts, deps: { serv: LlmClient; model: string; fallbackModel: string }): Promise<{ signals: Signal[]; audit: AuditEntry[] }>` — runs A, B, C in parallel (`Promise.all`), model `${model}-serv-multipath`, tools `[DISABLE_CONTENT_FILTER, shadowAgent("Every evidence string must be copied verbatim from the input values; drop any fired signal without a verbatim quote.")]`; result ordered S1..S8.
+  - `isDegenerate(signals: Signal[]): boolean` — true when every signal has `fired === false` AND all `reason` strings are identical.
+  - Retry policy: a group whose call throws `LlmError("refused"|"parse"|"empty")` or whose result is degenerate is retried once on `${fallbackModel}-serv-multipath`; if that fails too the group's signals are returned as `fired=false, severity "none", reason "evaluation unavailable"` and the audit entry gets `note: "group failed"`.
+
+- [ ] **Step 1: Write failing tests** with a stub client keyed by system prompt: (a) fixtures A/B/C → 8 signals in order, `S2_BRAND_LOCK.fired === true`, audit has 3 entries with models ending in `-serv-multipath`; (b) group B first returns `signals-degenerate.json` (restricted to B's ids) then the real fixture → B's audit shows 2 entries, second model starts with `gpt-5.4-mini`; (c) group A returns a guard refusal twice → A's three signals are `none` with reason `"evaluation unavailable"`, other groups intact; (d) `isDegenerate` true for the degenerate fixture, false for the real one.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement** prompts, schema builder, `evaluateSignals`, `isDegenerate`.
+- [ ] **Step 4: Run** → PASS.
+- [ ] **Step 5: Commit** `feat(core): signal matrix as three multipath calls with degenerate-output retry`.
+
+### Task 6: Evidence verification and scoring (pure functions)
+
+**Files:**
+- Create: `packages/core/src/pipeline/verify.ts`, `packages/core/src/pipeline/score.ts`
+- Test: `packages/core/test/verify.test.ts`, `packages/core/test/score.test.ts`
+
+**Interfaces:**
+- Produces:
+  - `normalizeForMatch(s: string): string` — NFC, replace `„ ” “ ” ‘ ’` with `"`/`'`, NBSP → space, collapse whitespace, trim, strip trailing `.`/`;`, lowercase.
+  - `verifyEvidence(signals: Signal[], sourceText: string, factsJson: string): { signals: Signal[]; dropped: number }` — evidence kept when `normalizeForMatch(e).length >= 12` and it is a substring of `normalizeForMatch(sourceText + "\n" + factsJson)`; a fired signal with no remaining evidence becomes `{ fired: false, severity: "none", reason: original reason + " (dropped: no verbatim evidence)" }`.
+  - `scoreSignals(signals: Signal[]): number` — sum of `SEVERITY_POINTS[severity]` over `fired` signals, capped at 100.
+
+- [ ] **Step 1: Write failing tests**: curly-quoted `„Integracja z Systemem DarkTrace”` matches source with straight quotes; `"Integracja  z Systemem DarkTrace."` matches; paraphrase `"Wymóg integracji z DarkTrace"` is dropped and the signal unfires; a JSON-key quote `lots:null` (< 12 chars) is dropped; `scoreSignals` on `[high, medium, low, none]` → 42; five highs → 100.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement.**
+- [ ] **Step 4: Run** → PASS.
+- [ ] **Step 5: Commit** `feat(core): verbatim evidence verification and risk scoring`.
+
+### Task 7: Summary and the report orchestrator with progress events
+
+**Files:**
+- Create: `packages/core/src/prompts/summary.v1.ts`, `packages/core/src/pipeline/summary.ts`, `packages/core/src/pipeline/run.ts`
+- Test: `packages/core/test/run.test.ts`
+
+**Interfaces:**
+- Consumes: everything from Tasks 2–6.
+- Produces:
+  - `SUMMARY_V1: string` — two English sentences, neutral tone, the phrase "competition-restriction signals", never the banned words; input = fired signals + buyer + title.
+  - `summarize(input: { buyer; title; signals: Signal[] }, deps: { serv: LlmClient; model: string }): Promise<{ summary: string; audit: AuditEntry }>` (schema `{ summary: string }`, tools `[DISABLE_CONTENT_FILTER]`).
+  - `type ProgressStep = "ingest" | "extract" | "signals" | "verify" | "summary" | "done" | "failed"`
+  - `generateReport(noticeId: string, deps: PipelineDeps, onProgress?: (step: ProgressStep, detail?: string) => void): Promise<Report>` where `PipelineDeps = { serv: LlmClient; dolphin: LlmClient|null; servModel: string; fallbackModel: string; fetchImpl?: typeof fetch; now?: () => Date }`. Steps: validate id → `fetchNoticeXml` → `flattenEforms` → `extractFacts` (primary = dolphin ?? serv) → `evaluateSignals` → `verifyEvidence` → `scoreSignals` → `summarize` → `Report` with `status "pending_verification"`, `costUsd` = sum of audit costs, `droppedEvidence`. Any thrown error → `Report` with `status "failed"`, `error: message`, partial audit kept; `NoticeNotFoundError` message is `"Notice <id> was not found on TED"`.
+
+- [ ] **Step 1: Write failing tests** with stub clients wired to fixtures and a fake fetch serving the XML fixture: (a) happy path → `status "pending_verification"`, `riskScore > 0`, `signals.length === 8`, progress sequence `ingest, extract, signals, verify, summary, done`; (b) fake fetch 404 → `status "failed"`, `error` contains `"not found on TED"`, progress ends with `failed`, `audit` empty; (c) `isValidNoticeId` false → `failed` without any fetch.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement.**
+- [ ] **Step 4: Run** → PASS; `pnpm typecheck` clean.
+- [ ] **Step 5: Commit** `feat(core): summary step and report orchestrator`.
+
+### Task 8: Live smoke script and the Dolphin timing decision (day-1 gate)
+
+**Files:**
+- Create: `packages/core/scripts/live.ts`, `packages/core/package.json` script `test:live: tsx scripts/live.ts`
+- Modify: `docs/superpowers/plans/2026-11-03-tenderhound.md` (this file, section "Day-1 results" at the end)
+
+**Interfaces:**
+- Consumes: `generateReport`, `ServClient`, `DolphinClient`; reads `.env` from repo root (`SERV_API_KEY`, `SERV_MODEL`, `DOLPHIN_API_KEY`, `DOLPHIN_MODEL`).
+
+- [ ] **Step 1: Write `live.ts`**: runs `generateReport(process.argv[2] ?? "722731-2026")` twice: once with Dolphin as primary, once with `dolphin: null`; prints per-step durations, each audit entry (model, requestId, cost), fired signals with evidence, `droppedEvidence`, total cost; exits non-zero on `failed`.
+- [ ] **Step 2: Run** `pnpm --filter @tenderhound/core test:live` with real keys. Expected: both runs reach `pending_verification`; S2 fires for the NBP notice.
+- [ ] **Step 3: Decide the extractor** by the rule in spec §4.1b: Dolphin stays primary iff its extract step ≤ 45 s on 2 of 3 runs; otherwise `PipelineDeps.dolphin` is set to `null` in the web app and Dolphin is documented as the bulk-attachment path. Record timings and the decision under "Day-1 results" below.
+- [ ] **Step 4: Passport buyer smoke (manual, owner's machine):** install `kpass` (`irm https://cli.gokite.ai/install.ps1 | iex`), `kpass signup init --email <owner>`, create passkey at https://agentpassport.ai, `kpass sandbox on`, `kpass faucet drop --recipient $(kpass wallet address) --token pieUSD`, then `kpass session create --task-summary "x402 smoke" --max-amount-per-tx 1 --max-total-amount 2 --ttl 1h --assets USDC --output json`, approve, `kpass session execute --url https://passport.dev.gokite.ai/x402/test --method GET --output json`. Record under "Day-1 results" whether `x402.status_code` is 200; if not, Task 13 starts from its Step 5 fallback.
+- [ ] **Step 5: Commit** `chore(core): live smoke script and day-1 extractor decision`.
+
+### Task 9: Reppo client, criteria, verdict mapping
+
+**Files:**
+- Create: `packages/core/src/reppo/client.ts`, `packages/core/src/reppo/artifact.ts`, `packages/core/src/reppo/map.ts`
+- Test: `packages/core/test/reppo.test.ts`
+
+**Interfaces:**
+- Produces:
+  - `class ReppoClient` — `new ReppoClient({ apiKey, baseUrl = "https://eval.reppo.xyz/api/v1", sandbox: boolean, fetchImpl? })`; `submit(input: { payload: string; context: string; criteria: string[]; settlementMinutes: 10 }): Promise<{ evalId: string }>` (POST `/agents/eval-requests/submit`, header `Sandbox: true` when `sandbox`); `get(evalId): Promise<ReppoVerdict>` (GET `/agents/eval-requests/{evalId}`, maps `result.verdict.*`, `result.evidence.evidenceBasis`, first `result.verdicts[].critique` joined by `" | "`). HTTP 409 on submit → throws `ReppoBusyError` (caller re-queues).
+  - `reportToArtifact(report: Report): { payload: string; context: string; criteria: string[] }` — payload = English markdown ≤ 40 KB (title, buyer, score, each fired signal with evidence); context = "Independent review of a competition-restriction signals report on an EU public tender notice; the audience is bidders and journalists; tone must be neutral"; criteria = `["Every fired signal cites a verbatim quote from the notice", "Tone is neutral and descriptive; no accusation of wrongdoing", "Severity levels follow the stated rules (high/medium/low)"]`.
+  - `mapVerdictToStatus(v: ReppoVerdict): ReportStatus` — `SETTLED+accept → verified`, `SETTLED+revise → disputed`, `SETTLED+reject → withheld`, `FAILED → unverified`, `PENDING → pending_verification`.
+
+- [ ] **Step 1: Write failing tests** with fake fetch: submit sends `Sandbox: true` header only when `sandbox`; submit 409 → `ReppoBusyError`; `get` on a SETTLED body with `decision "accept"` → `mapVerdictToStatus` `"verified"`, with `"reject"` → `"withheld"`, FAILED → `"unverified"`; `reportToArtifact` payload length ≤ 40_000 and contains the S2 evidence quote.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement.**
+- [ ] **Step 4: Run** → PASS.
+- [ ] **Step 5: Commit** `feat(core): Reppo evaluation client and verdict mapping`.
+
+### Task 10: Web app scaffold, database, report API with background generation
+
+**Files:**
+- Create: `apps/web/` via `pnpm create next-app@latest apps/web --ts --tailwind --app --src-dir --no-eslint --import-alias "@/*"`; add deps `@tenderhound/core` (workspace), `drizzle-orm`, `@neondatabase/serverless`, `drizzle-kit`, `zod`
+- Create: `apps/web/src/lib/db/schema.ts`, `apps/web/src/lib/db/index.ts`, `apps/web/drizzle.config.ts`, `apps/web/src/lib/deps.ts`, `apps/web/src/lib/reports.ts`
+- Create: `apps/web/src/app/api/reports/route.ts` (POST), `apps/web/src/app/api/reports/[id]/route.ts` (GET), `apps/web/src/app/api/internal/report/[id]/route.ts` (GET, x402 upstream)
+- Test: `apps/web/src/lib/reports.test.ts` (Vitest, DB mocked by an in-memory `ReportStore` implementation)
+
+**Interfaces:**
+- Consumes: `generateReport`, `Report`, `ReportStatus`, `ServClient`, `DolphinClient`.
+- Produces:
+  - `reports` table: `notice_id text PK, status text, notice_language text, buyer_platform text, facts jsonb, signals jsonb, risk_score int, summary text, reppo jsonb, audit jsonb, cost_usd numeric, dropped_evidence int, error text, progress text, created_at timestamptz, updated_at timestamptz`; `reppo_queue` table: `notice_id text PK, enqueued_at timestamptz, attempts int`.
+  - `interface ReportStore { get(id: string): Promise<(Report & { progress: string|null })|null>; upsert(r: Report & { progress?: string }): Promise<void>; enqueueReppo(id: string): Promise<void>; nextReppo(): Promise<{ noticeId: string; attempts: number }|null>; dequeueReppo(id: string): Promise<void>; incrementReppoAttempts(id: string): Promise<number>; findReppoPending(): Promise<Report|null> }` with `DrizzleReportStore` and `MemoryReportStore` (same file `apps/web/src/lib/store.ts`).
+  - `startGeneration(noticeId, store, deps): Promise<"started"|"exists">` — if a report exists and `status !== "failed"` → `"exists"`; else upsert `{status:"generating"}` and run `generateReport` with `onProgress` writing `progress`; on completion upsert and, if `pending_verification`, `enqueueReppo`.
+  - `POST /api/reports` body `{ noticeId }` → 202 `{ noticeId, status }`; uses `after()` from `next/server` to run `startGeneration` after the response; route config `export const maxDuration = 300`.
+  - `GET /api/reports/[id]` → 200 `Report & { progress }` or 404.
+  - `GET /api/internal/report/[id]` → requires header `x-internal-secret === process.env.INTERNAL_SECRET` (else 401); 200 with the report JSON only when `status ∈ {verified, disputed}`; 404 when missing; **409** `{ status, retryAfterSeconds: 60 }` for every other status.
+  - `deps.ts`: builds `PipelineDeps` from env (`SERV_API_KEY`, `SERV_MODEL` default `gpt-6-luna`, `SERV_FALLBACK_MODEL` default `gpt-5.4-mini`, `DOLPHIN_API_KEY` optional, `DOLPHIN_PRIMARY` = `"true"|"false"` per Task 8 decision).
+
+- [ ] **Step 1: Scaffold** the app; add `.env.example` entries `DATABASE_URL`, `INTERNAL_SECRET`, `DOLPHIN_PRIMARY`, `REPPO_EVAL_API_KEY`, `REPPO_SANDBOX`.
+- [ ] **Step 2: Write failing tests** in `reports.test.ts` with `MemoryReportStore` and a stub `generateReport`: `startGeneration` returns `"started"` then `"exists"`; after completion the store holds `pending_verification` and the Reppo queue contains the id; the internal route handler (call it as a function with a mocked store) returns 409 for `pending_verification`, 200 for `verified`, 401 without secret.
+- [ ] **Step 3: Run** → FAIL.
+- [ ] **Step 4: Implement** schema, stores, `startGeneration`, routes; run `pnpm --filter web drizzle-kit push` against a Neon branch.
+- [ ] **Step 5: Run** tests → PASS; `pnpm dev` and `curl -X POST localhost:3000/api/reports -d '{"noticeId":"722731-2026"}'` then poll GET until `pending_verification`.
+- [ ] **Step 6: Commit** `feat(web): Next.js app, Neon schema, report API with background generation`.
+
+### Task 11: Web UI — home list, report page with progress, signals and audit tab
+
+**Files:**
+- Create: `apps/web/src/app/page.tsx`, `apps/web/src/app/report/[id]/page.tsx`, `apps/web/src/components/{notice-list,notice-form,progress-steps,signal-card,risk-badge,reppo-badge,audit-table}.tsx`, `apps/web/src/app/api/notices/route.ts` (GET → `searchNotices` default query, cached 1 h)
+- Test: `apps/web/src/components/signal-card.test.tsx` (render fired/unfired), manual check in browser
+
+**Interfaces:**
+- Consumes: `GET /api/notices`, `POST /api/reports`, `GET /api/reports/[id]`, `Signal`, `AuditEntry`, `ReppoVerdict`.
+- Produces: pages only. Copy pinned: page title "TenderHound — competition-restriction signals for EU tenders"; status badges `Pending independent verification`, `Verified by Reppo`, `Disputed — see critique`, `Withheld after independent review`, `Verification unavailable`; non-POL notices show `Non-PL notice: reduced confidence`; the audit tab lists each entry as `step · model · prompt version · request id (link to https://console.openserv.ai/usage) · tokens · cost · ms` and a footer `Total cost $X.XXXX · N quotes dropped as non-verbatim`.
+
+- [ ] **Step 1: Write the failing component test**: `SignalCard` with a fired high signal renders the id, `high`, and each evidence string inside `<blockquote>`; an unfired signal renders muted with no blockquote.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement** components and pages. Home: form (notice id, validated by `isValidNoticeId`) + list of recent PL IT notices with "Analyze" buttons; report page: client polling every 2 s while `generating`, `ProgressSteps` from `progress`, then risk badge, summary, 8 signal cards (fired first), Reppo badge, tabs `Signals | Audit`. Use shadcn `card`, `badge`, `tabs`, `table`.
+- [ ] **Step 4: Run** test → PASS; open `/report/722731-2026` in the browser, confirm the S2 quote renders verbatim and the audit tab shows three `-serv-multipath` rows.
+- [ ] **Step 5: Commit** `feat(web): home, report page with live progress, signals and audit tab`.
+
+### Task 12: Reppo worker (cron) and status transitions
+
+**Files:**
+- Create: `apps/web/src/app/api/cron/reppo/route.ts`, `apps/web/src/lib/reppo-worker.ts`, `apps/web/vercel.ts` (crons: `/api/cron/reppo` every minute; `CRON_SECRET` check)
+- Test: `apps/web/src/lib/reppo-worker.test.ts`
+
+**Interfaces:**
+- Consumes: `ReppoClient`, `reportToArtifact`, `mapVerdictToStatus`, `ReportStore`.
+- Produces: `runReppoTick(store: ReportStore, reppo: ReppoClient): Promise<{ submitted?: string; settled?: string }>` — (1) if a report has `reppo.status === "PENDING"`, `get` it; when SETTLED/FAILED, upsert `status = mapVerdictToStatus` and the verdict; (2) else `nextReppo()` → `submit(reportToArtifact(report))` → upsert `reppo` PENDING; `ReppoBusyError` → leave queued, increment `attempts`; `attempts >= 3` with errors → `status "unverified"`.
+
+- [ ] **Step 1: Write failing tests** with `MemoryReportStore` and a fake `ReppoClient`: queued report gets submitted and `reppo.status === "PENDING"`; a pending report whose fake `get` returns SETTLED/accept becomes `verified`; `ReppoBusyError` leaves it queued; third failed attempt → `unverified`; only one submission per tick.
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement** worker and route (`GET`, requires `Authorization: Bearer ${CRON_SECRET}`); env `REPPO_SANDBOX=true` locally.
+- [ ] **Step 4: Run** → PASS; trigger the route locally twice and watch the NBP report move to `verified` (sandbox returns `revise` → expect `disputed`; note it in the UI badge).
+- [ ] **Step 5: Commit** `feat(web): Reppo verification worker with queue and status transitions`.
+
+### Task 13: x402 seller service (Kite template) and Passport buyer test
+
+**Files:**
+- Create: `apps/x402/` from `https://github.com/gokite-ai/kite-x402-services/tree/main/templates/typescript-express` (copy `src/index.ts`, `src/kite.ts`, `package.json`, `tsconfig.json`; keep Apache-2.0 notice)
+- Modify: `apps/x402/src/index.ts` (route `/v1/report/:noticeId` → upstream `${UPSTREAM_URL}/${noticeId}` with header `x-internal-secret`), `.env.example` (`PAY_TO`, `KITE_NETWORK=testnet`, `UPSTREAM_URL`, `PRICE_USD=0.50`, `INTERNAL_SECRET`)
+- Test: `apps/x402/test/paywall.test.ts` (supertest: no payment → 402 with `PAYMENT-REQUIRED` header; upstream 409 → response 409 and no settle call on a mocked facilitator)
+
+**Interfaces:**
+- Consumes: `GET /api/internal/report/[id]` from Task 10.
+- Produces: public `GET https://<x402-host>/v1/report/{noticeId}` (402 → pay → JSON), `GET /healthz` free.
+
+- [ ] **Step 1: Write the failing paywall tests.**
+- [ ] **Step 2: Run** → FAIL.
+- [ ] **Step 3: Implement** the route and env wiring; deploy `apps/x402` as its own Vercel project (Express on Fluid Compute) with a public HTTPS URL.
+- [ ] **Step 4: Buyer test (manual, record output in README):** `kpass sandbox on` → `kpass faucet drop --recipient <addr> --token pieUSD` → `kpass session create --task-summary "buy tender report" --max-amount-per-tx 1 --max-total-amount 5 --ttl 24h --assets USDC --output json` → approve → `kpass session execute --url https://<x402-host>/v1/report/722731-2026 --method GET --output json` → expect `x402.status_code 200` and the report JSON; then `kpass activity --limit 5`. Also execute against `pending_verification` id → expect 409 and `usage.spent_total` unchanged.
+- [ ] **Step 5: Fallback gate (spec §6.4):** if Step 4 cannot pass by 10 XI, switch `apps/x402` to standard x402 on Base mainnet USDC (`@x402/express` default money parser, facilitator `https://x402.org/facilitator`, `PRICE_USD=0.05`) and re-run Step 4 with `kpass sandbox off` and a funded Passport allowance; record which path shipped in README.
+- [ ] **Step 6: Commit** `feat(x402): paid report endpoint on Kite x402 template`.
+
+### Task 14: Deploy, API docs page, write-up, demo assets
+
+**Files:**
+- Create: `apps/web/src/app/api-docs/page.tsx` (how agents buy: curl 402 flow + `kpass` one-liner + price), `README.md` (replace), `docs/submission/write-up.md`, `docs/submission/demo-script.md`, `docs/submission/x-post.md`
+- Modify: `docs/hackathon-checklist.md` (tick items)
+
+- [ ] **Step 1: Deploy** `apps/web` to Vercel production via `vercel:deploy` skill; set env with `vercel:env`; add the cron; run Task 10 Step 5 curl against production.
+- [ ] **Step 2: Pre-generate and verify** five reference reports (NBP 722731-2026 + four from the default search) with **real** Reppo evaluations (`REPPO_SANDBOX=false`, one at a time, ~15 min each).
+- [ ] **Step 3: Stability check**: run `test:live` five times on luna; if any run yields `riskScore 0` with eight `none`, raise `fallbackModel` usage to "always for group B" and note it in the write-up's limitations.
+- [ ] **Step 4: Write** `write-up.md` (what it does; how it uses SERV: multipath, shadow agent, content-filter marker, request-id audit; Dolphin/Reppo/Kite roles; costs per report; limitations), `demo-script.md` (spec §4.4, timed), `x-post.md` (≤ 280 chars, tags @openservai @dphnAI @GoKiteAI @reppo), `README.md` (quick start, architecture diagram as text, env table, buyer instructions).
+- [ ] **Step 5: Record** the 3-minute video following `demo-script.md`; upload; put the link in `write-up.md`.
+- [ ] **Step 6: Submit** via https://openserv.typeform.com/submissions02 after posting on X; paste the post link. Commit `docs: submission write-up, demo script and README`.
+
+---
+
+## Day-1 results
+
+_(filled in by Task 8)_
+- Dolphin extract timings: …
+- Decision: `DOLPHIN_PRIMARY=` …
+- Passport buyer smoke against `https://passport.dev.gokite.ai/x402/test`: …
