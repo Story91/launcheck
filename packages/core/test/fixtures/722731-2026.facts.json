@@ -1,0 +1,53 @@
+{
+  "buyer": "Narodowy Bank Polski",
+  "title": "System wykrywania anomalii w ruchu SMTP w oparciu o Self-Learning AI",
+  "cpv": [
+    "48000000",
+    "72250000",
+    "72263000",
+    "72268000"
+  ],
+  "estimatedValue": "3157900",
+  "currency": "PLN",
+  "deadlineForTenders": "2026-11-19T12:00:00+01:00",
+  "publicationDate": "2026-10-20+02:00",
+  "daysToDeadline": 30,
+  "procedureType": "open",
+  "lots": null,
+  "awardCriteria": [
+    {
+      "name": "Cena brutto oferty",
+      "weight": "100%"
+    }
+  ],
+  "participationConditions": [
+    "5. O udzielenie zamówienia mogą się ubiegać Wykonawcy, którzy nie podlegają wykluczeniu na podstawie: 5.1. art. 108 ust. 1 oraz 109 ust. 1 pkt. 4, 8 – 10 ustawy; 5.2. art. 7 ust. 1 ustawy z 13.04.2022 r. o szczególnych rozwiązaniach w zakresie przeciwdziałania wspieraniu agresji na Ukrainę oraz służących ochronie bezpieczeństwa narodowego (Dz.U. z 2025 r. poz. 514); 5.3. art. 5k rozporządzenia Rady (UE) nr 833/2014 z dnia 31 lipca 2014 r. dotyczącego środków ograniczających w związku z działaniami Rosji destabilizującymi sytuację na Ukrainie.",
+    "1. Wykonawca jest zobowiązany wykazać, że dysponuje lub realizując zamówienie będzie dysponował co najmniej 2 osobami, zdolnymi do wykonania zamówienia, które będą uczestniczyły w realizacji zamówienia, a każda z tych osób posługuje się w mowie i w piśmie językiem polskim oraz legitymuje się odpowiednimi kwalifikacjami zawodowymi i doświadczeniem, niezbędnymi do wykonania zamówienia, tj.: 1.1. posiada doświadczenie w wykonaniu co najmniej 1 (jednego) przedsięwzięcia obejmującego wdrożenie zaoferowanego Zamawiającemu Systemu (obejmującego Urządzenie, zainstalowane na nim Oprogramowanie) do probabilistycznej analizy zagrożeń oraz zaawansowanej ochrony poczty elektronicznej w środowisku lokalnym (on-premises) dla systemu pocztowego Microsoft Exchange; 1.2. posiada doświadczenie w wykonaniu lub wykonywaniu Usług serwisowych dla Systemu do probabilistycznej analizy zagrożeń oraz zaawansowanej ochrony poczty elektronicznej w środowisku lokalnym (on-premises) dla systemu pocztowego Microsoft Exchange."
+  ],
+  "technicalRequirements": [
+    "Wykonanie przez Wykonawcę Usług instalacyjno-wdrożeniowych wraz z integracją z Systemem DarkTrace oraz przygotowaniem raportów z testów akceptacyjnych, a także przeniesienie autorskich praw majątkowych do raportu oraz praw zależnych;",
+    "Dostarczenie przez Wykonawcę do Lokalizacji Zamawiającego, na własny koszt i ryzyko, Urządzenia (stanowiącego własność Producenta przez cały okres obowiązywania Umowy) niezbędnego do prawidłowego uruchomienia i działania Systemu, dostarczenie Oprogramowania (stanowiącego własność Producenta przez cały okres obowiązywania Umowy), szczegółowych warunków Licencji Oprogramowania (określonych przez Producenta Oprogramowania) wraz z dokumentami potwierdzającymi udzielenie Zamawiającemu Licencji Oprogramowania, a także dostarczenie potwierdzenia, że Producent będzie świadczył Zamawiającemu Asystę techniczną Producenta oraz zapewnienie przez Wykonawcę korzystania przez Zamawiającego z Urządzenia wraz z zainstalowanym na nim Oprogramowaniem i z niezbędnych Licencji Oprogramowania;",
+    "Zapewnienie przez Wykonawcę świadczenia przez Producenta Asysty technicznej Producenta dla Systemu;",
+    "Przeprowadzenie przez Wykonawcę warsztatów szkoleniowych dla maksymalnie 8. administratorów Systemu oraz przeniesienie autorskich praw majątkowych i praw zależnych do utworów w zakresie materiałów szkoleniowych;",
+    "Udzielenie przez Wykonawcę dla Zamawiającego gwarancji na wykonane Usługi instalacyjno-wdrożeniowe Systemu, obejmującą dostarczone Urządzenie i Oprogramowanie."
+  ],
+  "brandOrProductNames": [
+    "SMTP",
+    "Microsoft Exchange",
+    "DarkTrace"
+  ],
+  "equivalenceClausePresent": false,
+  "incumbentSystemMentioned": "DarkTrace",
+  "contractDuration": null,
+  "notes": [
+    "Zamawiający ustala wadium: 63 000,00 PLN (słownie złotych: sześćdziesiąt trzy tysiące i 00/100).",
+    "Wykonawca jest związany ofertą do dnia 16.02.2027 r.",
+    "Zamawiający przewiduje zastosowanie procedury postępowania, o której mowa w art. 139 ustawy.",
+    "Zamawiający nie przewiduje udzielenia zamówienia, o których mowa w art. 214 ust.1 pkt 8 ustawy.",
+    "Zamawiający wyznaczył termin składania ofert krótszy niż termin określony w art. 138 ust. 1 ustawy, ponieważ składanie ofert odbywa się w całości przy użyciu środków komunikacji elektronicznej, w sposób określony w art. 63 ust. 1 ustawy.",
+    "Złożenie oferty w postępowaniu możliwe jest tylko przez wskazaną Platformę Zakupową NBP.",
+    "Warunkiem przystąpienia do postępowania i złożenia oferty jest posiadanie konta na platformie MarketPlanet.",
+    "W postępowaniu ofertę oraz oświadczenie z art. 125 ust. 1 ustawy składa się pod rygorem nieważności w formie elektronicznej (tj. w postaci elektronicznej opatrzonej kwalifikowanym podpisem elektronicznym).",
+    "Zamawiający, pod rygorem odrzucenia oferty, nie dopuszcza świadczeń, pochodzących z państw nie będących stroną Porozumienia Światowej Organizacji Handlu w sprawie zamówień rządowych lub innych umów międzynarodowych, których stroną jest Unia Europejska, gwarantujących na zasadzie wzajemności i równości dostęp do rynku zamówień publicznych;"
+  ]
+}
