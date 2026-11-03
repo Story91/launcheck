@@ -335,7 +335,9 @@ it("severity points match the spec", () => {
 
 ## Day-1 results
 
-_(filled in by Task 8)_
-- Dolphin extract timings: …
-- Decision: `DOLPHIN_PRIMARY=` …
-- Passport buyer smoke against `https://passport.dev.gokite.ai/x402/test`: …
+Run 2026-11-04 00:30 on notice 722731-2026 (`pnpm --filter @tenderhound/core test:live`):
+- Dolphin extract (DeepSeek V4.1 Flash, `max_tokens 3000`): **32.9 s, empty content** (hit the output cap; spike without cap took 68–87 s and 10–12K output tokens) → fallback to SERV gemini-3.1-flash-lite 8.4 s. Rule "≤45 s on 2 of 3 runs" not met.
+- **Decision: `DOLPHIN_PRIMARY=false`.** Extraction runs on SERV `gemini-3.1-flash-lite` with strict schema (2.1 s, ~$0.004). Dolphin stays wired as the bulk-attachment path (stretch) and is described as such in the write-up.
+- SERV-only full pipeline: **26.9 s, $0.0092**, risk 35/100, S2 BRAND_LOCK high ("Integracja z Systemem DarkTrace"), S7 low, S8 low; 0 non-verbatim quotes. Signal groups on gpt-6-luna: 12–20 s each, run in parallel.
+- Fix applied from this run: with no Dolphin, the primary extraction call now uses the strict JSON schema (loose `json_object` on gemini returned an array once). S8 prompt tightened to exclude standard conditions (WTO GPA origin rules, staffing requirements).
+- Passport buyer smoke against `https://passport.dev.gokite.ai/x402/test`: **pending, owner's machine** (kpass install + signup + passkey). Task 13 Step 5 fallback (Base mainnet USDC) applies if not green by 10 XI.

@@ -64,6 +64,18 @@ describe("extractFacts", () => {
     expect(fallback.requests[0]?.tools?.map((t) => t.function.name)).toEqual(["serv_disable_content_filter"]);
   });
 
+  it("uses a strict schema for the primary when primaryJsonSchema is set (SERV-only mode)", async () => {
+    const primary = new StubClient(() => ok(factsJson, "gemini-3.1-flash-lite"));
+    const fallback = new StubClient(() => {
+      throw new Error("must not be called");
+    });
+    const res = await extractFacts("t", "POL", { primary, fallback, primaryModel: "gemini-3.1-flash-lite", fallbackModel: "gemini-3.1-flash-lite", primaryJsonSchema: true });
+    expect(res.audit).toHaveLength(1);
+    expect(primary.requests[0]?.jsonObject).toBeUndefined();
+    expect(primary.requests[0]?.jsonSchema?.name).toBe("tender_facts");
+    expect(primary.requests[0]?.tools?.map((t) => t.function.name)).toEqual(["serv_disable_content_filter"]);
+  });
+
   it("falls back when the primary returns JSON that does not match the schema", async () => {
     const primary = new StubClient(() => ok('{"buyer":"x"}'));
     const fallback = new StubClient(() => ok(factsJson));

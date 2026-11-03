@@ -10,6 +10,8 @@ export interface ExtractDeps {
   fallback: LlmClient;
   primaryModel: string;
   fallbackModel: string;
+  /** Use the strict JSON schema on the primary call too (SERV-only mode); default is loose json_object for Dolphin. */
+  primaryJsonSchema?: boolean;
 }
 
 export interface ExtractResult {
@@ -62,7 +64,9 @@ export async function extractFacts(text: string, language: string, deps: Extract
   const primaryFacts = await attempt(
     deps.primary,
     "extract.primary",
-    { model: deps.primaryModel, system: EXTRACT_V1, user, jsonObject: true, temperature: 0 },
+    deps.primaryJsonSchema
+      ? { model: deps.primaryModel, system: EXTRACT_V1, user, jsonSchema: { name: "tender_facts", schema: EXTRACT_SCHEMA }, tools: [DISABLE_CONTENT_FILTER] }
+      : { model: deps.primaryModel, system: EXTRACT_V1, user, jsonObject: true, temperature: 0 },
     language,
     audit,
   );

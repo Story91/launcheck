@@ -74,6 +74,7 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
       fallback: deps.serv,
       primaryModel: deps.dolphin ? (deps.dolphinModel ?? DOLPHIN_DEFAULT_MODEL) : extractModel,
       fallbackModel: extractModel,
+      primaryJsonSchema: deps.dolphin === null,
     });
     report.facts = extracted.facts;
     report.audit.push(...extracted.audit);
