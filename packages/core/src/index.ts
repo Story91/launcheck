@@ -19,3 +19,6 @@ export * from "./pipeline/score";
 export * from "./prompts/summary.v1";
 export * from "./pipeline/summary";
 export * from "./pipeline/run";
+export * from "./reppo/client";
+export * from "./reppo/artifact";
+export * from "./reppo/map";
