@@ -7,7 +7,9 @@ Hackathon OpenServ "SERV Hackathon — Edition 02", 2–15 listopada 2026, onlin
 
 - **Wybrany pomysł (3 XI 2026): TenderHound** — audytowalne raporty sygnałów ograniczenia konkurencji dla ogłoszeń z TED, z werdyktem Reppo i sprzedażą per-call przez x402 (Kite). Spec: `docs/superpowers/specs/2026-11-03-tenderhound-design.md`. Track: Open (do potwierdzenia).
 - Odrzucone alternatywy i dlaczego: `docs/ideas/2026-11-03-five-ideas.md`, `docs/research/06-prior-art-crypto.md`.
-- Faza: spec → plan (`docs/superpowers/plans/`) → kod. `scratch/` to throwaway spike'i, do skasowania po scaffoldzie.
+- Plan: `docs/superpowers/plans/2026-11-03-tenderhound.md` (14 zadań; stan w ledgerze `.superpowers/sdd/2026-11-03-tenderhound/progress.md`).
+- **Stan 4 XI 2026:** zadania 1–13 zrobione na branchu `feat/tenderhound` (core 62 testów, web 17, x402 5). Działa lokalnie end-to-end na prawdziwym SERV (`pnpm --filter @tenderhound/web dev`, store in-memory bez `DATABASE_URL`). Otwarte: deploy na Vercel + Neon, klucz Reppo (cron zwraca `skipped` bez niego), test kupującego `kpass` na Kite testnet (fallback: Base mainnet USDC do 10 XI), wideo, post na X, zgłoszenie. Materiały: `docs/submission/`.
+- Struktura: `packages/core` (pipeline, bez frameworka), `apps/web` (Next.js), `apps/x402` (Express, template Kite).
 
 ## Twarde wymagania hackathonu
 
