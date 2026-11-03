@@ -43,6 +43,12 @@ describe("verifyEvidence", () => {
     expect(signals[0]?.fired).toBe(true);
   });
 
+  it("accepts a short quote when it is an exact string value in the facts (e.g. a CPV code)", () => {
+    const { signals, dropped } = verifyEvidence([sig(["48000000"], { id: "S7_NO_LOTS_LARGE_SCOPE", severity: "low" })], source, JSON.stringify({ cpv: ["48000000", "72250000"] }));
+    expect(dropped).toBe(0);
+    expect(signals[0]?.fired).toBe(true);
+  });
+
   it("accepts quotes that exist only in the extracted facts", () => {
     const { dropped } = verifyEvidence([sig(['"brandOrProductNames":["DarkTrace"]'])], source, factsJson);
     expect(dropped).toBe(0);

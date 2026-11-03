@@ -23,12 +23,15 @@ export interface VerifyResult {
 /** Keeps only evidence that is a verbatim substring of the source (notice text + extracted facts); unfires signals left without evidence. */
 export function verifyEvidence(signals: Signal[], sourceText: string, factsJson: string): VerifyResult {
   const haystack = normalizeForMatch(`${sourceText}\n${factsJson}`);
+  const factsNormalized = normalizeForMatch(factsJson);
   let dropped = 0;
   const verified = signals.map((signal) => {
     if (!signal.fired) return signal;
     const kept = signal.evidence.filter((e) => {
       const needle = normalizeForMatch(e).replace(/^"|"$/g, "");
-      const ok = needle.length >= MIN_EVIDENCE_LENGTH && haystack.includes(needle);
+      // Short quotes are accepted only when they are a whole string value in the facts (codes, short names), never JSON keys.
+      const longEnough = needle.length >= MIN_EVIDENCE_LENGTH || (needle.length >= 4 && factsNormalized.includes(`"${needle}"`));
+      const ok = longEnough && haystack.includes(needle);
       if (!ok) dropped++;
       return ok;
     });
