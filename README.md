@@ -73,7 +73,7 @@ Reports that are not yet verified answer `409 { status, retryAfterSeconds }` and
 
 ## Deploy (Vercel)
 
-Import the repository as one project (root `./`, preset *Services*); `vercel.json` declares the `web` (Next.js) and `x402` (Express) services, routes `/v1/*` and `/healthz` to x402 and everything else to web, binds `WEB_INTERNAL_URL` into x402, and schedules `/api/cron/reppo` every minute. Set the environment variables above on the project, then run `pnpm --filter @tendr/web db:push` once with `DATABASE_URL` to create the tables.
+Import the repository as one project (root `./`, preset *Services*); `vercel.json` declares the `web` (Next.js) and `paywall` (Express, directory `apps/x402`) services, routes `/v1/*` and `/healthz` to x402 and everything else to web, binds `WEB_INTERNAL_URL` into x402, and schedules `/api/cron/reppo` every minute. Set the environment variables above on the project, then run `pnpm --filter @tendr/web db:push` once with `DATABASE_URL` to create the tables.
 
 ## Example
 

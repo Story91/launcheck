@@ -5,7 +5,7 @@
       "root": "apps/web",
       "framework": "nextjs"
     },
-    "x402": {
+    "paywall": {
       "root": "apps/x402",
       "framework": "express",
       "bindings": [
@@ -14,8 +14,8 @@
     }
   },
   "rewrites": [
-    { "source": "/v1/(.*)", "destination": { "service": "x402" } },
-    { "source": "/healthz", "destination": { "service": "x402" } },
+    { "source": "/v1/(.*)", "destination": { "service": "paywall" } },
+    { "source": "/healthz", "destination": { "service": "paywall" } },
     { "source": "/(.*)", "destination": { "service": "web" } }
   ],
   "crons": [{ "path": "/api/cron/reppo", "schedule": "* * * * *" }]
