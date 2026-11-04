@@ -56,3 +56,32 @@ describe("searchNotices", () => {
     expect(typeof result[0]?.title).toBe("string");
   });
 });
+
+describe("TED API ingest", () => {
+  it("flattens an API notice into field: text lines in the notice language", async () => {
+    const { flattenApiNotice } = await import("../src/ted/api");
+    const api = (await import("./fixtures/722731-2026.api.json")).default as { notices: Record<string, unknown>[] };
+    const flat = flattenApiNotice(api.notices[0]!);
+    expect(flat.language).toBe("POL");
+    expect(flat.text).toContain("integracją z Systemem DarkTrace");
+    expect(flat.text).toContain("Cena brutto oferty");
+    expect(flat.text).toContain("Wadium w wysokości 63 000,00 PLN");
+    expect(flat.text).not.toContain("Lengyelország");
+    expect(flat.buyerPlatform).toBe("https://e-zamowienia.nbp.pl");
+  });
+
+  it("fetches a notice through the API and fails with NoticeNotFoundError when the API returns nothing", async () => {
+    const { fetchNoticeViaApi } = await import("../src/ted/api");
+    const api = (await import("./fixtures/722731-2026.api.json")).default;
+    const calls: string[] = [];
+    const ok = (async (url: string, init: RequestInit) => {
+      calls.push(JSON.parse(String(init.body)).query);
+      return new Response(JSON.stringify(api), { status: 200, headers: { "content-type": "application/json" } });
+    }) as unknown as typeof fetch;
+    const notice = await fetchNoticeViaApi("722731-2026", ok);
+    expect(notice["publication-number"]).toBe("722731-2026");
+    expect(calls[0]).toBe("publication-number=722731-2026");
+    const empty = (async () => new Response(JSON.stringify({ notices: [] }), { status: 200 })) as unknown as typeof fetch;
+    await expect(fetchNoticeViaApi("999999-2026", empty)).rejects.toBeInstanceOf(NoticeNotFoundError);
+  });
+});

@@ -22,3 +22,4 @@ export * from "./pipeline/run";
 export * from "./reppo/client";
 export * from "./reppo/artifact";
 export * from "./reppo/map";
+export * from "./ted/api";

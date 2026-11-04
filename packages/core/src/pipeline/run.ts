@@ -1,7 +1,8 @@
 import { DOLPHIN_DEFAULT_MODEL } from "../llm/dolphin";
 import type { LlmClient } from "../llm/types";
-import { fetchNoticeXml, isValidNoticeId } from "../ted/client";
-import { flattenEforms } from "../ted/flatten";
+import { fetchNoticeViaApi, flattenApiNotice } from "../ted/api";
+import { NoticeNotFoundError, fetchNoticeXml, isValidNoticeId } from "../ted/client";
+import { flattenEforms, type FlatNotice } from "../ted/flatten";
 import type { AuditEntry, Report } from "../types";
 import { extractFacts } from "./extract";
 import { scoreSignals } from "./score";
@@ -50,6 +51,16 @@ function emptyReport(noticeId: string, createdAt: string): Report {
 
 const sumCost = (audit: AuditEntry[]) => audit.reduce((sum, a) => sum + (a.costUsd ?? 0), 0);
 
+/** The official TED API first (reachable from cloud IPs); the website XML only as a fallback for notices the API does not return. */
+async function ingestNotice(noticeId: string, fetchImpl: typeof fetch): Promise<FlatNotice> {
+  try {
+    return flattenApiNotice(await fetchNoticeViaApi(noticeId, fetchImpl));
+  } catch (e) {
+    if (!(e instanceof NoticeNotFoundError)) throw e;
+    return flattenEforms(await fetchNoticeXml(noticeId, fetchImpl));
+  }
+}
+
 /** Full pipeline: TED → facts → signals → verbatim check → score → summary. Never throws; failures become status "failed". */
 export async function generateReport(noticeId: string, deps: PipelineDeps, onProgress: ProgressCallback = () => {}): Promise<Report> {
   const now = deps.now ?? (() => new Date());
@@ -63,8 +74,7 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
 
   try {
     onProgress("ingest");
-    const xml = await fetchNoticeXml(noticeId, deps.fetchImpl ?? fetch);
-    const flat = flattenEforms(xml);
+    const flat = await ingestNotice(noticeId, deps.fetchImpl ?? fetch);
     report.noticeLanguage = flat.language;
     report.buyerPlatform = flat.buyerPlatform;
 

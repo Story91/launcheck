@@ -34,8 +34,15 @@ const servStub: LlmClient = {
   },
 };
 
-const fetchXml = (async (url: string) =>
-  url.includes("722731-2026") ? new Response(xml, { status: 200 }) : new Response("nope", { status: 404 })) as unknown as typeof fetch;
+const apiFixture = readFileSync(new URL("./fixtures/722731-2026.api.json", import.meta.url), "utf8");
+/** TED API answers for the NBP notice (empty result otherwise); the website XML is the fallback path. */
+const fetchXml = (async (url: string, init?: RequestInit) => {
+  if (url.includes("api.ted.europa.eu")) {
+    const q = JSON.parse(String(init?.body)).query as string;
+    return new Response(q.includes("722731-2026") ? apiFixture : JSON.stringify({ notices: [] }), { status: 200, headers: { "content-type": "application/json" } });
+  }
+  return url.includes("722731-2026") ? new Response(xml, { status: 200 }) : new Response("nope", { status: 404 });
+}) as unknown as typeof fetch;
 
 const deps = (over: Partial<PipelineDeps> = {}): PipelineDeps => ({
   serv: servStub,
@@ -57,7 +64,7 @@ describe("generateReport", () => {
     expect(report.riskScore).toBeGreaterThan(0);
     expect(report.summary).toContain("competition-restriction");
     expect(report.noticeLanguage).toBe("POL");
-    expect(report.buyerPlatform).toBe("https://e-zamowienia.nbp.pl/");
+    expect(report.buyerPlatform).toMatch(/^https://e-zamowienia.nbp.pl/?$/);
     expect(report.facts?.buyer).toBe("Narodowy Bank Polski");
     expect(report.costUsd).toBeCloseTo(0.005, 6);
     expect(report.audit.map((a) => a.step)).toEqual(["extract.primary", "signals.A", "signals.B", "signals.C", "summary"]);
