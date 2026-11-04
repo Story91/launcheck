@@ -90,8 +90,10 @@ export class ReppoClient {
     });
     const json = (await res.json().catch(() => ({}))) as ReppoEvalResponse & { error?: string };
     if (!res.ok) throw new ReppoError(json.error ?? `Reppo get failed: HTTP ${res.status}`, res.status);
-    const status = json.status ?? "PENDING";
-    const verdict = json.result?.verdict;
+    // Reppo also returns DENIED (request rejected before judging); for us that is a failed verification.
+    const rawStatus = (json.status as string | undefined) ?? "PENDING";
+    const status: ReppoVerdict["status"] = rawStatus === "SETTLED" ? "SETTLED" : rawStatus === "PENDING" ? "PENDING" : "FAILED";
+    const verdict = status === "SETTLED" ? json.result?.verdict : undefined;
     const critiques = (json.result?.verdicts ?? []).map((v) => v.critique).filter((c): c is string => !!c);
     const nowIso = this.now().toISOString();
     return {

@@ -63,6 +63,18 @@ describe("ReppoClient.get", () => {
     expect(v.settledAt).toBe("2026-11-04T10:00:00.000Z");
   });
 
+  it("maps a DENIED evaluation to status FAILED with the decision cleared", async () => {
+    const { fetchImpl } = fakeFetch(() => ({ body: { evalId: "ev-3", status: "DENIED", result: null } }));
+    const v = await new ReppoClient({ apiKey: "k", sandbox: false, fetchImpl }).get("ev-3");
+    expect(v.status).toBe("FAILED");
+    expect(mapVerdictToStatus(v)).toBe("unverified");
+  });
+
+  it("throws ReppoError with status 402 when credits run out on submit", async () => {
+    const { fetchImpl } = fakeFetch(() => ({ status: 402, body: { error: "insufficient credits" } }));
+    await expect(new ReppoClient({ apiKey: "k", sandbox: false, fetchImpl }).submit({ payload: "p", context: "c", criteria: [], settlementMinutes: 10 })).rejects.toMatchObject({ name: "ReppoError", status: 402 });
+  });
+
   it("maps a pending evaluation with null verdict fields", async () => {
     const { fetchImpl } = fakeFetch(() => ({ body: { evalId: "ev-2", status: "PENDING" } }));
     const v = await new ReppoClient({ apiKey: "k", sandbox: false, fetchImpl }).get("ev-2");

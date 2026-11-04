@@ -30,3 +30,6 @@ __pycache__/
 # local scratch
 tmp/
 scratch/
+
+# executing-plans workspace (ledger, briefs, review packages)
+.superpowers/
