@@ -1,5 +1,5 @@
 import express from "express";
-import { createApp } from "./app.js";
+import { createApp } from "./server.js";
 import { resolveConfig } from "./config.js";
 
 const resolved = resolveConfig(process.env);

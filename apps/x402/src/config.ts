@@ -1,4 +1,4 @@
-import type { AppOptions } from "./app.js";
+import type { AppOptions } from "./server.js";
 
 export type ResolvedConfig = { ok: true; options: AppOptions } | { ok: false; missing: string[] };
 
