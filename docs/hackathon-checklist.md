@@ -16,8 +16,12 @@ Formularz: https://openserv.typeform.com/submissions02
 - [x] `packages/core` pipeline + 62 testy; live run na NBP 722731-2026: 27 s, $0.009, S2 BRAND_LOCK high
 - [x] `apps/web` UI + API + worker Reppo (17 testów), zweryfikowane w przeglądarce
 - [x] `apps/x402` paywall (5 testów)
-- [ ] Neon Postgres (`DATABASE_URL`) + `drizzle-kit push`
-- [ ] Deploy `apps/web` i `apps/x402` na Vercel, env, cron
+- [x] Repo GitHub `Story91/tendr` (main + feat/tendr), historia jako Story91
+- [x] Projekt Vercel `tendr` w teamie Story Project's (prj_fYlagLPSrA3a5sWrOG7NhowedWQA), preset Services, powiązany z GitHubem; 10 zmiennych wgranych (modele, tryby, INTERNAL_SECRET, CRON_SECRET)
+- [ ] W panelu Vercel: Settings → Deployment Protection → wyłączyć Vercel Authentication (inaczej demo i x402 wymagają logowania)
+- [ ] Wkleić sekrety z `.env.vercel`: SERV_API_KEY, REPPO_EVAL_API_KEY, (DOLPHIN_API_KEY), PAY_TO
+- [ ] Neon Postgres: Vercel → Storage → Create Database → Neon (doda `DATABASE_URL` automatycznie) + `pnpm --filter @tendr/web db:push`
+- [ ] Redeploy po dodaniu zmiennych; cron `/api/cron/reppo` co minutę z vercel.json
 - [ ] 5 raportów referencyjnych z prawdziwą ewaluacją Reppo
 - [ ] Zakup przez `kpass` na testnecie (fallback: Base mainnet USDC do 10 XI)
 
