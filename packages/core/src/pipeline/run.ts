@@ -51,6 +51,25 @@ function emptyReport(noticeId: string, createdAt: string): Report {
 
 const sumCost = (audit: AuditEntry[]) => audit.reduce((sum, a) => sum + (a.costUsd ?? 0), 0);
 
+const SIGNAL_LABELS: Record<string, string> = {
+  S1_SHORT_DEADLINE: "a short deadline",
+  S2_BRAND_LOCK: "a named brand or incumbent system",
+  S3_OVER_SPECIFICATION: "over-specified requirements",
+  S4_EXPERIENCE_LOCK: "experience tied to one supplier",
+  S5_PRICE_WEIGHT_LOW: "a low price weight with subjective criteria",
+  S6_DISPROPORTIONATE_CONDITIONS: "disproportionate financial conditions",
+  S7_NO_LOTS_LARGE_SCOPE: "no lots across a broad scope",
+  S8_UNUSUAL_NOTES: "unusual organisational requirements",
+};
+
+/** Deterministic two-sentence summary used when the SERV summary call is unavailable. */
+export function templateSummary(buyer: string, signals: Report["signals"]): string {
+  const fired = signals.filter((s) => s.fired);
+  if (fired.length === 0) return `No competition-restriction signals were detected in the notice text published by ${buyer}. The eight signals were evaluated and none met its threshold.`;
+  const list = fired.map((s) => `${SIGNAL_LABELS[s.id] ?? s.id} (${s.severity})`).join(", ");
+  return `The notice published by ${buyer} shows ${fired.length} competition-restriction signal${fired.length === 1 ? "" : "s"}: ${list}. Each signal cites a verbatim quote from the notice; see the signal list for details.`;
+}
+
 /** The official TED API first (reachable from cloud IPs); the website XML only as a fallback for notices the API does not return. */
 async function ingestNotice(noticeId: string, fetchImpl: typeof fetch): Promise<FlatNotice> {
   try {
@@ -105,12 +124,18 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
     report.riskScore = scoreSignals(verified.signals);
 
     onProgress("summary");
-    const summarized = await summarize(
-      { buyer: extracted.facts.buyer, title: extracted.facts.title, signals: verified.signals },
-      { serv: deps.serv, model: deps.servModel },
-    );
-    report.summary = summarized.summary;
-    report.audit.push(summarized.audit);
+    try {
+      const summarized = await summarize(
+        { buyer: extracted.facts.buyer, title: extracted.facts.title, signals: verified.signals },
+        { serv: deps.serv, model: deps.servModel },
+      );
+      report.summary = summarized.summary;
+      report.audit.push(summarized.audit);
+    } catch (e) {
+      // The signals are the product; a missing narrative must not throw away a paid-for evaluation.
+      report.summary = templateSummary(extracted.facts.buyer, verified.signals);
+      report.audit.push({ step: "summary", model: deps.servModel, promptVersion: "SUMMARY_V1", requestId: null, inputHash: "", usage: { promptTokens: 0, completionTokens: 0 }, costUsd: null, durationMs: 0, note: `summary unavailable, template used: ${(e as Error).message}` });
+    }
 
     onProgress("done");
     return { ...report, status: "pending_verification", costUsd: sumCost(report.audit), updatedAt: now().toISOString() };

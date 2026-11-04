@@ -98,6 +98,21 @@ describe("generateReport", () => {
     expect(report.signals.find((s) => s.id === "S2_BRAND_LOCK")?.fired).toBe(false);
   });
 
+  it("keeps the report when only the summary step fails, with a template summary and an audit note", async () => {
+    const noSummary: LlmClient = {
+      async chat(req) {
+        if (req.jsonSchema?.name === "summary") throw new Error("Insufficient credits for this request");
+        return servStub.chat(req);
+      },
+    };
+    const report = await generateReport("722731-2026", deps({ serv: noSummary }));
+    expect(report.status).toBe("pending_verification");
+    expect(report.riskScore).toBeGreaterThan(0);
+    expect(report.summary).toMatch(/competition-restriction signals/);
+    expect(report.audit.at(-1)?.step).toBe("summary");
+    expect(report.audit.at(-1)?.note).toContain("Insufficient credits");
+  });
+
   it("fails the report when every signal group is unavailable", async () => {
     const refusing: LlmClient = {
       async chat(req) {

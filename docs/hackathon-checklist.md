@@ -22,9 +22,11 @@ Formularz: https://openserv.typeform.com/submissions02
 - [ ] W panelu Vercel sprawdzić Settings → Deployment Protection (Vercel Authentication włączona domyślnie; produkcyjny alias odpowiadał 200, previews mogą wymagać logowania)
 - [x] Sekrety wklejone (SERV, Reppo, Dolphin); Neon podłączony przez integrację Vercel (prefix STORAGE → `STORAGE_DATABASE_URL`); tabele utworzone przez `POST /api/admin/migrate` (bearer CRON_SECRET)
 - [x] Ingest przez oficjalne API TED (strona XML ted.europa.eu zwraca z Vercela 202/WAF); raport NBP na produkcji: 35 s, 55/100, S2+S4+S7
-- [ ] **PAY_TO w Vercelu to wciąż placeholder `<twój adres EVM 0x...>` — wpisać prawdziwy adres i zrobić redeploy** (402 z paywalla zwraca ten placeholder jako payTo)
+- [x] PAY_TO ustawione; 402 z paywalla podaje prawdziwy adres, Kite testnet, 0.5 pieUSD
 - [x] Cron `/api/cron/reppo` co minutę działa (vercel.json)
-- [ ] 5 raportów referencyjnych z prawdziwą ewaluacją Reppo
+- [x] Pierwsza prawdziwa ewaluacja Reppo na produkcji: NBP 722731-2026 → SETTLED, decision revise, score 77, confidence medium (cytaty verbatim OK, severity OK, uwaga: ton opisów lekko negatywny → do poprawy w prompcie)
+- [ ] **SERV: saldo $0.00 — doładować konto na console.openserv.ai → Settings → Billing; 4 raporty referencyjne padły na "Insufficient credits" i czekają na ponowienie**
+- [ ] 5 raportów referencyjnych z werdyktem Reppo (1/5 gotowy)
 - [ ] Zakup przez `kpass` na testnecie (fallback: Base mainnet USDC do 10 XI)
 
 ## Wymagania twarde (cytaty ze strony)
