@@ -10,6 +10,7 @@ describe("resolveDatabaseUrl", () => {
     expect(resolveDatabaseUrl({ DATABASE_URL: "<connection string z Neon>", STORAGE_URL: "postgres://u:p@h/db" })).toBe("postgres://u:p@h/db");
     expect(resolveDatabaseUrl({ POSTGRES_URL: "postgres://u:p@h/db" })).toBe("postgres://u:p@h/db");
     expect(resolveDatabaseUrl({ STORAGE_POSTGRES_URL: "postgres://u:p@h/db" })).toBe("postgres://u:p@h/db");
+    expect(resolveDatabaseUrl({ STORAGE_DATABASE_URL: "postgres://pooled", STORAGE_POSTGRES_URL: "postgres://other" })).toBe("postgres://pooled");
   });
 
   it("returns null when nothing usable is set", () => {
