@@ -1,6 +1,7 @@
 import type { Report } from "@tendr/core";
 import { and, asc, eq, lt, or, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
+import { resolveDatabaseUrl } from "@/lib/db/url";
 
 export type StoredReport = Report & { progress: string | null };
 
@@ -220,9 +221,9 @@ declare global {
 
 /** Drizzle/Neon when DATABASE_URL is set; an in-process memory store for local dev and demos. Production refuses the fallback. */
 export function reportStore(): ReportStore {
-  if (process.env.DATABASE_URL) return new DrizzleReportStore();
+  if (resolveDatabaseUrl(process.env)) return new DrizzleReportStore();
   if (process.env.VERCEL_ENV === "production") {
-    throw new Error("DATABASE_URL must be set in production (the in-memory store would lose data across instances)");
+    throw new Error("A postgres connection string (DATABASE_URL or STORAGE_URL) must be set in production (the in-memory store would lose data across instances)");
   }
   if (!globalThis.__tendrMemoryStore) {
     console.warn("[tendr] DATABASE_URL not set — using in-memory report store (data is lost on restart)");

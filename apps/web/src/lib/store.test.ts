@@ -78,12 +78,16 @@ describe("reportStore() in production", () => {
 
   it("refuses the in-memory fallback when VERCEL_ENV is production", () => {
     delete process.env.DATABASE_URL;
+    delete process.env.STORAGE_URL;
+    delete process.env.POSTGRES_URL;
     process.env.VERCEL_ENV = "production";
     expect(() => reportStore()).toThrow(/DATABASE_URL/);
   });
 
   it("uses the in-memory fallback outside production", () => {
     delete process.env.DATABASE_URL;
+    delete process.env.STORAGE_URL;
+    delete process.env.POSTGRES_URL;
     process.env.VERCEL_ENV = "development";
     expect(reportStore()).toBeInstanceOf(MemoryReportStore);
   });

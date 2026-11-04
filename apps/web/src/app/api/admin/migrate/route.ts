@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
 import { runMigration } from "@/lib/db/migrate";
+import { resolveDatabaseUrl } from "@/lib/db/url";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -11,9 +12,9 @@ export async function POST(req: Request) {
   if (!expected || req.headers.get("authorization") !== `Bearer ${expected}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const url = process.env.DATABASE_URL;
-  if (!url || !/^postgres(ql)?:\/\//.test(url)) {
-    return NextResponse.json({ error: "DATABASE_URL is missing or not a postgres:// URL" }, { status: 503 });
+  const url = resolveDatabaseUrl(process.env);
+  if (!url) {
+    return NextResponse.json({ error: "no postgres connection string set (DATABASE_URL / STORAGE_URL / POSTGRES_URL)" }, { status: 503 });
   }
   try {
     const sql = neon(url);
