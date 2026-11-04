@@ -18,7 +18,8 @@ Formularz: https://openserv.typeform.com/submissions02
 - [x] `apps/x402` paywall (5 testów)
 - [x] Repo GitHub `Story91/tendr` (main + feat/tendr), historia jako Story91
 - [x] Projekt Vercel `tendr` w teamie Story Project's (prj_fYlagLPSrA3a5sWrOG7NhowedWQA), preset Services, powiązany z GitHubem; 10 zmiennych wgranych (modele, tryby, INTERNAL_SECRET, CRON_SECRET)
-- [ ] W panelu Vercel: Settings → Deployment Protection → wyłączyć Vercel Authentication (inaczej demo i x402 wymagają logowania)
+- [x] Produkcja https://tendr-ecru.vercel.app: strona główna 200 publicznie; paywall `/healthz` startuje i zgłasza brak `PAY_TO`; web zwraca 500 do czasu `DATABASE_URL`
+- [ ] W panelu Vercel sprawdzić Settings → Deployment Protection (Vercel Authentication włączona domyślnie; produkcyjny alias odpowiadał 200, previews mogą wymagać logowania)
 - [ ] Wkleić sekrety z `.env.vercel`: SERV_API_KEY, REPPO_EVAL_API_KEY, (DOLPHIN_API_KEY), PAY_TO
 - [ ] Neon Postgres: Vercel → Storage → Create Database → Neon (doda `DATABASE_URL` automatycznie) + `pnpm --filter @tendr/web db:push`
 - [ ] Redeploy po dodaniu zmiennych; cron `/api/cron/reppo` co minutę z vercel.json
