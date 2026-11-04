@@ -6,7 +6,7 @@ import { resolve } from "node:path";
 loadEnv({ path: resolve(process.cwd(), "../../.env") });
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@tenderhound/core"],
+  transpilePackages: ["@tendr/core"],
   turbopack: {
     rules: {
       "*.css": {

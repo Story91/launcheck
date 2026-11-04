@@ -1,5 +1,5 @@
 export default function ApiDocsPage() {
-  const host = process.env.NEXT_PUBLIC_X402_HOST ?? "https://x402.tenderhound.example";
+  const host = process.env.NEXT_PUBLIC_X402_HOST ?? "https://x402.tendr.example";
   return (
     <div className="max-w-[72ch] space-y-8">
       <section>

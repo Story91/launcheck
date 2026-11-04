@@ -13,7 +13,7 @@ importers:
       '@neondatabase/serverless':
         specifier: ^1.0.0
         version: 1.2.0
-      '@tenderhound/core':
+      '@tendr/core':
         specifier: workspace:*
         version: link:../../packages/core
       drizzle-orm:

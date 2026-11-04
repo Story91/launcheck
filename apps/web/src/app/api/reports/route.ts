@@ -1,4 +1,4 @@
-import { isValidNoticeId } from "@tenderhound/core";
+import { isValidNoticeId } from "@tendr/core";
 import { after, NextResponse } from "next/server";
 import { buildPipelineDeps } from "@/lib/deps";
 import { STALE_GENERATION_MS, startGeneration } from "@/lib/reports";

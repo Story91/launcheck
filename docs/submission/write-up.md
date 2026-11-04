@@ -1,10 +1,10 @@
-# TenderHound — submission write-up (draft, SERV Hackathon 02, Open Track)
+# Tendr — submission write-up (draft, SERV Hackathon 02, Open Track)
 
 **Demo:** _(link after deploy)_ · **Video:** _(link)_ · **Repo:** _(public GitHub URL)_ · **X post:** _(link)_
 
 ## What it does
 
-Companies lose days reading 300-page tender documentation before discovering the tender is written around one supplier. TenderHound reads a TED notice (EU public procurement), evaluates eight competition-restriction signals and publishes a report where every flag cites a quote that is verified, by code, to appear verbatim in the notice. The report carries its full reasoning trail, goes to independent reviewers (Reppo) before it is called verified, and can be bought per call by an agent with a Kite Agent Passport over x402.
+Companies lose days reading 300-page tender documentation before discovering the tender is written around one supplier. Tendr reads a TED notice (EU public procurement), evaluates eight competition-restriction signals and publishes a report where every flag cites a quote that is verified, by code, to appear verbatim in the notice. The report carries its full reasoning trail, goes to independent reviewers (Reppo) before it is called verified, and can be bought per call by an agent with a Kite Agent Passport over x402.
 
 Real data, real decisions, auditable steps: on a live notice from the Polish central bank (3.16 M PLN) it found a required integration with a named vendor's system without an equivalence clause, in 27 seconds, for one cent.
 

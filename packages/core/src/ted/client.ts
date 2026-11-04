@@ -1,5 +1,5 @@
 const TED_SEARCH_URL = "https://api.ted.europa.eu/v3/notices/search";
-const USER_AGENT = "TenderHound/0.1";
+const USER_AGENT = "Tendr/0.1";
 const TED_TIMEOUT_MS = 30_000;
 
 export class NoticeNotFoundError extends Error {

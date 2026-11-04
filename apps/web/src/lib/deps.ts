@@ -1,4 +1,4 @@
-import { DolphinClient, ReppoClient, ServClient, type PipelineDeps } from "@tenderhound/core";
+import { DolphinClient, ReppoClient, ServClient, type PipelineDeps } from "@tendr/core";
 
 function required(name: string): string {
   const v = process.env[name];

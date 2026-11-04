@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import type { Signal } from "@tenderhound/core";
+import type { Signal } from "@tendr/core";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { SignalCard } from "@/components/signal-card";

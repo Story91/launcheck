@@ -1,10 +1,10 @@
-# TenderHound — design doc
+# Tendr — design doc
 
 Data: 2026-11-03. Status: po builder-checku, decyzje właściciela wpisane (§6), czeka na finalne "ok". Hackathon: SERV Hackathon 02, deadline 15 XI 2026 23:59 UTC.
 
 ## 1. Intencja i dlaczego
 
-**Jedno zdanie:** TenderHound czyta ogłoszenia o zamówieniach publicznych z TED (Tenders Electronic Daily, UE) i wystawia audytowalny raport sygnałów ograniczenia konkurencji, z dosłownymi cytatami, niezależnym werdyktem jakości (Reppo) i sprzedażą per-call dla agentów (x402).
+**Jedno zdanie:** Tendr czyta ogłoszenia o zamówieniach publicznych z TED (Tenders Electronic Daily, UE) i wystawia audytowalny raport sygnałów ograniczenia konkurencji, z dosłownymi cytatami, niezależnym werdyktem jakości (Reppo) i sprzedażą per-call dla agentów (x402).
 
 **Dlaczego:** firmy startujące w przetargach tracą dni na czytanie dokumentacji, zanim zorientują się, że postępowanie jest "pisane pod" jednego dostawcę (nazwana marka bez klauzuli równoważności, integracja z istniejącym systemem, warunek doświadczenia pasujący do jednego gracza, krótki termin). Dziennikarze i NGO robią to ręcznie. Nikt nie ma taniego, obronnego "drugiego oka". Spike z 3 XI na prawdziwym ogłoszeniu NBP (722731-2026) wykrył integrację z DarkTrace bez klauzuli równoważności za ~1 cent w ~50 s.
 
@@ -74,7 +74,7 @@ Data: 2026-11-03. Status: po builder-checku, decyzje właściciela wpisane (§6)
 - Kupujący w demo: `kpass session create --max-amount-per-tx 1 --max-total-amount 5` → zatwierdzenie passkey → `kpass session execute --url .../v1/report/722731-2026`. Pokazujemy `kpass activity` jako dowód zakupu w limitach.
 - Jeśli raportu nie ma lub nie jest `verified`/`disputed`, endpoint zwraca 409 (patrz §4.1a), nigdy 2xx, żeby nie pobrać opłaty; w demo raport jest wygenerowany i zweryfikowany wcześniej.
 - **Sieć (decyzja właściciela §6.4):** primary = Kite testnet (2368, pieUSD, facilitator Pieverse) z template `kite-x402-services`; buyer = `kpass sandbox on` + faucet pieUSD. Fallback (jeśli nie działa end-to-end do 10 XI) = standardowy x402 na Base mainnet USDC, cena demo $0.05, bo to zakres, który Passport obsługuje natywnie w live mode.
-- Stretch: zgłoszenie usługi do katalogu Kite (`services/tenderhound/service.yaml`, PR do `kite-x402-services`).
+- Stretch: zgłoszenie usługi do katalogu Kite (`services/tendr/service.yaml`, PR do `kite-x402-services`).
 
 ### 4.3 Stack (moje decyzje)
 - TypeScript, Node 26, pnpm, jedno repo: `apps/web` (Next.js App Router, Vercel), `apps/x402` (Express z template Kite, deploy na Vercel jako osobny projekt lub Fly), `packages/core` (pipeline: ingest, extract, signals, verify, score, reppo; zero zależności od frameworka, testowalne Vitest).
@@ -109,7 +109,7 @@ Data: 2026-11-03. Status: po builder-checku, decyzje właściciela wpisane (§6)
 
 1. Track: **Open Track**.
 2. Język UI: **angielski**; cytaty w oryginale.
-3. Nazwa: robocza "TenderHound", właściciel chce propozycji innych (do ustalenia przed deployem; nie blokuje kodu).
+3. Nazwa: robocza "Tendr", właściciel chce propozycji innych (do ustalenia przed deployem; nie blokuje kodu).
 4. Płatność x402: **najpierw Kite testnet** (2368, pieUSD, template `kite-x402-services`, `kpass sandbox on`); **jeśli do 10 XI nie działa end-to-end z Passportem → Base mainnet USDC** (standardowy x402, prawdziwe centy). Test kupującego na `passport.dev.gokite.ai/x402/test` w dniu 1.
 
 ## 7. Co zostawiam budowniczemu

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Report } from "@tenderhound/core";
+import type { Report } from "@tendr/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AuditTable } from "@/components/audit-table";
 import { LanguageNote, RiskMeter, StatusBadge } from "@/components/badges";

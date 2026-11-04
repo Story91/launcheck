@@ -1,4 +1,4 @@
-import type { NoticeSummary } from "@tenderhound/core";
+import type { NoticeSummary } from "@tendr/core";
 import Link from "next/link";
 
 export function NoticeList({ notices }: { notices: NoticeSummary[] }) {

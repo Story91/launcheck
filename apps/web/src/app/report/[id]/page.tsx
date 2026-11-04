@@ -1,4 +1,4 @@
-import { isValidNoticeId } from "@tenderhound/core";
+import { isValidNoticeId } from "@tendr/core";
 import { notFound } from "next/navigation";
 import { ReportView } from "@/components/report-view";
 import { publicView } from "@/lib/reports";

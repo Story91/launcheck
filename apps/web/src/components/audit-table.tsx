@@ -1,4 +1,4 @@
-import type { AuditEntry } from "@tenderhound/core";
+import type { AuditEntry } from "@tendr/core";
 
 export function AuditTable({ audit, costUsd, droppedEvidence }: { audit: AuditEntry[]; costUsd: number; droppedEvidence: number }) {
   return (

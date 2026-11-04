@@ -1,4 +1,4 @@
-import { ReppoBusyError, type Report, type ReppoClient, type ReppoVerdict } from "@tenderhound/core";
+import { ReppoBusyError, type Report, type ReppoClient, type ReppoVerdict } from "@tendr/core";
 import { describe, expect, it } from "vitest";
 import { MAX_REPPO_ATTEMPTS, runReppoTick } from "@/lib/reppo-worker";
 import { MemoryReportStore } from "@/lib/store";

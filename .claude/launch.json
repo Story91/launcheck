@@ -4,7 +4,7 @@
     {
       "name": "web",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@tenderhound/web", "dev"],
+      "runtimeArgs": ["--filter", "@tendr/web", "dev"],
       "port": 3000
     }
   ]

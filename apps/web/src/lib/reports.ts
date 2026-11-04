@@ -1,4 +1,4 @@
-import { generateReport, type PipelineDeps, type Report } from "@tenderhound/core";
+import { generateReport, type PipelineDeps, type Report } from "@tendr/core";
 import type { ReportStore, StoredReport } from "@/lib/store";
 
 type Generate = typeof generateReport;

@@ -2,7 +2,7 @@
 
 Kod w `scratch/` (ignorowany przez git, do skasowania po decyzji). Model: `gpt-5.4-mini` przez SERV, bez klucza Dolphina (ekstrakcja na `gemini-3.1-flash-lite` przez SERV).
 
-## 1. TenderHound — prawdziwe ogłoszenie z TED
+## 1. Tendr — prawdziwe ogłoszenie z TED
 
 **Pytanie:** czy realny przetarg przejdzie przez ekstrakcję + macierz sygnałów SERV i wyjdzie jako audytowalny raport z cytatami, w <1 min i za grosze?
 
@@ -64,7 +64,7 @@ Co się nauczyliśmy:
 
 **gpt-6-luna w Bountiful:** 3/3 poprawnie, ~$0.0004 per decyzja (7× taniej niż mini), 13–46 s. **Luna wystarcza do drzew decyzyjnych.**
 
-**gpt-6-luna w TenderHound (8 sygnałów + shadow agent):** niestabilna. Na 3 przebiegi: 1× zapaść (wszystko "none", risk 0, atrapowe uzasadnienia), 2× sensowny raport (55/100), ale z błędami reguł (S1 odpalał przy 30 dniach mimo progu 15). Na skróconym prompcie z 3 sygnałami: 4/4 stabilnie (risk 30, S2+S7), niezależnie od narzędzi.
+**gpt-6-luna w Tendr (8 sygnałów + shadow agent):** niestabilna. Na 3 przebiegi: 1× zapaść (wszystko "none", risk 0, atrapowe uzasadnienia), 2× sensowny raport (55/100), ale z błędami reguł (S1 odpalał przy 30 dniach mimo progu 15). Na skróconym prompcie z 3 sygnałami: 4/4 stabilnie (risk 30, S2+S7), niezależnie od narzędzi.
 
 **Bez shadow agenta luna nie cytuje, tylko parafrazuje:** 0 z 14 "cytatów" było dosłownych (vs 11/12 z shadow agentem na mini). Shadow agent z hintem "verbatim" to jedyny mechanizm, który daje obronne cytaty. Nie da się go wyrzucić dla szybkości.
 
@@ -72,4 +72,4 @@ Co się nauczyliśmy:
 
 ## 5. Co to zmienia w rankingu
 
-Oba faworyty są technicznie wykonalne na SERV w 2 tygodnie. TenderHound ma gotowe prawdziwe dane od ręki (TED) i wyjątkowo dobry przypadek demo (NBP/DarkTrace). Bountiful ma czystsze drzewo decyzyjne i naturalną integrację z Kite. Decyzja pozostaje produktowa, nie techniczna.
+Oba faworyty są technicznie wykonalne na SERV w 2 tygodnie. Tendr ma gotowe prawdziwe dane od ręki (TED) i wyjątkowo dobry przypadek demo (NBP/DarkTrace). Bountiful ma czystsze drzewo decyzyjne i naturalną integrację z Kite. Decyzja pozostaje produktowa, nie techniczna.

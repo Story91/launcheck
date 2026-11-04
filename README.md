@@ -1,4 +1,4 @@
-# TenderHound
+# Tendr
 
 Competition-restriction signal reports for EU public tenders, with verbatim quotes, a full reasoning audit trail, independent verification and per-call sales to agents.
 
@@ -25,7 +25,7 @@ Every model call goes through `https://inference-api.openserv.ai` (default model
 - **Audit trail**: each step records model, prompt version, the `x-openserv-request-id` header (links to the OpenServ console), tokens, cost and latency. A report costs about $0.01.
 - Degenerate output (all signals "none" with identical reasons) and prompt-guard refusals are detected and retried once on `gpt-5.4-mini`.
 
-Dolphin (DeepSeek V4.1 Flash, 1M context) is wired as an alternative extractor (`DOLPHIN_PRIMARY=true`); by default extraction runs on SERV `gemini-3.1-flash-lite` (see `docs/superpowers/plans/2026-11-03-tenderhound.md`, "Day-1 results").
+Dolphin (DeepSeek V4.1 Flash, 1M context) is wired as an alternative extractor (`DOLPHIN_PRIMARY=true`); by default extraction runs on SERV `gemini-3.1-flash-lite` (see `docs/superpowers/plans/2026-11-03-tendr.md`, "Day-1 results").
 
 ## Repository
 
@@ -42,8 +42,8 @@ docs/           research, spec, plan, submission materials
 pnpm install
 cp .env.example .env        # fill SERV_API_KEY at minimum
 pnpm test                   # 102 unit tests, no network
-pnpm --filter @tenderhound/core test:live   # one real run against TED + SERV
-pnpm --filter @tenderhound/web dev           # http://localhost:3000 (in-memory store without DATABASE_URL)
+pnpm --filter @tendr/core test:live   # one real run against TED + SERV
+pnpm --filter @tendr/web dev           # http://localhost:3000 (in-memory store without DATABASE_URL)
 ```
 
 ### Environment

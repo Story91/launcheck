@@ -1,4 +1,4 @@
-import type { Signal } from "@tenderhound/core";
+import type { Signal } from "@tendr/core";
 
 const LABELS: Record<Signal["id"], string> = {
   S1_SHORT_DEADLINE: "Short deadline",

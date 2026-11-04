@@ -1,4 +1,4 @@
-import type { Report } from "@tenderhound/core";
+import type { Report } from "@tendr/core";
 import { and, asc, eq, lt, or, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 
@@ -215,7 +215,7 @@ export class DrizzleReportStore implements ReportStore {
 
 declare global {
   // eslint-disable-next-line no-var
-  var __tenderhoundMemoryStore: MemoryReportStore | undefined;
+  var __tendrMemoryStore: MemoryReportStore | undefined;
 }
 
 /** Drizzle/Neon when DATABASE_URL is set; an in-process memory store for local dev and demos. Production refuses the fallback. */
@@ -224,9 +224,9 @@ export function reportStore(): ReportStore {
   if (process.env.VERCEL_ENV === "production") {
     throw new Error("DATABASE_URL must be set in production (the in-memory store would lose data across instances)");
   }
-  if (!globalThis.__tenderhoundMemoryStore) {
-    console.warn("[tenderhound] DATABASE_URL not set — using in-memory report store (data is lost on restart)");
-    globalThis.__tenderhoundMemoryStore = new MemoryReportStore();
+  if (!globalThis.__tendrMemoryStore) {
+    console.warn("[tendr] DATABASE_URL not set — using in-memory report store (data is lost on restart)");
+    globalThis.__tendrMemoryStore = new MemoryReportStore();
   }
-  return globalThis.__tenderhoundMemoryStore;
+  return globalThis.__tendrMemoryStore;
 }

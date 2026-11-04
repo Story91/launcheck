@@ -1,4 +1,4 @@
-import type { PipelineDeps, Report } from "@tenderhound/core";
+import type { PipelineDeps, Report } from "@tendr/core";
 import { describe, expect, it } from "vitest";
 import { internalReportResponse, publicView, startGeneration } from "@/lib/reports";
 import { MemoryReportStore } from "@/lib/store";

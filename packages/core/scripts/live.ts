@@ -1,5 +1,5 @@
 // Live smoke: runs the real pipeline twice (Dolphin primary, then SERV-only extraction) and prints timings/costs.
-// Usage: pnpm --filter @tenderhound/core test:live [noticeId]   (reads ../../.env)
+// Usage: pnpm --filter @tendr/core test:live [noticeId]   (reads ../../.env)
 import { readFileSync } from "node:fs";
 import { DolphinClient, DOLPHIN_DEFAULT_MODEL } from "../src/llm/dolphin";
 import { ServClient } from "../src/llm/serv";

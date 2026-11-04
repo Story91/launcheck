@@ -9,7 +9,7 @@ export interface AppOptions {
   /** Wallet that receives payments. */
   payTo: string;
   network: "mainnet" | "testnet";
-  /** Base URL of the web app's internal endpoint, e.g. https://tenderhound.app/api/internal/report */
+  /** Base URL of the web app's internal endpoint, e.g. https://tendr.app/api/internal/report */
   upstreamUrl: string;
   priceUsd: string;
   internalSecret: string;
@@ -47,7 +47,7 @@ export function createApp(opts: AppOptions): Express {
         {
           "/v1/*": {
             accepts: { scheme: "exact", price, network: chain.network, payTo: opts.payTo, maxTimeoutSeconds: 60 },
-            description: opts.description ?? "TenderHound: competition-restriction signals report for one TED notice (verified reports only)",
+            description: opts.description ?? "Tendr: competition-restriction signals report for one TED notice (verified reports only)",
             mimeType: "application/json",
           },
         },

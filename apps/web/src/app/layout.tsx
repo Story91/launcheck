@@ -8,7 +8,7 @@ const plexSans = IBM_Plex_Sans({ variable: "--font-plex-sans", subsets: ["latin"
 const plexSerif = IBM_Plex_Serif({ variable: "--font-plex-serif", subsets: ["latin", "latin-ext"], weight: ["400", "500"] });
 
 export const metadata: Metadata = {
-  title: "TenderHound — competition-restriction signals for EU tenders",
+  title: "Tendr — competition-restriction signals for EU tenders",
   description: "Auditable competition-restriction signal reports for TED procurement notices, with verbatim quotes and independent verification.",
 };
 
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <header className="border-b border-rule">
           <div className="mx-auto flex w-full max-w-5xl items-baseline justify-between gap-6 px-4 py-4">
             <Link href="/" className="font-serif text-xl text-ink">
-              TenderHound
+              Tendr
             </Link>
             <nav className="flex gap-5 text-sm text-slate">
               <Link href="/">Notices</Link>

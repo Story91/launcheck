@@ -6,7 +6,7 @@ Legenda użycia SERV: **PG** = `serv_prompt_guard`, **SA** = `serv_shadow_agent`
 
 ---
 
-## 1. TenderHound — pies tropiący ustawione przetargi
+## 1. Tendr — pies tropiący ustawione przetargi
 
 **Track:** Dolphin (01) lub Open. Drugi partner: Reppo (opcjonalnie Kite seller-side).
 
@@ -138,7 +138,7 @@ Legenda użycia SERV: **PG** = `serv_prompt_guard`, **SA** = `serv_shadow_agent`
 
 | # | Pomysł | Track | Creativity | Readiness | Revenue | Ryzyko | Partnerzy |
 |---|---|---|---|---|---|---|---|
-| 1 | TenderHound | Dolphin/Open | ★★★★★ | ★★★★☆ | ★★★★☆ | niskie-śr. | Dolphin + Reppo (+Kite) |
+| 1 | Tendr | Dolphin/Open | ★★★★★ | ★★★★☆ | ★★★★☆ | niskie-śr. | Dolphin + Reppo (+Kite) |
 | 2 | Bountiful | Kite | ★★★★☆ | ★★★★☆ | ★★★★★ | średnie | Kite + Reppo + Dolphin |
 | 3 | Heartbeat | Kite | ★★★★☆ | ★★★★★ | ★★★☆☆ | niskie | Kite + Reppo |
 | 4 | Underwrite | Open/Kite | ★★★★★ | ★★☆☆☆ | ★★★★★ | wysokie | Kite + Reppo |
@@ -146,7 +146,7 @@ Legenda użycia SERV: **PG** = `serv_prompt_guard`, **SA** = `serv_shadow_agent`
 
 ## Rekomendacja
 
-**#1 TenderHound** jako główny kandydat: najlepszy balans trzech kryteriów, prawdziwe publiczne dane (TED jest otwarte od ręki), jesteśmy pierwsi na Dolphinie, a 1M kontekstu to realna, a nie dekoracyjna przewaga. Audytowalność jest tu sednem produktu, nie dodatkiem — idealnie pod "make every agent decision auditable".
+**#1 Tendr** jako główny kandydat: najlepszy balans trzech kryteriów, prawdziwe publiczne dane (TED jest otwarte od ręki), jesteśmy pierwsi na Dolphinie, a 1M kontekstu to realna, a nie dekoracyjna przewaga. Audytowalność jest tu sednem produktu, nie dodatkiem — idealnie pod "make every agent decision auditable".
 
 **#2 Bountiful** jako równorzędna alternatywa, jeśli wolimy track Kite (najjaśniejszy model przychodowy, prompt guard ma tu realne zastosowanie).
 

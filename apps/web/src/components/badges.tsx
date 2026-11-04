@@ -1,4 +1,4 @@
-import type { Report } from "@tenderhound/core";
+import type { Report } from "@tendr/core";
 
 export const STATUS_COPY: Record<Report["status"], { label: string; tone: string }> = {
   generating: { label: "Generating report", tone: "text-slate" },

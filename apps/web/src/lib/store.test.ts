@@ -1,4 +1,4 @@
-import type { Report } from "@tenderhound/core";
+import type { Report } from "@tendr/core";
 import { afterEach, describe, expect, it } from "vitest";
 import { MemoryReportStore, reportStore } from "@/lib/store";
 
@@ -73,7 +73,7 @@ describe("reportStore() in production", () => {
   const env = { ...process.env };
   afterEach(() => {
     process.env = { ...env };
-    delete (globalThis as { __tenderhoundMemoryStore?: unknown }).__tenderhoundMemoryStore;
+    delete (globalThis as { __tendrMemoryStore?: unknown }).__tendrMemoryStore;
   });
 
   it("refuses the in-memory fallback when VERCEL_ENV is production", () => {

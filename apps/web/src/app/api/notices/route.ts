@@ -1,4 +1,4 @@
-import { defaultSearchQuery, searchNotices } from "@tenderhound/core";
+import { defaultSearchQuery, searchNotices } from "@tendr/core";
 import { NextResponse } from "next/server";
 
 export const revalidate = 3600;

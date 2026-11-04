@@ -1,5 +1,5 @@
 {
-  "name": "tenderhound",
+  "name": "tendr",
   "private": true,
   "packageManager": "pnpm@10.32.1",
   "engines": { "node": ">=22" },

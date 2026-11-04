@@ -1,4 +1,4 @@
-import { mapVerdictToStatus, reportToArtifact, ReppoBusyError, type ReppoClient } from "@tenderhound/core";
+import { mapVerdictToStatus, reportToArtifact, ReppoBusyError, type ReppoClient } from "@tendr/core";
 import type { ReportStore } from "@/lib/store";
 
 export const MAX_REPPO_ATTEMPTS = 3;

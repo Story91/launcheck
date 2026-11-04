@@ -1,9 +1,9 @@
 {
-  "name": "@tenderhound/x402",
+  "name": "@tendr/x402",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Sells TenderHound reports per call over x402 (Kite network), proxying to the web app's internal endpoint",
+  "description": "Sells Tendr reports per call over x402 (Kite network), proxying to the web app's internal endpoint",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",

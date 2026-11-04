@@ -22,5 +22,5 @@ const app = createApp({
 
 const port = Number(env("PORT", "8080"));
 app.listen(port, () => {
-  console.log(`tenderhound x402 on :${port} -> ${env("UPSTREAM_URL")} (${network}, ${env("PRICE_USD", "0.50")} USD per report to ${env("PAY_TO")})`);
+  console.log(`tendr x402 on :${port} -> ${env("UPSTREAM_URL")} (${network}, ${env("PRICE_USD", "0.50")} USD per report to ${env("PAY_TO")})`);
 });
