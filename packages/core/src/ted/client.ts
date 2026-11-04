@@ -3,8 +3,11 @@ const USER_AGENT = "Tendr/0.1";
 const TED_TIMEOUT_MS = 30_000;
 
 export class NoticeNotFoundError extends Error {
-  constructor(public readonly noticeId: string) {
-    super(`Notice ${noticeId} was not found on TED`);
+  constructor(
+    public readonly noticeId: string,
+    detail?: string,
+  ) {
+    super(`Notice ${noticeId} was not found on TED${detail ? ` (${detail})` : ""}`);
     this.name = "NoticeNotFoundError";
   }
 }
@@ -69,9 +72,12 @@ export async function fetchNoticeXml(noticeId: string, fetchImpl: typeof fetch =
     headers: { "User-Agent": USER_AGENT },
     signal: AbortSignal.timeout(TED_TIMEOUT_MS),
   });
-  if (res.status === 404) throw new NoticeNotFoundError(noticeId);
+  if (res.status === 404) throw new NoticeNotFoundError(noticeId, "HTTP 404");
   if (!res.ok) throw new Error(`TED notice download failed: HTTP ${res.status}`);
   const body = await res.text();
-  if (!body.includes("<ContractNotice")) throw new NoticeNotFoundError(noticeId);
+  if (!body.includes("<ContractNotice")) {
+    const kind = /<html/i.test(body) ? "TED returned an HTML page instead of the notice XML" : `unexpected document (${body.slice(0, 60).replace(/\s+/g, " ")}…)`;
+    throw new NoticeNotFoundError(noticeId, kind);
+  }
   return body;
 }
