@@ -33,6 +33,7 @@ Dolphin (DeepSeek V4.1 Flash, 1M context) is wired as an alternative extractor (
 packages/core   pipeline: TED client, flattener, SERV/Dolphin clients, prompts, signals, verification, scoring, Reppo
 apps/web        Next.js app (Vercel): home, report page with live progress, audit tab, API, Reppo cron worker
 apps/x402       Express service from the Kite x402 template: GET /v1/report/{noticeId} behind a 402 paywall
+vercel.json     one Vercel project with two services (web + x402), /v1 and /healthz routed to x402, cron for Reppo
 docs/           research, spec, plan, submission materials
 ```
 
@@ -57,18 +58,22 @@ pnpm --filter @tendr/web dev           # http://localhost:3000 (in-memory store 
 | `DATABASE_URL` | Neon Postgres (omit locally for an in-memory store) |
 | `INTERNAL_SECRET` | shared secret between `apps/x402` and `/api/internal/report` |
 | `CRON_SECRET` | protects `/api/cron/reppo` (runs every minute on Vercel) |
-| `PAY_TO`, `KITE_NETWORK`, `UPSTREAM_URL`, `PRICE_USD` | `apps/x402` seller configuration |
+| `PAY_TO`, `KITE_NETWORK`, `PRICE_USD` | `apps/x402` seller configuration; the upstream comes from the Vercel service binding `WEB_INTERNAL_URL` (or `UPSTREAM_URL` when run alone) |
 
 ### Buying a report with Kite Agent Passport
 
 ```bash
 kpass session create --task-summary "buy tender report" --max-amount-per-tx 1 --max-total-amount 5 --ttl 24h --assets USDC --output json
 # approve with your passkey, then
-kpass session execute --url https://<x402-host>/v1/report/722731-2026 --method GET --output json
+kpass session execute --url https://<deployment>/v1/report/722731-2026 --method GET --output json
 kpass activity --limit 5
 ```
 
 Reports that are not yet verified answer `409 { status, retryAfterSeconds }` and are never charged.
+
+## Deploy (Vercel)
+
+Import the repository as one project (root `./`, preset *Services*); `vercel.json` declares the `web` (Next.js) and `x402` (Express) services, routes `/v1/*` and `/healthz` to x402 and everything else to web, binds `WEB_INTERNAL_URL` into x402, and schedules `/api/cron/reppo` every minute. Set the environment variables above on the project, then run `pnpm --filter @tendr/web db:push` once with `DATABASE_URL` to create the tables.
 
 ## Example
 

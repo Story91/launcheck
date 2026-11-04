@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "web": {
+      "root": "apps/web",
+      "framework": "nextjs"
+    },
+    "x402": {
+      "root": "apps/x402",
+      "framework": "express",
+      "bindings": [
+        { "type": "service", "service": "web", "format": "url", "env": "WEB_INTERNAL_URL" }
+      ]
+    }
+  },
+  "rewrites": [
+    { "source": "/v1/(.*)", "destination": { "service": "x402" } },
+    { "source": "/healthz", "destination": { "service": "x402" } },
+    { "source": "/(.*)", "destination": { "service": "web" } }
+  ],
+  "crons": [{ "path": "/api/cron/reppo", "schedule": "* * * * *" }]
+}

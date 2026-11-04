@@ -1,26 +1,20 @@
+import express from "express";
 import { createApp } from "./app.js";
+import { resolveConfig } from "./config.js";
 
-const env = (key: string, fallback = ""): string => (process.env[key] ?? "").trim() || fallback;
+const resolved = resolveConfig(process.env);
 
-function required(key: string): string {
-  const v = env(key);
-  if (!v) throw new Error(`${key} is required`);
-  return v;
-}
+const app = resolved.ok
+  ? createApp(resolved.options)
+  : express()
+      .get("/healthz", (_req, res) => res.status(503).json({ ok: false, missing: resolved.missing }))
+      .all("/v1/*path", (_req, res) => res.status(503).json({ error: "x402 service not configured", missing: resolved.missing }));
 
-const network = env("KITE_NETWORK", "testnet");
-if (network !== "mainnet" && network !== "testnet") throw new Error(`KITE_NETWORK must be mainnet or testnet, got "${network}"`);
+if (!resolved.ok) console.error(`tendr x402 misconfigured, missing: ${resolved.missing.join(", ")}`);
 
-const app = createApp({
-  payTo: required("PAY_TO"),
-  network,
-  upstreamUrl: required("UPSTREAM_URL"),
-  priceUsd: env("PRICE_USD", "0.50"),
-  internalSecret: required("INTERNAL_SECRET"),
-  facilitatorUrl: env("FACILITATOR_URL") || undefined,
-});
-
-const port = Number(env("PORT", "8080"));
+const port = Number((process.env.PORT ?? "").trim() || "8080");
 app.listen(port, () => {
-  console.log(`tendr x402 on :${port} -> ${env("UPSTREAM_URL")} (${network}, ${env("PRICE_USD", "0.50")} USD per report to ${env("PAY_TO")})`);
+  if (resolved.ok) {
+    console.log(`tendr x402 on :${port} -> ${resolved.options.upstreamUrl} (${resolved.options.network}, ${resolved.options.priceUsd} USD per report to ${resolved.options.payTo})`);
+  }
 });
