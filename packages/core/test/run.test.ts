@@ -64,7 +64,7 @@ describe("generateReport", () => {
     expect(report.riskScore).toBeGreaterThan(0);
     expect(report.summary).toContain("competition-restriction");
     expect(report.noticeLanguage).toBe("POL");
-    expect(report.buyerPlatform).toMatch(/^https://e-zamowienia.nbp.pl/?$/);
+    expect(report.buyerPlatform).toMatch(/^https:\/\/e-zamowienia\.nbp\.pl\/?$/);
     expect(report.facts?.buyer).toBe("Narodowy Bank Polski");
     expect(report.costUsd).toBeCloseTo(0.005, 6);
     expect(report.audit.map((a) => a.step)).toEqual(["extract.primary", "signals.A", "signals.B", "signals.C", "summary"]);
