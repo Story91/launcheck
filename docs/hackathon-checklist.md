@@ -20,9 +20,10 @@ Formularz: https://openserv.typeform.com/submissions02
 - [x] Projekt Vercel `tendr` w teamie Story Project's (prj_fYlagLPSrA3a5sWrOG7NhowedWQA), preset Services, powiązany z GitHubem; 10 zmiennych wgranych (modele, tryby, INTERNAL_SECRET, CRON_SECRET)
 - [x] Produkcja https://tendr-ecru.vercel.app: strona główna 200 publicznie; paywall `/healthz` startuje i zgłasza brak `PAY_TO`; web zwraca 500 do czasu `DATABASE_URL`
 - [ ] W panelu Vercel sprawdzić Settings → Deployment Protection (Vercel Authentication włączona domyślnie; produkcyjny alias odpowiadał 200, previews mogą wymagać logowania)
-- [ ] Wkleić sekrety z `.env.vercel`: SERV_API_KEY, REPPO_EVAL_API_KEY, (DOLPHIN_API_KEY), PAY_TO
-- [ ] Neon Postgres: Vercel → Storage → Create Database → Neon (doda `DATABASE_URL` automatycznie) + `pnpm --filter @tendr/web db:push`
-- [ ] Redeploy po dodaniu zmiennych; cron `/api/cron/reppo` co minutę z vercel.json
+- [x] Sekrety wklejone (SERV, Reppo, Dolphin); Neon podłączony przez integrację Vercel (prefix STORAGE → `STORAGE_DATABASE_URL`); tabele utworzone przez `POST /api/admin/migrate` (bearer CRON_SECRET)
+- [x] Ingest przez oficjalne API TED (strona XML ted.europa.eu zwraca z Vercela 202/WAF); raport NBP na produkcji: 35 s, 55/100, S2+S4+S7
+- [ ] **PAY_TO w Vercelu to wciąż placeholder `<twój adres EVM 0x...>` — wpisać prawdziwy adres i zrobić redeploy** (402 z paywalla zwraca ten placeholder jako payTo)
+- [x] Cron `/api/cron/reppo` co minutę działa (vercel.json)
 - [ ] 5 raportów referencyjnych z prawdziwą ewaluacją Reppo
 - [ ] Zakup przez `kpass` na testnecie (fallback: Base mainnet USDC do 10 XI)
 
