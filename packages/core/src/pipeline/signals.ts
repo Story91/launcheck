@@ -6,6 +6,9 @@ import type { ChatResult, LlmClient } from "../llm/types";
 import { SIGNALS_A_V2 } from "../prompts/signals-a.v2";
 import { SIGNALS_B_V2 } from "../prompts/signals-b.v2";
 import { SIGNALS_C_V2 } from "../prompts/signals-c.v2";
+import { SIGNALS_A_US_V1 } from "../prompts/signals-a.us.v1";
+import { SIGNALS_B_US_V1 } from "../prompts/signals-b.us.v1";
+import { SIGNALS_C_US_V1 } from "../prompts/signals-c.us.v1";
 import { SIGNALS_SHADOW_HINT, signalsSchema } from "../prompts/signals-shared";
 import { SIGNAL_IDS, Signal, type AuditEntry, type SignalId, type TenderFacts } from "../types";
 
@@ -23,10 +26,21 @@ const GROUP_PROMPTS: Record<GroupKey, { version: string; system: string }> = {
   C: { version: "SIGNALS_C_V2", system: SIGNALS_C_V2 },
 };
 
+/** EU = Directive 2014/24/EU (TED notices); US = Federal Acquisition Regulation (SAM.gov notices). */
+export type Jurisdiction = "EU" | "US";
+
+const GROUP_PROMPTS_US: Record<GroupKey, { version: string; system: string }> = {
+  A: { version: "SIGNALS_A_US_V1", system: SIGNALS_A_US_V1 },
+  B: { version: "SIGNALS_B_US_V1", system: SIGNALS_B_US_V1 },
+  C: { version: "SIGNALS_C_US_V1", system: SIGNALS_C_US_V1 },
+};
+
 export interface SignalsDeps {
   serv: LlmClient;
   model: string;
   fallbackModel: string;
+  /** Rule set to apply; defaults to EU. */
+  jurisdiction?: Jurisdiction;
 }
 
 export interface SignalsResult {
@@ -59,7 +73,7 @@ function unavailable(ids: readonly SignalId[]): Signal[] {
 
 async function runGroup(group: GroupKey, facts: TenderFacts, deps: SignalsDeps): Promise<{ signals: Signal[]; audit: AuditEntry[] }> {
   const ids = SIGNAL_GROUPS[group];
-  const { version, system } = GROUP_PROMPTS[group];
+  const { version, system } = (deps.jurisdiction === "US" ? GROUP_PROMPTS_US : GROUP_PROMPTS)[group];
   const user = JSON.stringify(facts);
   const schema = groupResponseSchema(ids);
   const audit: AuditEntry[] = [];
