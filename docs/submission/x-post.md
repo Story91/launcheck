@@ -1,5 +1,5 @@
 # X post (draft, ≤ 280 chars)
 
-Tendr reads EU public tenders and flags competition-restriction signals with quotes verified verbatim against the notice. Reasoning on @openservai SERV (gpt-6-luna, ~$0.01/report), independent review by @reppo, agents buy reports via x402 with @GoKiteAI Passport. #SERVHackathon
+Tendr reads US federal solicitations from SAM.gov and flags competition-restriction signals, every quote verified verbatim. Tested on GAO bid protests: 0 false alarms. Reasoning on @openservai SERV, review by @reppo, agents pay per report via x402 + @GoKiteAI Passport. #SERVHackathon
 
-_(add demo link; replace with final text before posting)_
+_(add demo link; check length and handles before posting)_
