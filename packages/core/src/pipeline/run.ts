@@ -92,26 +92,34 @@ async function ingestNotice(noticeId: string, fetchImpl: typeof fetch, deps: Pip
   }
 }
 
-/** Full pipeline: TED → facts → signals → verbatim check → score → summary. Never throws; failures become status "failed". */
-export async function generateReport(noticeId: string, deps: PipelineDeps, onProgress: ProgressCallback = () => {}): Promise<Report> {
+export interface AnalyzeOptions {
+  /** false skips the narrative summary (the evaluation set scores signals only). Default true. */
+  summary?: boolean;
+}
+
+/**
+ * Analysis on already-ingested text: facts → signals → verbatim check → score → summary.
+ * Shared by generateReport and the GAO evaluation set, so both exercise the same production path. Never throws.
+ */
+export async function analyzeNotice(
+  noticeId: string,
+  flat: FlatNotice,
+  jurisdiction: Jurisdiction,
+  deps: PipelineDeps,
+  options: AnalyzeOptions = {},
+  onProgress: ProgressCallback = () => {},
+  base?: Report,
+): Promise<Report> {
   const now = deps.now ?? (() => new Date());
-  const report = emptyReport(noticeId, now().toISOString());
+  const report = base ?? emptyReport(noticeId, now().toISOString());
+  report.noticeLanguage = flat.language;
+  report.buyerPlatform = flat.buyerPlatform;
   const fail = (message: string): Report => {
     onProgress("failed", message);
     return { ...report, status: "failed", error: message, costUsd: sumCost(report.audit), updatedAt: now().toISOString() };
   };
 
-  if (!isValidNoticeId(noticeId)) {
-    return fail(`"${noticeId}" is neither a SAM.gov notice id (32 hex characters) nor a TED publication number (e.g. 722731-2026)`);
-  }
-  const jurisdiction = jurisdictionFor(noticeId);
-
   try {
-    onProgress("ingest");
-    const flat = await ingestNotice(noticeId, deps.fetchImpl ?? fetch, deps);
-    report.noticeLanguage = flat.language;
-    report.buyerPlatform = flat.buyerPlatform;
-
     onProgress("extract");
     const extractModel = deps.extractModel ?? DEFAULT_EXTRACT_MODEL;
     const extracted = await extractFacts(flat.text, flat.language, {
@@ -139,18 +147,20 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
     report.droppedEvidence = verified.dropped;
     report.riskScore = scoreSignals(verified.signals);
 
-    onProgress("summary");
-    try {
-      const summarized = await summarize(
-        { buyer: extracted.facts.buyer, title: extracted.facts.title, signals: verified.signals },
-        { serv: deps.serv, model: deps.servModel },
-      );
-      report.summary = summarized.summary;
-      report.audit.push(summarized.audit);
-    } catch (e) {
-      // The signals are the product; a missing narrative must not throw away a paid-for evaluation.
-      report.summary = templateSummary(extracted.facts.buyer, verified.signals);
-      report.audit.push({ step: "summary", model: deps.servModel, promptVersion: "SUMMARY_V2", requestId: null, inputHash: "", usage: { promptTokens: 0, completionTokens: 0 }, costUsd: null, durationMs: 0, note: `summary unavailable, template used: ${(e as Error).message}` });
+    if (options.summary !== false) {
+      onProgress("summary");
+      try {
+        const summarized = await summarize(
+          { buyer: extracted.facts.buyer, title: extracted.facts.title, signals: verified.signals },
+          { serv: deps.serv, model: deps.servModel },
+        );
+        report.summary = summarized.summary;
+        report.audit.push(summarized.audit);
+      } catch (e) {
+        // The signals are the product; a missing narrative must not throw away a paid-for evaluation.
+        report.summary = templateSummary(extracted.facts.buyer, verified.signals);
+        report.audit.push({ step: "summary", model: deps.servModel, promptVersion: "SUMMARY_V2", requestId: null, inputHash: "", usage: { promptTokens: 0, completionTokens: 0 }, costUsd: null, durationMs: 0, note: `summary unavailable, template used: ${(e as Error).message}` });
+      }
     }
 
     onProgress("done");
@@ -158,4 +168,27 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
   } catch (e) {
     return fail((e as Error).message);
   }
+}
+
+/** Full pipeline: ingest (SAM.gov or TED) → analyzeNotice. Never throws; failures become status "failed". */
+export async function generateReport(noticeId: string, deps: PipelineDeps, onProgress: ProgressCallback = () => {}): Promise<Report> {
+  const now = deps.now ?? (() => new Date());
+  const report = emptyReport(noticeId, now().toISOString());
+  const fail = (message: string): Report => {
+    onProgress("failed", message);
+    return { ...report, status: "failed", error: message, costUsd: sumCost(report.audit), updatedAt: now().toISOString() };
+  };
+
+  if (!isValidNoticeId(noticeId)) {
+    return fail(`"${noticeId}" is neither a SAM.gov notice id (32 hex characters) nor a TED publication number (e.g. 722731-2026)`);
+  }
+
+  let flat: FlatNotice;
+  try {
+    onProgress("ingest");
+    flat = await ingestNotice(noticeId, deps.fetchImpl ?? fetch, deps);
+  } catch (e) {
+    return fail((e as Error).message);
+  }
+  return analyzeNotice(noticeId, flat, jurisdictionFor(noticeId), deps, {}, onProgress, report);
 }

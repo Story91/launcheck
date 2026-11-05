@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import type { ChatRequest, ChatResult, LlmClient } from "../src/llm/types";
-import { generateReport, type PipelineDeps, type ProgressStep } from "../src/pipeline/run";
+import { analyzeNotice, generateReport, type PipelineDeps, type ProgressStep } from "../src/pipeline/run";
 import factsFixture from "./fixtures/722731-2026.facts.json";
 import groupA from "./fixtures/signals-a.json";
 import groupB from "./fixtures/signals-b.json";
@@ -188,5 +188,27 @@ describe("generateReport for SAM.gov (US) notices", () => {
     const report = await generateReport("abc", deps());
     expect(report.error).toMatch(/SAM\.gov notice id/);
     expect(report.error).toMatch(/TED publication number/);
+  });
+});
+
+describe("analyzeNotice (pre-fetched text, used by the evaluation set)", () => {
+  it("runs extract → signals → verify on given text with the requested rules, without fetching", async () => {
+    const requests: ChatRequest[] = [];
+    const recording: LlmClient = { chat: (req) => (requests.push(req), servStub.chat(req)) };
+    const noFetch = (async () => {
+      throw new Error("must not fetch");
+    }) as unknown as typeof fetch;
+    const report = await analyzeNotice(
+      "gao-B-000001",
+      { text: xml, language: "ENG", buyerPlatform: null },
+      "US",
+      deps({ serv: recording, fetchImpl: noFetch }),
+      { summary: false },
+    );
+    expect(report.status).toBe("pending_verification");
+    expect(report.signals).toHaveLength(8);
+    expect(report.summary).toBeNull();
+    expect(requests.some((r) => r.jsonSchema?.name === "summary")).toBe(false);
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V1", "SIGNALS_C_US_V1"]);
   });
 });
