@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
         <footer className="border-t border-rule">
           <p className="mx-auto max-w-5xl px-4 py-5 text-xs text-mist">
-            Reports describe competition-restriction signals found in the notice text. They are not findings of wrongdoing. Sources: SAM.gov (US federal) and TED (EU). Reasoning by SERV, independent review by Reppo.
+            Reports describe competition-restriction signals found in the notice text. They are not findings of wrongdoing. Sources: SAM.gov public data (US federal) and TED (EU). Not affiliated with GSA, SAM.gov or any government agency. Reasoning by SERV, independent review by Reppo.
           </p>
         </footer>
       </body>

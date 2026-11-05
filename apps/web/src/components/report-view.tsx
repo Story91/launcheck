@@ -78,7 +78,7 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
       <section className="max-w-[70ch]">
         <h1 className="text-3xl">Notice {noticeId}</h1>
         <p className="mt-3 text-seal">{report.error ?? "The report could not be generated."}</p>
-        <p className="mt-2 text-sm text-slate">Check the publication number on ted.europa.eu, or try again.</p>
+        <p className="mt-2 text-sm text-slate">Check the notice id on sam.gov or the publication number on ted.europa.eu, or try again.</p>
         <button onClick={() => void kick().then(() => setReport(null))} className="mt-4 bg-ink px-3 py-1.5 text-sm text-paper hover:bg-slate">
           Retry
         </button>

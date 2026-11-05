@@ -4,7 +4,9 @@
 
 ## What it does
 
-Companies lose days reading 300-page tender documentation before discovering the tender is written around one supplier. Tendr reads a TED notice (EU public procurement), evaluates eight competition-restriction signals and publishes a report where every flag cites a quote that is verified, by code, to appear verbatim in the notice. The report carries its full reasoning trail, goes to independent reviewers (Reppo) before it is called verified, and can be bought per call by an agent with a Kite Agent Passport over x402.
+Companies lose days reading solicitations before discovering the requirement is written around one supplier. Tendr reads a US federal solicitation from SAM.gov (EU notices from TED also work), evaluates eight competition-restriction signals grounded in the FAR and publishes a report where every flag cites a quote that is verified, by code, to appear verbatim in the notice. The report carries its full reasoning trail, goes to independent reviewers (Reppo) before it is called verified, and can be bought per call by an agent with a Kite Agent Passport over x402.
+
+Data: SAM.gov publishes a public daily extract of all contract opportunities (no API key, no rate limit; downloading it is allowed by the SAM.gov Terms of Use). A daily cron streams the ~200 MB file in about 11 seconds and keeps the ~12,600 active solicitations from the last 30 days that have a description. Officials' emails and phone numbers are removed before any text reaches a model.
 
 Real data, real decisions, auditable steps: on a live notice from the Polish central bank (3.16 M PLN) it found a required integration with a named vendor's system without an equivalence clause, in 27 seconds, for one cent.
 
@@ -27,19 +29,36 @@ Real data, real decisions, auditable steps: on a live notice from the Polish cen
 
 The first real Reppo verdict on production (NBP notice, 4 Nov 2026) was `revise`, score 77/100: quotes verbatim and severities correct, but "slight implications of negativity in phrasing" in high-severity reasons. We turned that critique into a prompt change (signal prompts V2: reasons state what the notice says and which rule applies; the SERV shadow-agent hint now rejects effect/intent judgements). Before: "…which strongly limits potential bidders". After: "The notice says: '…integracją z Systemem DarkTrace' and the rule for this signal applies when a notice names a specific brand or product." Cost moved from ~$0.010 to ~$0.013 per report because gpt-6-luna more often hands a group to the gpt-5.4-mini fallback under the stricter check.
 
+## Does it judge correctly? A GAO-based evaluation set
+
+We built a ground-truth set from US GAO bid-protest decisions (`packages/core/eval/gao-cases.json`, run with `pnpm --filter @tendr/core eval`). Positives are protests GAO sustained because a solicitation term restricted competition (brand-name requirements, specifications beyond the agency's needs, narrowly shaped experience criteria). Negatives are protests on unrelated grounds whose decisions quote ordinary solicitation text. The input is only the solicitation language each decision quotes, copied from the decision PDF and checked by script to occur in it verbatim; the GAO outcome is never shown to the model. Each case runs 3 times through the production analysis path; a signal counts when it fires in at least 2 of 3 runs.
+
+| | Rules V1 | Rules V2 |
+|---|---|---|
+| Precision | 50% | 100% (3 of 3 flags correct) |
+| Recall | 17% | 50% |
+| Sustained protests caught | 1 of 6 | 3 of 6 |
+| Clean solicitations flagged | 1 of 7 | 0 of 7 |
+| Run-to-run stability | 90% | 92% |
+| Cost of the whole run | $0.07 | $0.08 |
+
+V1 flagged an agency's own information system (REMIS) as a brand and missed a task order for a named commercial product's maintenance (AtHoc). V2 states the FAR distinction in the brand rule: an agency-owned system is not a brand; buying or supporting a named commercial product is. V2 was tuned on this same set, so these numbers are not a held-out measurement. The remaining misses are honest limits of a text-only reader: GAO sustained them because the agency could not justify a requirement (a 5,000-gallon tank cap, a feeder capability, an exact labor-category match), which the solicitation text alone does not reveal. Tendr reports signals visible in the text; it does not claim to judge the agency's needs. Full per-case results: `packages/core/eval/results/`.
+
 ## Track
 
 Open Track.
 
 ## Revenue
 
-Per-report x402 sales to agents (no account needed), subscriptions for SMEs bidding in a CPV range, licences for newsrooms and NGOs. Cost of goods is about $0.01 per report.
+Per-report x402 sales to agents (no account needed), subscriptions for small businesses bidding in a NAICS range, licences for newsrooms and NGOs. Cost of goods is about $0.01 per report.
 
 ## Limitations
 
 - Stability on gpt-6-luna: in 10 live runs on the same notice, 9 produced the same verdict (30/100, named-brand high + no-lots low); 1 missed the brand signal (5/100). Reports are therefore sold only after independent review, and a report whose signal groups failed is marked partial and never sold.
 
-- Reports use the TED notice; full tender documentation on buyer platforms is not fetched yet.
-- Poland first; other member states work best-effort with a reduced-confidence note.
+- Reports read the notice text (SAM.gov description or TED notice); attachments such as the PWS or specifications are not fetched yet, and many restrictive terms live there.
+- The evaluation set is small (13 cases) and V2 rules were tuned on it.
+- EU: Poland first; other member states work best-effort with a reduced-confidence note.
 - Reppo verdicts are public on the Reppo feed; reports are public anyway.
-- Signals are heuristics under Directive 2014/24/EU. The product says "competition-restriction signals", never "rigged".
+- Signals are heuristics under the FAR (US) or Directive 2014/24/EU (EU). The product says "competition-restriction signals", never "rigged". Small-business set-asides are lawful and never flagged.
+- Tendr is not affiliated with GSA, SAM.gov or any government agency.

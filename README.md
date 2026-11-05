@@ -1,18 +1,20 @@
 # Tendr
 
-Competition-restriction signal reports for EU public tenders, with verbatim quotes, a full reasoning audit trail, independent verification and per-call sales to agents.
+Competition-restriction signal reports for US federal solicitations (SAM.gov) and EU tenders (TED), with verbatim quotes, a full reasoning audit trail, independent verification and per-call sales to agents.
 
 Built for [SERV Hackathon 02](https://www.openserv.ai/hackathon-2) (OpenServ, 2–15 November 2026), Open Track.
 
 ## What it does
 
-1. You give it a TED publication number (or pick one of the recent Polish IT notices on the home page).
-2. It downloads the eForms XML from TED, extracts the facts (buyer, value, deadline, criteria, conditions, named products) and evaluates **eight competition-restriction signals**: short deadline, named brand or incumbent system, over-specification, experience tied to one supplier, low price weight with subjective criteria, disproportionate financial conditions, no lots across a broad scope, unusual organisational requirements.
+1. You give it a SAM.gov notice id (32 characters, from `sam.gov/opp/<id>/view`) or a TED publication number, or pick one of the open federal IT solicitations on the home page.
+2. It reads the notice (SAM.gov: from the public daily extract a cron imports into Postgres, no API key needed; TED: official search API), extracts the facts (buyer, value, deadline, criteria, conditions, named products) and evaluates **eight competition-restriction signals** (FAR rules for US notices, Directive 2014/24/EU for EU notices): short deadline, named brand or incumbent system, over-specification, experience tied to one supplier, low price weight with subjective criteria, disproportionate financial conditions, no lots across a broad scope, unusual organisational requirements.
 3. Every signal that fires must cite a quote that the code verifies **verbatim against the notice text** (never against model output). Quotes that are not in the notice are dropped and the signal is unfired; extracted facts are filtered the same way before the signal step sees them.
 4. The report is published immediately as *pending independent verification*, then sent to **Reppo's Evaluation API**; the verdict becomes *verified*, *disputed* or *withheld*.
 5. Verified reports are sold per call over **x402** on the Kite network; an agent with a **Kite Agent Passport** buys one inside the spending limits its owner approved.
 
-Reports describe signals in the notice text. They never claim wrongdoing.
+Reports describe signals in the notice text. They never claim wrongdoing. Small-business set-asides are lawful and never flagged. Tendr is not affiliated with GSA, SAM.gov or any government agency.
+
+**Accuracy:** measured on a ground-truth set built from GAO bid-protest decisions (`pnpm --filter @tendr/core eval`): precision 100%, recall 50%, no false alarms on 7 clean solicitations, 92% run-to-run stability. Details and caveats in `docs/submission/write-up.md`.
 
 ## How it uses SERV Reasoning
 
@@ -30,10 +32,10 @@ Dolphin (DeepSeek V4.1 Flash, 1M context) is wired as an alternative extractor (
 ## Repository
 
 ```
-packages/core   pipeline: TED client, flattener, SERV/Dolphin clients, prompts, signals, verification, scoring, Reppo
+packages/core   pipeline: SAM.gov extract + API, TED client, flatteners, SERV/Dolphin clients, prompts, signals, verification, scoring, Reppo
 apps/web        Next.js app (Vercel): home, report page with live progress, audit tab, API, Reppo cron worker
 apps/x402       Express service from the Kite x402 template: GET /v1/report/{noticeId} behind a 402 paywall
-vercel.json     one Vercel project with two services (web + x402), /v1 and /healthz routed to x402, cron for Reppo
+vercel.json     one Vercel project with two services (web + x402), /v1 and /healthz routed to x402, crons for Reppo and the daily SAM.gov import
 docs/           research, spec, plan, submission materials
 ```
 
@@ -73,7 +75,7 @@ Reports that are not yet verified answer `409 { status, retryAfterSeconds }` and
 
 ## Deploy (Vercel)
 
-Import the repository as one project (root `./`, preset *Services*); `vercel.json` declares the `web` (Next.js) and `paywall` (Express, directory `apps/x402`) services, routes `/v1/*` and `/healthz` to x402 and everything else to web, binds `WEB_INTERNAL_URL` into x402, and schedules `/api/cron/reppo` every minute. Set the environment variables above on the project, then run `pnpm --filter @tendr/web db:push` once with `DATABASE_URL` to create the tables.
+Import the repository as one project (root `./`, preset *Services*); `vercel.json` declares the `web` (Next.js) and `paywall` (Express, directory `apps/x402`) services, routes `/v1/*` and `/healthz` to x402 and everything else to web, binds `WEB_INTERNAL_URL` into x402, and schedules `/api/cron/reppo` every minute and `/api/cron/sam-import` daily at 06:15 UTC. Set the environment variables above on the project, then run `pnpm --filter @tendr/web db:push` once with `DATABASE_URL` to create the tables.
 
 ## Example
 
