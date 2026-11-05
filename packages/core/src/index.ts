@@ -7,7 +7,7 @@ export * from "./llm/pricing";
 export * from "./llm/audit";
 export * from "./llm/serv";
 export * from "./llm/dolphin";
-export * from "./prompts/extract.v1";
+export * from "./prompts/extract.v2";
 export * from "./pipeline/extract";
 export * from "./prompts/signals-shared";
 export * from "./prompts/signals-a.v2";
