@@ -13,7 +13,7 @@ export function NoticeForm() {
     e.preventDefault();
     const id = value.trim();
     if (!isValidNoticeId(id)) {
-      setError("Enter a TED publication number such as 722731-2026.");
+      setError("Enter a SAM.gov notice id (32 characters, from the sam.gov/opp/… link) or a TED publication number such as 722731-2026.");
       return;
     }
     router.push(`/report/${id}`);
@@ -22,15 +22,14 @@ export function NoticeForm() {
   return (
     <form onSubmit={submit} className="flex flex-col gap-2 sm:flex-row sm:items-end">
       <label className="flex flex-1 flex-col gap-1 text-sm text-slate">
-        TED publication number
+        SAM.gov notice id or TED number
         <input
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
             setError(null);
           }}
-          placeholder="722731-2026"
-          inputMode="numeric"
+          placeholder="e.g. the id in sam.gov/opp/<id>/view"
           className="border border-rule bg-white px-3 py-2 text-base text-ink placeholder:text-mist"
           aria-invalid={error ? true : undefined}
         />

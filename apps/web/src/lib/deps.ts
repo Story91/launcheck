@@ -16,6 +16,7 @@ export function buildPipelineDeps(): PipelineDeps {
     fallbackModel: process.env.SERV_FALLBACK_MODEL ?? "gpt-5.4-mini",
     extractModel: process.env.SERV_EXTRACT_MODEL ?? "gemini-3.1-flash-lite",
     dolphinModel: process.env.DOLPHIN_MODEL,
+    samApiKey: process.env.SAM_API_KEY,
   };
 }
 

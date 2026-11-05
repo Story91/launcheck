@@ -8,8 +8,8 @@ const plexSans = IBM_Plex_Sans({ variable: "--font-plex-sans", subsets: ["latin"
 const plexSerif = IBM_Plex_Serif({ variable: "--font-plex-serif", subsets: ["latin", "latin-ext"], weight: ["400", "500"] });
 
 export const metadata: Metadata = {
-  title: "Tendr — competition-restriction signals for EU tenders",
-  description: "Auditable competition-restriction signal reports for TED procurement notices, with verbatim quotes and independent verification.",
+  title: "Tendr — competition-restriction signals for public tenders",
+  description: "Auditable competition-restriction signal reports for US federal (SAM.gov) and EU (TED) tenders, with verbatim quotes and independent verification.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
         <footer className="border-t border-rule">
           <p className="mx-auto max-w-5xl px-4 py-5 text-xs text-mist">
-            Reports describe competition-restriction signals found in the notice text. They are not findings of wrongdoing. Source: TED (Tenders Electronic Daily). Reasoning by SERV, independent review by Reppo.
+            Reports describe competition-restriction signals found in the notice text. They are not findings of wrongdoing. Sources: SAM.gov (US federal) and TED (EU). Reasoning by SERV, independent review by Reppo.
           </p>
         </footer>
       </body>

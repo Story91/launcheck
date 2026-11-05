@@ -1,3 +1,4 @@
+import { showsLanguageWarning } from "@/lib/source";
 import type { Report } from "@tendr/core";
 
 export const STATUS_COPY: Record<Report["status"], { label: string; tone: string }> = {
@@ -39,7 +40,7 @@ export function RiskMeter({ score }: { score: number }) {
   );
 }
 
-export function LanguageNote({ language }: { language: string | null }) {
-  if (!language || language === "POL") return null;
-  return <p className="text-sm text-amber">Non-PL notice: reduced confidence. Rules are applied under Directive 2014/24/EU; national thresholds may differ.</p>;
+export function LanguageNote({ noticeId, language }: { noticeId: string; language: string | null }) {
+  if (!showsLanguageWarning(noticeId, language)) return null;
+  return <p className="text-sm text-amber">Non-Polish EU notice: reduced confidence. Rules are applied under Directive 2014/24/EU; national thresholds may differ.</p>;
 }

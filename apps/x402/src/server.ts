@@ -47,7 +47,7 @@ export function createApp(opts: AppOptions): Express {
         {
           "/v1/*": {
             accepts: { scheme: "exact", price, network: chain.network, payTo: opts.payTo, maxTimeoutSeconds: 60 },
-            description: opts.description ?? "Tendr: competition-restriction signals report for one TED notice (verified reports only)",
+            description: opts.description ?? "Tendr: competition-restriction signals report for one public tender notice (SAM.gov or TED; verified reports only)",
             mimeType: "application/json",
           },
         },
