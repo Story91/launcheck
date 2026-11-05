@@ -1,0 +1,301 @@
+{
+  "about": "Ground-truth set from US GAO bid-protest decisions (federal works, public domain). Excerpts are solicitation language quoted in each decision, copied from the decision PDF (pdftotext; whitespace collapsed, straight quotes) and checked to occur verbatim in it. Positives: protests GAO sustained because a solicitation term restricted competition. Negatives: protests on unrelated grounds that quote ordinary solicitation text.",
+  "collectedAt": "2026-11-05",
+  "cases": [
+    {
+      "id": "B-422670",
+      "title": "Wilson 5 Service Company, Inc.",
+      "date": "2024-09-25",
+      "url": "https://www.gao.gov/assets/880/871709.pdf",
+      "sourceType": "gao.gov",
+      "agency": "General Services Administration, Public Buildings Service",
+      "solicitationNumber": "47PN0424Q0003",
+      "outcome": "sustained",
+      "group": "positive",
+      "ground": "Pre-award challenge to a facilities-maintenance RFQ that automatically penalized prior-experience examples not covering multiple facilities under one contract at least 200 miles apart; GAO sustained because GSA could not justify these experience criteria (the two-phase scheme challenge was denied).",
+      "excerpts": [
+        "projects should be inclusive of two or more facilities, geographically dispersed from one another under one contract.",
+        "[a] distance of less than 200 miles between at least two of the locations under a project will be viewed as an unfavorable aspect of the offeror's quote",
+        "[p]rojects not inclusive of two or more facilities will be viewed as an unfavorable aspect of the offeror's quote.",
+        "projects must be inclusive of two or more facilities . . . under one contract vehicle."
+      ],
+      "expectedSignals": [
+        "S4_EXPERIENCE_LOCK"
+      ],
+      "labelNote": "Experience criteria shaped so that only a vendor with a particular single-contract, geographically dispersed portfolio scores well; closest fit is the experience-lock signal (not tied to a named incumbent, so S4 is an approximation)."
+    },
+    {
+      "id": "B-420119",
+      "title": "Westwind Computer Products, Inc.",
+      "date": "2021-12-08",
+      "url": "https://www.gao.gov/assets/b-420119.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of Agriculture",
+      "solicitationNumber": "12314421Q0078",
+      "outcome": "sustained",
+      "group": "positive",
+      "ground": "Pre-award challenge to a SEWP task-order RFQ limited to Microsoft enterprise licenses; GAO sustained because the brand-name justification did not show, through market research, that other companies' products could not meet USDA's needs (FAR 16.505(a)(4)).",
+      "excerpts": [
+        "USDA has standardized on Microsoft Office, email and cloud and has been using these tools for over 20 years.",
+        "software provided must support the existing email system, business applications (word processing, spreadsheets, and slide presentations, etc.) and agency applications without the need for programming modifications."
+      ],
+      "expectedSignals": [
+        "S2_BRAND_LOCK"
+      ],
+      "labelNote": "Solicitation text ties the requirement to the agency's installed Microsoft environment and compatibility with it; GAO notes the RFQ specifies vendors are to propose only Microsoft products (that sentence is GAO's paraphrase, not quoted)."
+    },
+    {
+      "id": "B-414987",
+      "title": "Global SuperTanker Services, LLC",
+      "date": "2017-11-06",
+      "url": "https://www.gao.gov/assets/b-414987,b-414987.2.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of Agriculture, Forest Service",
+      "solicitationNumber": "AG-024B-S16-9014",
+      "outcome": "sustained",
+      "group": "positive",
+      "ground": "Pre-award challenge to a new 5,000-gallon maximum tank capacity in a call-when-needed airtanker RFP that excluded very large airtankers; GAO sustained because the record did not show the cap was reasonably necessary to meet the agency's needs.",
+      "excerpts": [
+        "required to have a minimum tank capacity of 3,000 gallons that will deliver long term retardant to active wildland fires.",
+        "The minimum required volume is 3000 gallons (dispensable) and 27,000 pounds of payload. The maximum allowed volume is 5000 gallons (dispensable) and 45,000 pounds of payload. . . . Aircraft with less than 3000-gallon dispensing capacity or greater than 5000-gallon dispensing capacity will not be considered.",
+        "The Government does not guarantee the placement of any orders for service under the BOA and the Contractor is not obligated to accept any orders.",
+        "After BOAs are awarded, the CO will order a CWN Airtanker based on operational needs, which is determined to be the best value to the Government from all aircraft that are awarded a BOA. . . . To determine best value for each initial order, the CO will consider the following factors: aircraft capability, aircraft location, availability and cost at the time of its activation."
+      ],
+      "expectedSignals": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "labelNote": "A maximum-capacity cap that excludes larger aircraft is a technical limit beyond the agency's demonstrated needs (FAR 11.002), i.e., over-specification."
+    },
+    {
+      "id": "B-413876.2",
+      "title": "Pitney Bowes, Inc.",
+      "date": "2017-02-13",
+      "url": "https://www.gao.gov/assets/b-413876.2.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of the Treasury, Internal Revenue Service",
+      "solicitationNumber": "TIRMS-16-R-00016",
+      "outcome": "sustained",
+      "group": "positive",
+      "ground": "Pre-award challenge to folder/inserter specifications (built around the PS200 or equivalent) requiring load-on-the-fly high-capacity feeders; GAO sustained because the IRS did not show that capability was necessary when alternating feeders could meet the same need.",
+      "excerpts": [
+        "[a] high capacity sheet feeder with a capacity of up to 1,000 per feeder with the capability of loading on the fly",
+        "[a] feeder swap capability for up to 10 sheet feeders per machine",
+        "[o]ne envelope feeder to handle all types of envelopes from letters to flats."
+      ],
+      "expectedSignals": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "labelNote": "Feature-level specifications that exceeded the demonstrated need; GAO also notes the CLINs reference the brand-name PS200, but that is paraphrase, so S2 is not claimed from the excerpts."
+    },
+    {
+      "id": "B-408196",
+      "title": "Desktop Alert, Inc.",
+      "date": "2013-07-22",
+      "url": "https://www.gao.gov/assets/b-408196.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of Defense, Defense Contract Management Agency",
+      "solicitationNumber": "S5121A-13-Q-0013",
+      "outcome": "sustained",
+      "group": "positive",
+      "ground": "Pre-award challenge to an FSS RFQ limited to the AtHoc mass-notification brand and authorized AtHoc resellers; GAO sustained because the limited-source justification did not define the needs, explain why AtHoc was essential, or reflect adequate market research.",
+      "excerpts": [
+        "DCMA plans to establish a Task Order against a GSA Federal Supply Schedule (FSS) contract for AtHoc Mass Notification Software Maintenance and Support.",
+        "due to the open market items (Items 0006, 0007, 0008, and 0009) and to satisfy regulations,",
+        "FAR clauses applicable to the open market items have been added."
+      ],
+      "expectedSignals": [
+        "S2_BRAND_LOCK"
+      ],
+      "labelNote": "The quoted requirement names a single proprietary product (AtHoc) with no 'or equal'; the other two excerpts are routine amendment text included to reach length."
+    },
+    {
+      "id": "B-416733",
+      "title": "Grant Thornton, LLC",
+      "date": "2018-11-29",
+      "url": "https://www.gao.gov/assets/b-416733.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of Defense, Washington Headquarters Services",
+      "solicitationNumber": "HQ003418R0198",
+      "outcome": "sustained",
+      "group": "positive",
+      "ground": "Pre-award challenge to an FSS audit-support RFQ requiring vendors' schedule labor categories to 'align precisely' with PWS minimum years of experience, so 'minimum of 10 years' could not satisfy a 12-year position; GAO sustained the provision as unduly restrictive.",
+      "excerpts": [
+        "The pricelist description of the vendor's quoted FSS labor category must align precisely with the requirements of the corresponding PWS-defined labor category.",
+        "For example, the PWS-defined labor category of Systems Analyst IV requires 12 years of experience and a Master's degree. To fill the services of the Systems Analyst IV, a vendor may not quote [an] FSS labor category that provides for only 10 years of experience and a Master's degree.",
+        "The vendor may not quote such labor category for the Systems Analyst IV even if the FSS pricelist description uses wording such [as] \"minimum of 10 years,\" \"10+ years,\" \"at least 10 years,\" etc.",
+        "The minimum number of years of experience listed in the FSS pricelist description must be no less than the minimum number of years listed in the Attachment 1.3 definition of the PWS labor category."
+      ],
+      "expectedSignals": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "labelNote": "An evaluation rule stricter than the agency's need (form-matching of schedule text rather than capability); arguably S4 as well, but it is not tied to an incumbent or product, so S3 is the primary label."
+    },
+    {
+      "id": "B-422388.3",
+      "title": "emissary LLC",
+      "date": "2025-07-29",
+      "url": "https://www.gao.gov/assets/890/880688.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of Defense, Washington Headquarters Services",
+      "solicitationNumber": "HQ0034-23-R-0290",
+      "outcome": "sustained",
+      "group": "negative",
+      "ground": "Post-award protest of technical, key-personnel and past-performance evaluations of the awardee; GAO sustained because the evaluations and resulting tradeoff were unreasonable (nothing about solicitation restrictiveness).",
+      "excerpts": [
+        "submit a detailed management and staffing approach that describes labor categories with at least the minimum required descriptions in accordance with the PWS and an appropriate labor mix.",
+        "The Management & Staffing Approach will be evaluated to determine the extent to which the Offeror's approach reflects a detailed methodology, including a descriptive labor categories and labor mix in accordance with the PWS, to accomplish the tasks listed in Part 5 of the PWS . . .",
+        "to become fully functional within the 30 calendar days to begin full performance on the first day of the base period of performance.",
+        "[m]inimum 3 years of experience with Global Force Management and the Secretary of Defense Orders Book process.",
+        "evaluate how well the Offeror has performed on contracts that have been determined to be both recent and relevant to the PWS"
+      ],
+      "expectedSignals": [],
+      "labelNote": "Ordinary staffing, phase-in, key-personnel and past-performance language; the key-person experience minimum is job-related, not tied to the agency or incumbent. GAO paraphrases that non-price factors were significantly more important than price, but that is not quoted, so no S5."
+    },
+    {
+      "id": "B-422938",
+      "title": "ATP Gov, LLC",
+      "date": "2024-12-12",
+      "url": "https://www.gao.gov/assets/880/874160.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of the Air Force",
+      "solicitationNumber": "FA872624RB021",
+      "outcome": "sustained",
+      "group": "negative",
+      "ground": "Post-award protest that the awardee's satellite terminal assembly was not WGS-certified at proposal submission as the FOPR required; GAO sustained because award to a noncompliant proposal was unreasonable.",
+      "excerpts": [
+        "conforms to the solicitation's requirements (to include all stated terms, conditions, representations, certifications, and all other information required by this FOPR) and is judged, based on the evaluation factors to represent the best value to the Government.",
+        "The Offeror's solution must meet the technical requirements of the TRD.",
+        "The Offeror's solution will be evaluated to determine its ability to meet the technical requirements of the system (the TRD). Threshold requirements must be met in order to be considered acceptable.",
+        "shall provide auto-tracking/auto-acquire functionality,",
+        "[t]he terminal assembly shall be certified via [Army Forces Strategic Command] for operation with the antenna(s), allowing transmission over [Wideband Global Satellite Communications (WGS)] when integrated with WGS-certified equipment."
+      ],
+      "expectedSignals": [],
+      "labelNote": "Standard technical-acceptability language; the WGS certification is a government interoperability standard, not a brand or incumbent lock. Borderline hard negative: a detector may be tempted to flag the certification as S4/S6."
+    },
+    {
+      "id": "B-421525",
+      "title": "General Dynamics Information Technology, Inc.",
+      "date": "2023-05-26",
+      "url": "https://www.gao.gov/assets/830/825933.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of the Army",
+      "solicitationNumber": "W50NH9-22-R-0005",
+      "outcome": "sustained",
+      "group": "negative",
+      "ground": "Pre-award challenge to an IT-support task-order RTOP that was out of scope and contradictory about a firm-fixed-price level-of-effort structure; GAO sustained on ambiguity and FAR 16.207 noncompliance, not on restrictiveness.",
+      "excerpts": [
+        "provide subject matter experts necessary to provide support to maintain the C4IM of INSCOM's local networks and corollary infrastructure.",
+        "[t]he contractor shall provide the level of support",
+        "[t]here are 4,751,392 million hours that can be utilized throughout the contract; the estimated annual 950 [thousand] is for proposal purposes and workload planning.",
+        "[t]he Government [would not be] held to a set amount of hours annually."
+      ],
+      "expectedSignals": [],
+      "labelNote": "Scope and level-of-effort language; the defect is ambiguity and contract type, which none of S1-S8 covers."
+    },
+    {
+      "id": "B-422886.2",
+      "title": "NARCORPS Specialties, LLC",
+      "date": "2025-03-28",
+      "url": "https://www.gao.gov/assets/880/877482.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of Homeland Security, Transportation Security Administration",
+      "solicitationNumber": "70T01024Q7670N009",
+      "outcome": "denied",
+      "group": "negative",
+      "ground": "Post-award protest of an LPTA role-player task order challenging the awardee's past-performance and technical evaluation and the lack of a price realism analysis; GAO denied the evaluation grounds and dismissed the realism ground.",
+      "excerpts": [
+        "a history of developing and delivering satisfactory services/products in the areas described in the solicitation (or areas similar in size, scope and complexity to the solicitation and the [statement of work (SOW)]).",
+        "may reject any quote that is evaluated to be non-compliant with the solicitation requirements or reflects a failure to comprehend the complexity and risks of the work to be performed.",
+        "must be experienced in providing role player support services[.]",
+        "develop and implement the detailed transition strategies and processes needed to enable an efficient transfer of services[.]"
+      ],
+      "expectedSignals": [],
+      "labelNote": "Generic past-performance, compliance and transition language in an LPTA buy; nothing restrictive."
+    },
+    {
+      "id": "B-424200.2",
+      "title": "ShorePoint, LLC",
+      "date": "2026-08-24",
+      "url": "https://www.gao.gov/assets/890/888636.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of Health and Human Services, National Institutes of Health",
+      "solicitationNumber": "75N98025R00020",
+      "outcome": "denied",
+      "group": "negative",
+      "ground": "Post-award protest of a low-confidence past-performance rating that excluded the protester; GAO denied because the evaluation of the magnitude and complexity of prior work matched the RFQ.",
+      "excerpts": [
+        "excluded from award due to the level of risk it presents.",
+        "at least 3 but no more than 5 similar contracts, within the past 5 years, for which the responder was the prime contractor",
+        "demonstrate an ability to perform future contracts of this magnitude and complexity.",
+        "[h]ow the characteristics of the organizational examples provided are similar to or different than the NIH's (such as size of organization, public versus private, carrier selection, demographics, etc.)."
+      ],
+      "expectedSignals": [],
+      "labelNote": "Ordinary past-performance instructions. Hard negative: asking how prior clients compare with NIH could tempt an S4 flag, but it is relevance-based and not limited to this agency or the incumbent."
+    },
+    {
+      "id": "B-424321.2",
+      "title": "Absolute Strategic Technologies, LLC",
+      "date": "2026-06-18",
+      "url": "https://www.gao.gov/assets/890/887335.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of the Air Force",
+      "solicitationNumber": "FA8770-25R-B006",
+      "outcome": "denied",
+      "group": "negative",
+      "ground": "Post-award protest of the technical evaluation (missing strengths, disparate treatment), price realism and the best-value tradeoff for REMIS support; GAO denied because the evaluation was reasonable and the FOPR did not provide for price realism.",
+      "excerpts": [
+        "maintain operation of the REMIS system",
+        "implement[] new capability and software corrections,",
+        "will include all aspects of the software development process.",
+        "an aspect of an Offeror's proposal that has merit or exceeds specified performance or capability requirements in a way that will be advantageous to the Government during contract performance.",
+        "[t]his effort will have CPFF-LOE CLINs, so a Cost Realism analysis will need to be accomplished,",
+        "Cost Realism analysis is the process of independently reviewing and evaluating specific elements of each offeror's proposed cost estimate."
+      ],
+      "expectedSignals": [],
+      "labelNote": "Standard statement-of-objectives, strength-definition and cost-realism language; nothing restrictive."
+    },
+    {
+      "id": "B-423172.4",
+      "title": "1st SBC Solutions, LLC",
+      "date": "2025-08-01",
+      "url": "https://www.gao.gov/assets/890/880602.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of the Treasury, Internal Revenue Service",
+      "solicitationNumber": "2032H5-24-R-00013",
+      "outcome": "denied",
+      "group": "negative",
+      "ground": "Post-award protest alleging non-meaningful discussions during corrective action, relaxation of a staffing-consistency instruction for the awardee, and a flawed price realism and past-performance evaluation; GAO denied.",
+      "excerpts": [
+        "any entity proposed to perform 30 [percent] or more of the total proposed contract value[.]",
+        "[i]nformation including the name, title, and actual hourly rate . . . for each individual proposed[.]",
+        "staff proposed in the technical submittal must be the same staff proposed in the cost submittal[.]"
+      ],
+      "expectedSignals": [],
+      "labelNote": "Routine definition and price-proposal instructions; nothing restrictive. Excerpts total under 300 characters."
+    }
+  ],
+  "excluded": [
+    {
+      "id": "B-423993",
+      "title": "Effective Communication Strategies, LLC",
+      "date": "2026-02-18",
+      "url": "https://www.gao.gov/assets/890/885096.pdf",
+      "sourceType": "gao.gov",
+      "agency": "Department of the Army, Corps of Engineers",
+      "solicitationNumber": "W912DY-25-Q-A101",
+      "outcome": "sustained",
+      "group": "positive",
+      "ground": "Post-award protest of an appliance RFQ amended repeatedly with material refrigerator specification changes and response windows of under an hour to a day (including a weekend); GAO sustained because vendors were not given a reasonable opportunity to respond (FAR 5.203(b), 13.003(h)(2)).",
+      "excerpts": [
+        "a. Shall be maximum 22.5\"W x 23\"D x 57.25\"H. Dimensions are critical.",
+        "b. Shall have total capacity of 7.4 cu. ft. c. Shall have 2 doors with separate freezer compartment. d. Shall have a minimum of: i. 2 Full width adjustable shelves in the main compartment ii. 2 Crispers iii. 3 Shelves in the door of main compartment iv. 1 Full width adjustable shelf in the freezer compartment v. 2 Shelves in the door of freezer compartment e. Doors shall be installed hinged 50% on the left and 50% on the right. f. Shall be Energy Star certified.",
+        "g. Color shall be stainless steel. h. Shall provide minimum 1 year warranty on parts and labor."
+      ],
+      "expectedSignals": [
+        "S1_SHORT_DEADLINE"
+      ],
+      "labelNote": "GAO's holding is the unreasonably short response time, but the deadlines appear only in GAO's narrative and agency e-mails, not in quoted solicitation text; the excerpts are the amendment 0007 refrigerator specification, so a text-only detector can at most see tight specs (possible S3) and will likely miss S1.",
+      "excludedReason": "The sustained ground (unreasonably short response time) is described only in GAO's narrative and agency emails; the solicitation text GAO quotes is the product specification, so a text-only reader cannot see it."
+    }
+  ]
+}
