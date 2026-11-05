@@ -4,6 +4,12 @@ import { isValidNoticeId } from "@tendr/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+/** Accepts a bare id or anything pasted from TED (URL, "Notice 722731-2026", …). */
+export function extractNoticeId(raw: string): string {
+  const m = raw.match(/\b(\d{1,8}-\d{4})\b/);
+  return m ? m[1] : raw.trim();
+}
+
 export function NoticeForm() {
   const router = useRouter();
   const [value, setValue] = useState("");
@@ -11,34 +17,36 @@ export function NoticeForm() {
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    const id = value.trim();
+    const id = extractNoticeId(value);
     if (!isValidNoticeId(id)) {
-      setError("Enter a TED publication number such as 722731-2026.");
+      setError("Paste a TED link or a publication number such as 722731-2026.");
       return;
     }
     router.push(`/report/${id}`);
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-2 sm:flex-row sm:items-end">
-      <label className="flex flex-1 flex-col gap-1 text-sm text-slate">
-        TED publication number
+    <form onSubmit={submit} className="flex flex-col gap-2">
+      <label className="sr-only" htmlFor="ted-link">
+        TED link or publication number
+      </label>
+      <div className="flex rounded-2xl border-2 border-ink bg-white focus-within:ring-2 focus-within:ring-tide">
         <input
+          id="ted-link"
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
             setError(null);
           }}
-          placeholder="722731-2026"
-          inputMode="numeric"
-          className="border border-rule bg-white px-3 py-2 text-base text-ink placeholder:text-mist"
+          placeholder="Paste a TED link"
+          className="min-w-0 flex-1 rounded-2xl bg-transparent px-4 py-3.5 text-lg text-ink outline-none placeholder:text-mist"
           aria-invalid={error ? true : undefined}
         />
-      </label>
-      <button type="submit" className="bg-ink px-4 py-2 text-base text-paper hover:bg-slate">
-        Analyze notice
-      </button>
-      {error && <p className="text-sm text-seal sm:basis-full">{error}</p>}
+        <button type="submit" className="m-1.5 rounded-xl bg-ink px-4 text-paper hover:bg-slate">
+          Analyze
+        </button>
+      </div>
+      {error && <p className="text-sm text-seal">{error}</p>}
     </form>
   );
 }
