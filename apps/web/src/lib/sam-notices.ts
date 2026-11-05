@@ -43,12 +43,11 @@ export class MemorySamNoticeStore implements SamNoticeStore {
     return this.rows.get(noticeId)?.flat ?? null;
   }
   async listOpen({ naicsPrefixes, limit, now }: ListOpenOptions) {
-    return [...this.rows.values()]
+    const open = [...this.rows.values()]
       .filter((n) => naicsPrefixes.some((p) => n.naics?.startsWith(p)))
       .filter((n) => !n.responseDeadline || new Date(n.responseDeadline) > now)
-      .sort((a, b) => b.postedAt.localeCompare(a.postedAt))
-      .slice(0, limit)
-      .map(summary);
+      .sort((a, b) => b.postedAt.localeCompare(a.postedAt));
+    return dedupeBySolicitation(open).slice(0, limit).map(summary);
   }
   async pruneOlderThan(cutoff: Date) {
     let pruned = 0;
@@ -58,6 +57,17 @@ export class MemorySamNoticeStore implements SamNoticeStore {
   async count() {
     return this.rows.size;
   }
+}
+
+/** Amendments are posted as new notices with the same solicitation number: keep the first (newest) of each. */
+function dedupeBySolicitation<T extends { noticeId: string; solicitationNumber: string | null }>(rows: T[]): T[] {
+  const seen = new Set<string>();
+  return rows.filter((r) => {
+    const key = r.solicitationNumber?.trim().toUpperCase() || r.noticeId;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 const deadlineAt = (s: string | null) => {
@@ -114,12 +124,12 @@ export class DrizzleSamNoticeStore implements SamNoticeStore {
     const t = schema.samNotices;
     const naics = or(...naicsPrefixes.map((p) => sql`${t.naics} like ${`${p}%`}`));
     const rows = await db()
-      .select({ noticeId: t.noticeId, title: t.title, agency: t.agency, responseDeadline: t.responseDeadline })
+      .select({ noticeId: t.noticeId, title: t.title, agency: t.agency, responseDeadline: t.responseDeadline, solicitationNumber: t.solicitationNumber })
       .from(t)
       .where(and(naics, or(isNull(t.responseDeadlineAt), gt(t.responseDeadlineAt, now))))
       .orderBy(desc(t.postedAt))
-      .limit(limit);
-    return rows.map(summary);
+      .limit(limit * 4);
+    return dedupeBySolicitation(rows).slice(0, limit).map(summary);
   }
   async pruneOlderThan(cutoff: Date) {
     const rows = await db().delete(schema.samNotices).where(lt(schema.samNotices.postedAt, cutoff)).returning({ id: schema.samNotices.noticeId });

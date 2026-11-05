@@ -47,3 +47,16 @@ describe("MemorySamNoticeStore.listOpen", () => {
     expect(list[0]).toMatchObject({ title: "Notice b2", buyer: "DEPT OF THE NAVY", deadline: "2026-11-20T17:00:00-05:00" });
   });
 });
+
+describe("MemorySamNoticeStore.listOpen de-duplication", () => {
+  it("shows one entry per solicitation number (amendments get new notice ids), the newest", async () => {
+    const store = new MemorySamNoticeStore();
+    await store.upsertMany([
+      n("j1", { title: "JFrog", solicitationNumber: "SOL-1", postedAt: "2026-11-01T00:00:00Z" }),
+      n("j2", { title: "JFrog", solicitationNumber: "SOL-1", postedAt: "2026-11-03T00:00:00Z" }),
+      n("k1", { title: "Other", solicitationNumber: null, postedAt: "2026-11-02T00:00:00Z" }),
+    ]);
+    const list = await store.listOpen({ naicsPrefixes: ["5415"], limit: 10, now: NOW });
+    expect(list.map((x) => x.noticeId.replace(/0+$/, ""))).toEqual(["j2", "k1"]);
+  });
+});
