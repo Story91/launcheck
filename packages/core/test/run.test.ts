@@ -155,7 +155,38 @@ describe("generateReport", () => {
     }) as unknown as typeof fetch;
     const report = await generateReport("abc", deps({ fetchImpl: fetchSpy }));
     expect(report.status).toBe("failed");
-    expect(report.error).toMatch(/not a valid TED publication number/);
+    expect(report.error).toMatch(/neither a SAM.gov notice id .* nor a TED publication number/);
     expect(fetched).toBe(false);
+  });
+});
+
+describe("generateReport for SAM.gov (US) notices", () => {
+  const SAM_ID = "3f2a9c41d7e84b6a9b1c0d2e5f6a7b8c";
+  const samSearch = readFileSync(new URL("./fixtures/sam-search.json", import.meta.url), "utf8");
+  const samDesc = readFileSync(new URL("./fixtures/sam-description.json", import.meta.url), "utf8");
+  const samFetch = (async (url: string) =>
+    new Response(url.includes("/noticedesc") ? samDesc : samSearch, { status: 200, headers: { "content-type": "application/json" } })) as unknown as typeof fetch;
+
+  it("ingests from SAM.gov, extracts with a US jurisdiction hint and evaluates with the FAR prompts", async () => {
+    const requests: ChatRequest[] = [];
+    const recording: LlmClient = { chat: (req) => (requests.push(req), servStub.chat(req)) };
+    const report = await generateReport(SAM_ID, deps({ serv: recording, fetchImpl: samFetch, samApiKey: "k" }));
+    expect(report.status).toBe("pending_verification");
+    expect(report.noticeLanguage).toBe("ENG");
+    expect(report.buyerPlatform).toBe(`https://sam.gov/opp/${SAM_ID}/view`);
+    expect(requests.find((r) => r.jsonSchema?.name === "tender_facts")?.user).toContain("jurisdiction: US federal (FAR)");
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V1", "SIGNALS_C_US_V1"]);
+  });
+
+  it("fails with a clear message when SAM_API_KEY is missing", async () => {
+    const report = await generateReport(SAM_ID, deps({ fetchImpl: samFetch }));
+    expect(report.status).toBe("failed");
+    expect(report.error).toMatch(/SAM_API_KEY/);
+  });
+
+  it("names both accepted id formats when the id is malformed", async () => {
+    const report = await generateReport("abc", deps());
+    expect(report.error).toMatch(/SAM\.gov notice id/);
+    expect(report.error).toMatch(/TED publication number/);
   });
 });

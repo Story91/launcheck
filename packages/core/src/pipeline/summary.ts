@@ -3,7 +3,7 @@ import { makeAudit } from "../llm/audit";
 import { DISABLE_CONTENT_FILTER } from "../llm/markers";
 import { parseJsonContent } from "../llm/serv";
 import type { LlmClient } from "../llm/types";
-import { SUMMARY_SCHEMA, SUMMARY_V1 } from "../prompts/summary.v1";
+import { SUMMARY_SCHEMA, SUMMARY_V2 } from "../prompts/summary.v2";
 import type { AuditEntry, Signal } from "../types";
 
 export interface SummaryInput {
@@ -23,11 +23,11 @@ export async function summarize(
   });
   const res = await deps.serv.chat({
     model: deps.model,
-    system: SUMMARY_V1,
+    system: SUMMARY_V2,
     user,
     jsonSchema: { name: "summary", schema: SUMMARY_SCHEMA },
     tools: [DISABLE_CONTENT_FILTER],
   });
   const { summary } = parseJsonContent(res, z.object({ summary: z.string() }));
-  return { summary, audit: makeAudit("summary", "SUMMARY_V1", user, res) };
+  return { summary, audit: makeAudit("summary", "SUMMARY_V2", user, res) };
 }

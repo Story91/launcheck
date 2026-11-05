@@ -6,6 +6,7 @@ import { AuditTable } from "@/components/audit-table";
 import { LanguageNote, RiskMeter, StatusBadge } from "@/components/badges";
 import { ProgressSteps } from "@/components/progress-steps";
 import { SignalCard } from "@/components/signal-card";
+import { noticeSource } from "@/lib/source";
 
 type Stored = Report & { progress: string | null };
 const FAST_POLL_MS = 2000;
@@ -85,6 +86,7 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
     );
   }
 
+  const source = noticeSource(report.noticeId, report.buyerPlatform);
   const fired = report.signals.filter((s) => s.fired);
   const rest = report.signals.filter((s) => !s.fired);
   const value = report.facts?.estimatedValue ? Number(report.facts.estimatedValue.replace(/[^\d.]/g, "")) : NaN;
@@ -93,7 +95,7 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
     <div className="space-y-10">
       <section>
         <p className="text-sm text-slate">
-          {report.facts?.buyer} · TED {report.noticeId}
+          {report.facts?.buyer} · <a href={source.url} target="_blank" rel="noreferrer" className="text-tide underline-offset-2 hover:underline">{source.label} notice</a>
           {Number.isFinite(value) && ` · ${value.toLocaleString("en-GB")} ${report.facts?.currency ?? ""}`}
           {report.facts?.deadlineForTenders && ` · tenders due ${report.facts.deadlineForTenders.slice(0, 10)}`}
         </p>
@@ -102,7 +104,7 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
           <StatusBadge status={report.status} />
           {report.reppo?.sandbox && <span className="text-sm text-amber">Sandbox verdict (not an independent review)</span>}
           {report.partial && <span className="text-sm text-amber">Partial: some signals could not be evaluated</span>}
-          <LanguageNote language={report.noticeLanguage} />
+          <LanguageNote noticeId={report.noticeId} language={report.noticeLanguage} />
         </div>
       </section>
 

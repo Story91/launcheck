@@ -1,11 +1,29 @@
-import { defaultSearchQuery, searchNotices, type NoticeSummary, type Report } from "@tendr/core";
+import { defaultSearchQuery, searchNotices, searchSamOpportunities, type NoticeSummary, type Report } from "@tendr/core";
 import Link from "next/link";
 import { NoticeForm } from "@/components/notice-form";
 import { type MarketItem, TenderMarket } from "@/components/tender-market";
 import { reportStore } from "@/lib/store";
 import { isReady, strongestQuote, verdictWord } from "@/lib/verdict";
 
-export const revalidate = 300;
+// SAM.gov personal API keys have a small daily request budget: refresh the list a few times a day only.
+export const revalidate = 21600;
+
+async function loadNotices(): Promise<{ source: "SAM.gov" | "TED"; notices: NoticeSummary[] }> {
+  const apiKey = process.env.SAM_API_KEY;
+  if (apiKey) {
+    try {
+      const notices = await searchSamOpportunities({ apiKey, limit: 5 });
+      if (notices.length > 0) return { source: "SAM.gov", notices: notices.slice(0, 15) };
+    } catch {
+      /* fall back to TED below */
+    }
+  }
+  try {
+    return { source: "TED", notices: await searchNotices(defaultSearchQuery(), { limit: 12 }) };
+  } catch {
+    return { source: "TED", notices: [] };
+  }
+}
 
 const SIGNAL_NAMES: Record<string, string> = {
   S1_SHORT_DEADLINE: "short deadline",
@@ -19,13 +37,8 @@ const SIGNAL_NAMES: Record<string, string> = {
 };
 
 export default async function HomePage() {
-  let notices: NoticeSummary[] = [];
+  const { source, notices } = await loadNotices();
   let reports: Report[] = [];
-  try {
-    notices = await searchNotices(defaultSearchQuery(), { limit: 12 });
-  } catch {
-    notices = [];
-  }
   try {
     reports = (await reportStore().listRecent(200)).filter(isReady);
   } catch {
@@ -63,7 +76,7 @@ export default async function HomePage() {
         <div className="flex min-w-0 flex-col justify-center gap-4 bg-seal p-6 text-white sm:p-12">
           {featured ? (
             <>
-              <p className="text-sm opacity-80">Answer · {featured.facts?.buyer ?? `TED ${featured.noticeId}`}</p>
+              <p className="text-sm opacity-80">Answer · {featured.facts?.buyer ?? featured.noticeId}</p>
               <p className="font-sans text-7xl font-extrabold leading-none tracking-tight sm:text-8xl">{verdictWord(featured.riskScore)}</p>
               <p className="text-lg opacity-90">
                 {firedCount} of {featured.signals.length} signals · {highCount} high · score {featured.riskScore}/100
@@ -84,7 +97,7 @@ export default async function HomePage() {
           )}
         </div>
       </section>
-      <TenderMarket items={items} />
+      <TenderMarket items={items} source={source} />
     </div>
   );
 }

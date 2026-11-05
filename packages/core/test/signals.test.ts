@@ -62,11 +62,32 @@ describe("evaluateSignals", () => {
     expect(res.signals.every((s) => Signal.safeParse(s).success)).toBe(true);
     expect(res.audit).toHaveLength(3);
     expect(res.audit.every((a) => a.model.endsWith("-serv-multipath"))).toBe(true);
+    expect(res.audit.map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_V2", "SIGNALS_B_V2", "SIGNALS_C_V2"]);
     for (const r of requests) {
       expect(r.model).toBe("gpt-6-luna-serv-multipath");
       expect(r.tools?.map((t) => t.function.name)).toEqual(["serv_disable_content_filter", "serv_shadow_agent"]);
       expect(r.user).toContain("Narodowy Bank Polski");
+      expect(r.system).toMatch(/factual observations about the notice/);
+      const hint = (r.tools?.[1]?.function.parameters as { properties: { hint: { default: string } } }).properties.hint.default;
+      expect(hint).toMatch(/verbatim/);
+      expect(hint).toMatch(/no judgement/);
     }
+  });
+
+  it("uses the FAR prompt set for US notices", async () => {
+    const { client, requests } = stub({
+      A: [ok(JSON.stringify(groupA), "gpt-6-luna-serv-multipath")],
+      B: [ok(JSON.stringify(groupB), "gpt-6-luna-serv-multipath")],
+      C: [ok(JSON.stringify(groupC), "gpt-6-luna-serv-multipath")],
+    });
+    const res = await evaluateSignals(facts, { ...deps(client), jurisdiction: "US" });
+    expect(res.audit.map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V1", "SIGNALS_C_US_V1"]);
+    for (const r of requests) {
+      expect(r.system).toMatch(/Federal Acquisition Regulation/);
+      expect(r.system).not.toMatch(/Directive 2014\/24\/EU/);
+    }
+    expect(requests.find((r) => r.jsonSchema?.name === "signals_B")?.system).toMatch(/brand name or equal/i);
+    expect(requests.find((r) => r.jsonSchema?.name === "signals_C")?.system).toMatch(/set-aside/i);
   });
 
   it("retries a degenerate group once on the fallback model", async () => {

@@ -4,6 +4,7 @@ import type { NoticeSummary, Signal } from "@tendr/core";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SignalFingerprint } from "@/components/fingerprint";
+import { noticeSource } from "@/lib/source";
 
 export type MarketItem = NoticeSummary & { analysis: { riskScore: number; signals: Signal[] } | null };
 
@@ -28,7 +29,12 @@ function scoreTone(score: number): string {
   return score >= 50 ? "text-seal" : score >= 25 ? "text-amber" : "text-tide";
 }
 
-export function TenderMarket({ items }: { items: MarketItem[] }) {
+const SUBTITLE = {
+  "SAM.gov": "Live from SAM.gov · federal IT solicitations · NAICS 5415 and 5182 · last 30 days",
+  TED: "Live from TED · EU IT notices · CPV 72 · last 30 days",
+} as const;
+
+export function TenderMarket({ items, source }: { items: MarketItem[]; source: "SAM.gov" | "TED" }) {
   const [filter, setFilter] = useState<Filter>("All");
   const shown = useMemo(() => filterItems(items, filter), [items, filter]);
 
@@ -37,7 +43,7 @@ export function TenderMarket({ items }: { items: MarketItem[] }) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="font-sans! text-3xl font-bold tracking-tight">Open tenders</h2>
-          <p className="mt-1 text-slate">Live from TED · IT services · performed in Poland · last 30 days</p>
+          <p className="mt-1 text-slate">{SUBTITLE[source]}</p>
         </div>
         <div className="flex flex-wrap gap-2 text-sm" role="group" aria-label="Filter tenders">
           {FILTERS.map((f) => (
@@ -56,7 +62,7 @@ export function TenderMarket({ items }: { items: MarketItem[] }) {
 
       {shown.length === 0 ? (
         <p className="mt-6 text-sm text-mist">
-          {items.length === 0 ? "TED returned no recent notices for this query. Paste a link above instead." : "No tenders match this filter yet."}
+          {items.length === 0 ? `${source} returned no recent notices. Paste a link above instead.` : "No tenders match this filter yet."}
         </p>
       ) : (
         <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -69,7 +75,7 @@ export function TenderMarket({ items }: { items: MarketItem[] }) {
                 <span className="text-xs text-mist">{n.buyer}</span>
                 <span className="line-clamp-2 min-h-[2.75rem] font-sans font-semibold text-ink">{n.title.replace(/^[^–]*–[^–]*–\s*/, "")}</span>
                 <span className="text-sm text-slate">
-                  TED {n.noticeId}
+                  {noticeSource(n.noticeId, null).label}
                   {n.deadline && ` · due ${n.deadline.slice(0, 10)}`}
                 </span>
                 <span className="mt-auto flex items-end justify-between border-t border-dashed border-rule pt-3">

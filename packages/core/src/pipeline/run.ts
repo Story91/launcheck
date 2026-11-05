@@ -1,12 +1,13 @@
 import { DOLPHIN_DEFAULT_MODEL } from "../llm/dolphin";
 import type { LlmClient } from "../llm/types";
+import { fetchSamNotice } from "../sam/client";
 import { fetchNoticeViaApi, flattenApiNotice } from "../ted/api";
-import { NoticeNotFoundError, fetchNoticeXml, isValidNoticeId } from "../ted/client";
+import { NoticeNotFoundError, fetchNoticeXml, isSamNoticeId, isValidNoticeId } from "../ted/client";
 import { flattenEforms, type FlatNotice } from "../ted/flatten";
 import type { AuditEntry, Report } from "../types";
 import { extractFacts } from "./extract";
 import { scoreSignals } from "./score";
-import { UNAVAILABLE_REASON, evaluateSignals } from "./signals";
+import { UNAVAILABLE_REASON, evaluateSignals, type Jurisdiction } from "./signals";
 import { summarize } from "./summary";
 import { verifyEvidence } from "./verify";
 
@@ -24,6 +25,8 @@ export interface PipelineDeps {
   dolphinModel?: string;
   fetchImpl?: typeof fetch;
   now?: () => Date;
+  /** SAM.gov public API key; required for SAM.gov notice ids. */
+  samApiKey?: string;
 }
 
 export const DEFAULT_EXTRACT_MODEL = "gemini-3.1-flash-lite";
@@ -70,8 +73,17 @@ export function templateSummary(buyer: string, signals: Report["signals"]): stri
   return `The notice published by ${buyer} shows ${fired.length} competition-restriction signal${fired.length === 1 ? "" : "s"}: ${list}. Each signal cites a verbatim quote from the notice; see the signal list for details.`;
 }
 
-/** The official TED API first (reachable from cloud IPs); the website XML only as a fallback for notices the API does not return. */
-async function ingestNotice(noticeId: string, fetchImpl: typeof fetch): Promise<FlatNotice> {
+/** Rule set implied by the notice id format: SAM.gov → US federal (FAR), TED → EU. */
+export function jurisdictionFor(noticeId: string): Jurisdiction {
+  return isSamNoticeId(noticeId) ? "US" : "EU";
+}
+
+/**
+ * SAM.gov ids go to the SAM.gov Opportunities API. TED ids use the official TED API first (reachable from cloud IPs)
+ * and the website XML only as a fallback for notices the API does not return.
+ */
+async function ingestNotice(noticeId: string, fetchImpl: typeof fetch, deps: PipelineDeps): Promise<FlatNotice> {
+  if (isSamNoticeId(noticeId)) return fetchSamNotice(noticeId, { apiKey: deps.samApiKey ?? "", fetchImpl, now: deps.now });
   try {
     return flattenApiNotice(await fetchNoticeViaApi(noticeId, fetchImpl));
   } catch (e) {
@@ -89,11 +101,14 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
     return { ...report, status: "failed", error: message, costUsd: sumCost(report.audit), updatedAt: now().toISOString() };
   };
 
-  if (!isValidNoticeId(noticeId)) return fail(`"${noticeId}" is not a valid TED publication number (expected e.g. 722731-2026)`);
+  if (!isValidNoticeId(noticeId)) {
+    return fail(`"${noticeId}" is neither a SAM.gov notice id (32 hex characters) nor a TED publication number (e.g. 722731-2026)`);
+  }
+  const jurisdiction = jurisdictionFor(noticeId);
 
   try {
     onProgress("ingest");
-    const flat = await ingestNotice(noticeId, deps.fetchImpl ?? fetch);
+    const flat = await ingestNotice(noticeId, deps.fetchImpl ?? fetch, deps);
     report.noticeLanguage = flat.language;
     report.buyerPlatform = flat.buyerPlatform;
 
@@ -105,12 +120,13 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
       primaryModel: deps.dolphin ? (deps.dolphinModel ?? DOLPHIN_DEFAULT_MODEL) : extractModel,
       fallbackModel: extractModel,
       primaryJsonSchema: deps.dolphin === null,
+      jurisdiction,
     });
     report.facts = extracted.facts;
     report.audit.push(...extracted.audit);
 
     onProgress("signals");
-    const evaluated = await evaluateSignals(extracted.facts, { serv: deps.serv, model: deps.servModel, fallbackModel: deps.fallbackModel });
+    const evaluated = await evaluateSignals(extracted.facts, { serv: deps.serv, model: deps.servModel, fallbackModel: deps.fallbackModel, jurisdiction });
     report.audit.push(...evaluated.audit);
 
     const unavailable = evaluated.signals.filter((s) => s.reason === UNAVAILABLE_REASON).length;
@@ -134,7 +150,7 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
     } catch (e) {
       // The signals are the product; a missing narrative must not throw away a paid-for evaluation.
       report.summary = templateSummary(extracted.facts.buyer, verified.signals);
-      report.audit.push({ step: "summary", model: deps.servModel, promptVersion: "SUMMARY_V1", requestId: null, inputHash: "", usage: { promptTokens: 0, completionTokens: 0 }, costUsd: null, durationMs: 0, note: `summary unavailable, template used: ${(e as Error).message}` });
+      report.audit.push({ step: "summary", model: deps.servModel, promptVersion: "SUMMARY_V2", requestId: null, inputHash: "", usage: { promptTokens: 0, completionTokens: 0 }, costUsd: null, durationMs: 0, note: `summary unavailable, template used: ${(e as Error).message}` });
     }
 
     onProgress("done");

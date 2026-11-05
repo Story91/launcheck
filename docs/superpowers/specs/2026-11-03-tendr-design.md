@@ -119,3 +119,25 @@ Data: 2026-11-03. Status: po builder-checku, decyzje właściciela wpisane (§6)
 - Sposób kolejkowania generacji (synchronicznie w route handlerze z limitem 90 s na Fluid Compute vs. Vercel Queues).
 - Szczegóły schematu Drizzle i migracji.
 - Wybór facilitatora i sieci, jeśli Kite testnet okaże się niestabilny (fallback: Base Sepolia + standardowy x402).
+
+## 8. Addendum 5 XI 2026: USA jako źródło domyślne (decyzja właściciela)
+
+Właściciel zmienił rynek docelowy z Polski/UE na **USA**. Ścieżka TED/UE zostaje w kodzie jako drugie źródło (już działa, koszt zerowy), ale domyślne źródło, lista ogłoszeń, demo i copy są amerykańskie.
+
+**Źródło:** SAM.gov Get Opportunities Public API v2 (`https://api.sam.gov/opportunities/v2/search`), klucz `SAM_API_KEY` z konta SAM.gov (Account Details → Public API Key), parametr `api_key`. Typy: `ptype=o` (Solicitation) i `k` (Combined Synopsis/Solicitation). Pełny opis z linku `description` (`/prod/opportunities/v1/noticedesc?noticeid=…`, wymaga `api_key`). Załączniki (`resourceLinks`) poza zakresem, jak SWZ w UE. Lista domyślna: ostatnie 30 dni, NAICS IT (541511, 541512, 541519, 518210).
+
+**Identyfikatory:** SAM.gov `noticeId` (32 znaki hex). Źródło rozpoznawane po formacie id: `^[0-9a-f]{32}$` → SAM.gov, `^\d{1,6}-\d{4}$` → TED.
+
+**Jurysdykcja w promptach:** osobne prompty sygnałów `SIGNALS_*_US_V1` (FAR) obok `SIGNALS_*_V2` (UE), bo SERV cache'uje graf per system prompt. Ekstrakcja wspólna (`EXTRACT_V2`): klauzula równoważności rozpoznaje też "or equal" (FAR 11.104), pole `cpv` niesie kody klasyfikacji (CPV w UE; NAICS + PSC w USA).
+
+**Sygnały w USA (te same id, reguły FAR):**
+- S1 krótki termin: FAR 5.203 (co najmniej 30 dni dla zamówień powyżej SAT, 15 dni dla commercial); progi < 30 low, < 15 medium, < 10 high.
+- S2 marka: "brand name" bez "or equal" (FAR 11.104, 6.302-1(c)) → high; "brand name or equal" z listą cech kluczowych → nie odpala.
+- S3 nadmierna specyfikacja: FAR 11.002 (wymagania tylko w zakresie niezbędnym).
+- S4 doświadczenie: past performance ograniczone do tej agencji, systemu zastanego lub konkretnego produktu → high.
+- S5 waga ceny: tradeoff, w którym cena jest "significantly less important" przy subiektywnych czynnikach → medium; LPTA lub cena równoważna → nie odpala.
+- S6 warunki: bonding/insurance/obrót > 2× wartości, wymóg facility clearance nieproporcjonalny do zakresu → medium.
+- S7 skupienie zakresu (bundling, FAR 7.107): jedna nagroda obejmująca kody z dwóch lub więcej różnych grup NAICS/PSC → low.
+- S8 nietypowe: obowiązkowa wizja lokalna w jednym terminie, okno pytań < 5 dni, dokumenty tylko na żądanie, rejestracja w jednym komercyjnym portalu → low. **Set-aside (small business, 8(a), SDVOSB, HUBZone) to legalna polityka, nigdy sygnał.**
+
+**UI:** angielski bez zmian, tytuł "competition-restriction signals for public tenders", na raporcie źródło (SAM.gov/TED) i link do oryginału (`uiLink`). Kontekst dla Reppo bez odniesień do UE.
