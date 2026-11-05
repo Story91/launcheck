@@ -1,0 +1,36 @@
+{
+  "_fixture": "SYNTHETIC, shaped like the GSA Get Opportunities v2 docs; replace with a recorded response once SAM_API_KEY exists",
+  "totalRecords": 1,
+  "limit": 1,
+  "offset": 0,
+  "opportunitiesData": [
+    {
+      "noticeId": "3f2a9c41d7e84b6a9b1c0d2e5f6a7b8c",
+      "title": "Splunk Enterprise Security Licenses and Support - Brand Name Only",
+      "solicitationNumber": "36C10B26Q0412",
+      "fullParentPathName": "VETERANS AFFAIRS, DEPARTMENT OF.VETERANS AFFAIRS, DEPARTMENT OF.TECHNOLOGY ACQUISITION CENTER NJ (36C10B)",
+      "fullParentPathCode": "036.3600.36C10B",
+      "postedDate": "2026-10-28",
+      "type": "Combined Synopsis/Solicitation",
+      "baseType": "Combined Synopsis/Solicitation",
+      "archiveType": "auto15",
+      "archiveDate": "2026-11-21",
+      "typeOfSetAsideDescription": null,
+      "typeOfSetAside": null,
+      "responseDeadLine": "2026-11-06T12:00:00-05:00",
+      "naicsCode": "513210",
+      "classificationCode": "7A21",
+      "active": "Yes",
+      "award": null,
+      "pointOfContact": [{ "type": "primary", "title": "Contract Specialist", "fullName": "Jane Doe", "email": "jane.doe@va.gov", "phone": null, "fax": null }],
+      "description": "https://api.sam.gov/prod/opportunities/v1/noticedesc?noticeid=3f2a9c41d7e84b6a9b1c0d2e5f6a7b8c",
+      "organizationType": "OFFICE",
+      "officeAddress": { "zipcode": "07724", "city": "EATONTOWN", "countryCode": "USA", "state": "NJ" },
+      "placeOfPerformance": { "city": { "code": "", "name": "Washington" }, "state": { "code": "DC", "name": "District of Columbia" }, "country": { "code": "USA", "name": "UNITED STATES" } },
+      "additionalInfoLink": null,
+      "uiLink": "https://sam.gov/opp/3f2a9c41d7e84b6a9b1c0d2e5f6a7b8c/view",
+      "links": [{ "rel": "self", "href": "https://api.sam.gov/prod/opportunities/v2/search?noticeid=3f2a9c41d7e84b6a9b1c0d2e5f6a7b8c&limit=1" }],
+      "resourceLinks": null
+    }
+  ]
+}

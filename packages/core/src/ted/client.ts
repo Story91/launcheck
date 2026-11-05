@@ -19,8 +19,19 @@ export interface NoticeSummary {
   deadline: string | null;
 }
 
-export function isValidNoticeId(id: string): boolean {
+/** TED publication number, e.g. 722731-2026. */
+export function isTedNoticeId(id: string): boolean {
   return /^\d{1,6}-\d{4}$/.test(id);
+}
+
+/** SAM.gov notice id: 32 hex characters. */
+export function isSamNoticeId(id: string): boolean {
+  return /^[0-9a-f]{32}$/i.test(id);
+}
+
+/** Any notice id Tendr can analyse (SAM.gov or TED). */
+export function isValidNoticeId(id: string): boolean {
+  return isSamNoticeId(id) || isTedNoticeId(id);
 }
 
 export function defaultSearchQuery(now: Date = new Date()): string {
