@@ -1,4 +1,5 @@
 import { readSamExtract } from "@tendr/core";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { importSamNotices, samNoticeStore } from "@/lib/sam-notices";
 
@@ -19,6 +20,8 @@ export async function GET(req: Request) {
   try {
     const now = new Date();
     const result = await importSamNotices(samNoticeStore(), readSamExtract({ now: () => now, days: 30 }), { now });
+    // The home page lists open solicitations; refresh it now instead of waiting for the hourly revalidation.
+    revalidatePath("/");
     return NextResponse.json({ ok: true, ...result, durationMs: Date.now() - t0 });
   } catch (e) {
     return NextResponse.json({ ok: false, error: (e as Error).message, durationMs: Date.now() - t0 }, { status: 502 });
