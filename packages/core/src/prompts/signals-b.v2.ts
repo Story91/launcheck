@@ -1,7 +1,7 @@
-// Prompt version: SIGNALS_B_V1 — requirements group. Model `<model>-serv-multipath`, tools: serv_disable_content_filter + serv_shadow_agent.
+// Prompt version: SIGNALS_B_V2 — requirements group. Model `<model>-serv-multipath`, tools: serv_disable_content_filter + serv_shadow_agent.
 import { SIGNALS_OUTPUT_CONTRACT, SIGNALS_ROLE } from "./signals-shared";
 
-export const SIGNALS_B_V1 = `${SIGNALS_ROLE}
+export const SIGNALS_B_V2 = `${SIGNALS_ROLE}
 
 SIGNALS (decision tree):
 S2_BRAND_LOCK: if brandOrProductNames is non-empty AND equivalenceClausePresent is false → fires, high. Also fires, high, when incumbentSystemMentioned is not null and the subject requires integration with, extension of, or compatibility with that named system, because only that vendor can realistically bid. If equivalenceClausePresent is true → does not fire; say so in the reason.

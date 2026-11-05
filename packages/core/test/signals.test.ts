@@ -62,10 +62,15 @@ describe("evaluateSignals", () => {
     expect(res.signals.every((s) => Signal.safeParse(s).success)).toBe(true);
     expect(res.audit).toHaveLength(3);
     expect(res.audit.every((a) => a.model.endsWith("-serv-multipath"))).toBe(true);
+    expect(res.audit.map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_V2", "SIGNALS_B_V2", "SIGNALS_C_V2"]);
     for (const r of requests) {
       expect(r.model).toBe("gpt-6-luna-serv-multipath");
       expect(r.tools?.map((t) => t.function.name)).toEqual(["serv_disable_content_filter", "serv_shadow_agent"]);
       expect(r.user).toContain("Narodowy Bank Polski");
+      expect(r.system).toMatch(/factual observations about the notice/);
+      const hint = (r.tools?.[1]?.function.parameters as { properties: { hint: { default: string } } }).properties.hint.default;
+      expect(hint).toMatch(/verbatim/);
+      expect(hint).toMatch(/no judgement/);
     }
   });
 

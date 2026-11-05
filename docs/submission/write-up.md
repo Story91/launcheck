@@ -23,6 +23,10 @@ Real data, real decisions, auditable steps: on a live notice from the Polish cen
 - **Kite Agent Passport / x402**: `apps/x402` wraps the report endpoint with the Kite x402 template (Pieverse facilitator, pieUSD on Kite testnet). Unverified reports answer 409, so the paywall never settles for nothing. Buyer: `kpass session execute`.
 - **Dolphin**: wired as an alternative 1M-context extractor (`DOLPHIN_PRIMARY=true`); measured too slow for the default path (Day-1 results in the plan), so the default extractor is SERV `gemini-3.1-flash-lite`.
 
+## Feedback loop in practice
+
+The first real Reppo verdict on production (NBP notice, 4 Nov 2026) was `revise`, score 77/100: quotes verbatim and severities correct, but "slight implications of negativity in phrasing" in high-severity reasons. We turned that critique into a prompt change (signal prompts V2: reasons state what the notice says and which rule applies; the SERV shadow-agent hint now rejects effect/intent judgements). Before: "…which strongly limits potential bidders". After: "The notice says: '…integracją z Systemem DarkTrace' and the rule for this signal applies when a notice names a specific brand or product." Cost moved from ~$0.010 to ~$0.013 per report because gpt-6-luna more often hands a group to the gpt-5.4-mini fallback under the stricter check.
+
 ## Track
 
 Open Track.
