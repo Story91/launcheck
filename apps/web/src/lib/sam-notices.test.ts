@@ -9,6 +9,7 @@ const n = (id: string, over: Partial<ImportedSamNotice> = {}): ImportedSamNotice
   solicitationNumber: null,
   agency: "DEPT OF DEFENSE.DEPT OF THE NAVY.FLC PUGET SOUND",
   postedAt: "2026-11-04T10:00:00Z",
+  firstPostedAt: "2026-11-04T10:00:00Z",
   responseDeadline: "2026-11-20T17:00:00-05:00",
   naics: "541512",
   setAside: null,

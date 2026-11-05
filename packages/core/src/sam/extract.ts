@@ -17,6 +17,8 @@ export interface ImportedSamNotice {
   solicitationNumber: string | null;
   agency: string;
   postedAt: string;
+  /** Earliest posting of the same solicitation number in the extract (amendments are re-posted as new notices). */
+  firstPostedAt: string;
   responseDeadline: string | null;
   naics: string | null;
   setAside: string | null;
@@ -121,6 +123,7 @@ export function extractRowToNotice(rec: Record<string, string>, since: Date): Im
     solicitationNumber: orNull(rec["Sol#"]),
     agency,
     postedAt,
+    firstPostedAt: postedAt,
     responseDeadline: orNull(rec.ResponseDeadLine),
     naics: orNull(rec.NaicsCode),
     setAside: orNull(rec.SetASide),
@@ -146,15 +149,36 @@ export async function* readSamExtract(opts: ExtractOptions = {}): AsyncGenerator
   if (!res.ok || !res.body) throw new Error(`SAM.gov extract download failed (HTTP ${res.status})`);
   const text = res.body.pipeThrough(new TextDecoderStream("windows-1252")) as unknown as AsyncIterable<string>;
 
+  // Buffer the matching notices: the original posting of a solicitation can appear anywhere in the file, and response
+  // time must be measured from it, not from the latest amendment.
+  const firstPosted = new Map<string, string>();
+  const notices: ImportedSamNotice[] = [];
   let header: string[] | null = null;
   for await (const row of parseCsv(text)) {
     if (!header) {
-      header = row.map((h) => h.replace(/^﻿/, ""));
+      header = row.map((h) => h.replace(/^\uFEFF/, ""));
       continue;
     }
     const rec: Record<string, string> = {};
     header.forEach((h, i) => (rec[h] = row[i] ?? ""));
+    const sol = solKey(rec["Sol#"]);
+    const posted = isoPosted(rec.PostedDate ?? "");
+    if (sol && posted && (!firstPosted.has(sol) || posted < firstPosted.get(sol)!)) firstPosted.set(sol, posted);
     const notice = extractRowToNotice(rec, since);
-    if (notice) yield notice;
+    if (notice) notices.push(notice);
   }
+  for (const n of notices) {
+    const first = n.solicitationNumber ? firstPosted.get(solKey(n.solicitationNumber)) : undefined;
+    if (first && first < n.postedAt) yield withOriginalPosting(n, first);
+    else yield n;
+  }
+}
+
+const solKey = (s: string | undefined) => one(s).toUpperCase();
+
+/** "2026-10-20T09:00:00Z" → adds "originalPostedDate: 2026-10-20 09:00:00" right after the postedDate line. */
+function withOriginalPosting(n: ImportedSamNotice, first: string): ImportedSamNotice {
+  const display = first.replace("T", " ").replace(/Z$/, "");
+  const text = n.flat.text.replace(/^(postedDate: .*)$/m, `$1\noriginalPostedDate: ${display}`);
+  return { ...n, firstPostedAt: first, flat: { ...n.flat, text } };
 }

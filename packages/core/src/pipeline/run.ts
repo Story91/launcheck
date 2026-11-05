@@ -9,6 +9,7 @@ import { extractFacts } from "./extract";
 import { scoreSignals } from "./score";
 import { UNAVAILABLE_REASON, evaluateSignals, type Jurisdiction } from "./signals";
 import { summarize } from "./summary";
+import { usDeadlineFacts } from "./us-deadline";
 import { verifyEvidence } from "./verify";
 
 export type ProgressStep = "ingest" | "extract" | "signals" | "verify" | "summary" | "done" | "failed";
@@ -139,6 +140,13 @@ export async function analyzeNotice(
       primaryJsonSchema: deps.dolphin === null,
       jurisdiction,
     });
+    if (jurisdiction === "US") {
+      // Dates and notice type come from the SAM.gov metadata lines, computed in code; keep the model's value when a line is absent.
+      const computed = usDeadlineFacts(flat.text);
+      for (const [k, v] of Object.entries(computed) as [keyof typeof computed, string | number | null][]) {
+        if (v !== null) (extracted.facts as Record<string, unknown>)[k] = v;
+      }
+    }
     report.facts = extracted.facts;
     report.audit.push(...extracted.audit);
 

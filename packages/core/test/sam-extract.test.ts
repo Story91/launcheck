@@ -72,3 +72,18 @@ describe("readSamExtract", () => {
     await expect(collect(readSamExtract({ fetchImpl: bad, now: NOW }))).rejects.toThrow(/HTTP 503/);
   });
 });
+
+describe("readSamExtract original posting date", () => {
+  it("adds originalPostedDate when an earlier version of the same solicitation exists in the extract", async () => {
+    const header = '"NoticeId","Title","Sol#","Department/Ind.Agency","Sub-Tier","Office","PostedDate","Type","BaseType","SetASideCode","SetASide","ResponseDeadLine","NaicsCode","ClassificationCode","PopCity","PopState","PopCountry","Active","OrganizationType","Description"';
+    const desc = "x".repeat(250);
+    const row = (id: string, posted: string, type: string, active: string) =>
+      [id, "JFrog Artifactory Subscription Maintenance", "SOL-1", "FDIC", "FDIC", "DOA", posted, type, type, "", "", "2026-11-14T12:00:00-05:00", "541519", "7030", "", "", "USA", active, "OFFICE", desc].map((v) => `"${v}"`).join(",");
+    const csv = [header, row("a".repeat(32), "2026-11-04 10:00:00", "Combined Synopsis/Solicitation", "Yes"), row("b".repeat(32), "2026-10-20 09:00:00", "Combined Synopsis/Solicitation", "No")].join("\n");
+    const fetchImpl = (async () => new Response(csv)) as unknown as typeof fetch;
+    const notices = await collect(readSamExtract({ fetchImpl, now: NOW, days: 30 }));
+    expect(notices.map((x) => x.noticeId)).toEqual(["a".repeat(32)]);
+    expect(notices[0]!.firstPostedAt).toBe("2026-10-20T09:00:00Z");
+    expect(notices[0]!.flat.text).toContain("originalPostedDate: 2026-10-20 09:00:00");
+  });
+});

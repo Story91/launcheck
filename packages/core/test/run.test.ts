@@ -175,7 +175,7 @@ describe("generateReport for SAM.gov (US) notices", () => {
     expect(report.noticeLanguage).toBe("ENG");
     expect(report.buyerPlatform).toBe(`https://sam.gov/opp/${SAM_ID}/view`);
     expect(requests.find((r) => r.jsonSchema?.name === "tender_facts")?.user).toContain("jurisdiction: US federal (FAR)");
-    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V2", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V3", "SIGNALS_B_US_V3", "SIGNALS_C_US_V2"]);
   });
 
   it("fails with a clear message when SAM_API_KEY is missing", async () => {
@@ -209,7 +209,7 @@ describe("analyzeNotice (pre-fetched text, used by the evaluation set)", () => {
     expect(report.signals).toHaveLength(8);
     expect(report.summary).toBeNull();
     expect(requests.some((r) => r.jsonSchema?.name === "summary")).toBe(false);
-    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V2", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V3", "SIGNALS_B_US_V3", "SIGNALS_C_US_V2"]);
   });
 });
 
@@ -224,12 +224,22 @@ describe("generateReport with imported SAM.gov notices (public daily extract, no
     const report = await generateReport(SAM_ID, deps({ fetchImpl: noFetch, samNoticeLookup: async (id) => (id === SAM_ID ? flat : null) }));
     expect(report.status).toBe("pending_verification");
     expect(report.buyerPlatform).toBe(`https://sam.gov/opp/${SAM_ID}/view`);
-    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V2", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V3", "SIGNALS_B_US_V3", "SIGNALS_C_US_V2"]);
   });
 
   it("explains a miss when the notice is not imported and no API key is set", async () => {
     const report = await generateReport(SAM_ID, deps({ fetchImpl: noFetch, samNoticeLookup: async () => null }));
     expect(report.status).toBe("failed");
     expect(report.error).toMatch(/not in the imported SAM\.gov extract/);
+  });
+});
+
+describe("analyzeNotice deadline facts for US notices", () => {
+  it("replaces model-computed dates with values computed from the SAM.gov lines", async () => {
+    const text = "type: Combined Synopsis/Solicitation\npostedDate: 2026-11-04 10:00:00\noriginalPostedDate: 2026-10-20 09:00:00\nresponseDeadLine: 2026-11-14T12:00:00-05:00\ndescription: Wykonanie przez Wykonawcę";
+    const report = await analyzeNotice("a".repeat(32), { text, language: "ENG", buyerPlatform: null }, "US", deps(), { summary: false });
+    expect(report.facts?.daysToDeadline).toBe(25);
+    expect(report.facts?.publicationDate).toBe("2026-10-20");
+    expect(report.facts?.procedureType).toBe("Combined Synopsis/Solicitation");
   });
 });
