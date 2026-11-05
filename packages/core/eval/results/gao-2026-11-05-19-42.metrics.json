@@ -1,0 +1,192 @@
+{
+  "cases": [
+    {
+      "id": "B-422670",
+      "group": "positive",
+      "expected": [
+        "S4_EXPERIENCE_LOCK"
+      ],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [
+        "S4_EXPERIENCE_LOCK"
+      ],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-420119",
+      "group": "positive",
+      "expected": [
+        "S2_BRAND_LOCK"
+      ],
+      "predicted": [
+        "S2_BRAND_LOCK"
+      ],
+      "truePositives": [
+        "S2_BRAND_LOCK"
+      ],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-414987",
+      "group": "positive",
+      "expected": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "predicted": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "truePositives": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-413876.2",
+      "group": "positive",
+      "expected": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "stability": 0.6666666666666666,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-408196",
+      "group": "positive",
+      "expected": [
+        "S2_BRAND_LOCK"
+      ],
+      "predicted": [
+        "S2_BRAND_LOCK"
+      ],
+      "truePositives": [
+        "S2_BRAND_LOCK"
+      ],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 0.6666666666666666,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-416733",
+      "group": "positive",
+      "expected": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [
+        "S3_OVER_SPECIFICATION"
+      ],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-422388.3",
+      "group": "negative",
+      "expected": [],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-422938",
+      "group": "negative",
+      "expected": [],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-421525",
+      "group": "negative",
+      "expected": [],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-422886.2",
+      "group": "negative",
+      "expected": [],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-424200.2",
+      "group": "negative",
+      "expected": [],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-424321.2",
+      "group": "negative",
+      "expected": [],
+      "predicted": [
+        "S2_BRAND_LOCK"
+      ],
+      "truePositives": [],
+      "falsePositives": [
+        "S2_BRAND_LOCK"
+      ],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    },
+    {
+      "id": "B-423172.4",
+      "group": "negative",
+      "expected": [],
+      "predicted": [],
+      "truePositives": [],
+      "falsePositives": [],
+      "falseNegatives": [],
+      "stability": 1,
+      "completedRuns": 3
+    }
+  ],
+  "tp": 3,
+  "fp": 1,
+  "fn": 3,
+  "precision": 0.75,
+  "recall": 0.5,
+  "positivesCaught": 3,
+  "positives": 6,
+  "negativesFlagged": 1,
+  "negatives": 7,
+  "stability": 0.9487179487179487,
+  "failedRuns": 0
+}

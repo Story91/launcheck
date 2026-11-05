@@ -175,7 +175,7 @@ describe("generateReport for SAM.gov (US) notices", () => {
     expect(report.noticeLanguage).toBe("ENG");
     expect(report.buyerPlatform).toBe(`https://sam.gov/opp/${SAM_ID}/view`);
     expect(requests.find((r) => r.jsonSchema?.name === "tender_facts")?.user).toContain("jurisdiction: US federal (FAR)");
-    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V2", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
   });
 
   it("fails with a clear message when SAM_API_KEY is missing", async () => {
@@ -209,7 +209,7 @@ describe("analyzeNotice (pre-fetched text, used by the evaluation set)", () => {
     expect(report.signals).toHaveLength(8);
     expect(report.summary).toBeNull();
     expect(requests.some((r) => r.jsonSchema?.name === "summary")).toBe(false);
-    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V2", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
   });
 });
 
@@ -224,7 +224,7 @@ describe("generateReport with imported SAM.gov notices (public daily extract, no
     const report = await generateReport(SAM_ID, deps({ fetchImpl: noFetch, samNoticeLookup: async (id) => (id === SAM_ID ? flat : null) }));
     expect(report.status).toBe("pending_verification");
     expect(report.buyerPlatform).toBe(`https://sam.gov/opp/${SAM_ID}/view`);
-    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V2", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
   });
 
   it("explains a miss when the notice is not imported and no API key is set", async () => {

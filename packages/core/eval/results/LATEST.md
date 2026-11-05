@@ -1,16 +1,16 @@
 # GAO evaluation set: results
 
-Run 2026-11-05T18:58:39.580Z · 13 cases · 3 runs each · model gpt-6-luna (fallback per pipeline) · total cost $0.0822
+Run 2026-11-05T19:46:30.562Z · 13 cases · 3 runs each · model gpt-6-luna (fallback per pipeline) · total cost $0.0862
 
 Ground truth: GAO bid-protest decisions. Positives are protests GAO sustained because a solicitation term restricted competition; negatives are protests on unrelated grounds whose decisions quote ordinary solicitation text. Input is only the solicitation language the decision quotes, formatted like a SAM.gov notice; the GAO outcome is never shown to the model. A signal counts as predicted when it fired (after the verbatim-evidence check) in at least half of the runs.
 
 | Metric | Value |
 |---|---|
-| Precision (per signal) | 100% (3 TP, 0 FP) |
-| Recall (per signal) | 50% (3 FN) |
-| Sustained protests caught | 3 of 6 |
+| Precision (per signal) | 100% (2 TP, 0 FP) |
+| Recall (per signal) | 33% (4 FN) |
+| Sustained protests caught | 2 of 6 |
 | Clean notices with a false alarm | 0 of 7 |
-| Run-to-run stability | 92% |
+| Run-to-run stability | 97% |
 | Failed runs | 0 |
 
 ## Per signal
@@ -18,25 +18,25 @@ Ground truth: GAO bid-protest decisions. Positives are protests GAO sustained be
 | Signal | TP | FP | FN |
 |---|---|---|---|
 | S2_BRAND_LOCK | 2 | 0 | 0 |
-| S3_OVER_SPECIFICATION | 1 | 0 | 2 |
+| S3_OVER_SPECIFICATION | 0 | 0 | 3 |
 | S4_EXPERIENCE_LOCK | 0 | 0 | 1 |
 
 ## Per case
 
 | Case | Group | Expected | Predicted | Stability | Source |
 |---|---|---|---|---|---|
-| B-422670 | positive | S4_EXPERIENCE_LOCK | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/880/871709.pdf) |
+| B-422670 | positive | S4_EXPERIENCE_LOCK | none | 67% (3/3) | [gao.gov](https://www.gao.gov/assets/880/871709.pdf) |
 | B-420119 | positive | S2_BRAND_LOCK | S2_BRAND_LOCK | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/b-420119.pdf) |
-| B-414987 | positive | S3_OVER_SPECIFICATION | S3_OVER_SPECIFICATION | 67% (3/3) | [gao.gov](https://www.gao.gov/assets/b-414987,b-414987.2.pdf) |
+| B-414987 | positive | S3_OVER_SPECIFICATION | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/b-414987,b-414987.2.pdf) |
 | B-413876.2 | positive | S3_OVER_SPECIFICATION | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/b-413876.2.pdf) |
 | B-408196 | positive | S2_BRAND_LOCK | S2_BRAND_LOCK | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/b-408196.pdf) |
 | B-416733 | positive | S3_OVER_SPECIFICATION | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/b-416733.pdf) |
 | B-422388.3 | negative | none | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/890/880688.pdf) |
-| B-422938 | negative | none | none | 67% (3/3) | [gao.gov](https://www.gao.gov/assets/880/874160.pdf) |
+| B-422938 | negative | none | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/880/874160.pdf) |
 | B-421525 | negative | none | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/830/825933.pdf) |
 | B-422886.2 | negative | none | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/880/877482.pdf) |
 | B-424200.2 | negative | none | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/890/888636.pdf) |
-| B-424321.2 | negative | none | none | 67% (3/3) | [gao.gov](https://www.gao.gov/assets/890/887335.pdf) |
+| B-424321.2 | negative | none | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/890/887335.pdf) |
 | B-423172.4 | negative | none | none | 100% (3/3) | [gao.gov](https://www.gao.gov/assets/890/880602.pdf) |
 
 ## Misses and false alarms
@@ -46,6 +46,12 @@ Ground truth: GAO bid-protest decisions. Positives are protests GAO sustained be
 GAO: Pre-award challenge to a facilities-maintenance RFQ that automatically penalized prior-experience examples not covering multiple facilities under one contract at least 200 miles apart; GAO sustained because GSA could not justify these experience criteria (the two-phase scheme challenge was denied).
 
 Missed: S4_EXPERIENCE_LOCK. Label note: Experience criteria shaped so that only a vendor with a particular single-contract, geographically dispersed portfolio scores well; closest fit is the experience-lock signal (not tied to a named incumbent, so S4 is an approximation).
+
+### B-414987 (positive)
+
+GAO: Pre-award challenge to a new 5,000-gallon maximum tank capacity in a call-when-needed airtanker RFP that excluded very large airtankers; GAO sustained because the record did not show the cap was reasonably necessary to meet the agency's needs.
+
+Missed: S3_OVER_SPECIFICATION. Label note: A maximum-capacity cap that excludes larger aircraft is a technical limit beyond the agency's demonstrated needs (FAR 11.002), i.e., over-specification.
 
 ### B-413876.2 (positive)
 

@@ -33,16 +33,16 @@ The first real Reppo verdict on production (NBP notice, 4 Nov 2026) was `revise`
 
 We built a ground-truth set from US GAO bid-protest decisions (`packages/core/eval/gao-cases.json`, run with `pnpm --filter @tendr/core eval`). Positives are protests GAO sustained because a solicitation term restricted competition (brand-name requirements, specifications beyond the agency's needs, narrowly shaped experience criteria). Negatives are protests on unrelated grounds whose decisions quote ordinary solicitation text. The input is only the solicitation language each decision quotes, copied from the decision PDF and checked by script to occur in it verbatim; the GAO outcome is never shown to the model. Each case runs 3 times through the production analysis path; a signal counts when it fires in at least 2 of 3 runs.
 
-| | Rules V1 | Rules V2 |
-|---|---|---|
-| Precision | 50% | 100% (3 of 3 flags correct) |
-| Recall | 17% | 50% |
-| Sustained protests caught | 1 of 6 | 3 of 6 |
-| Clean solicitations flagged | 1 of 7 | 0 of 7 |
-| Run-to-run stability | 90% | 92% |
-| Cost of the whole run | $0.07 | $0.08 |
+| | Rules V1 | Rules V2 | Current rules |
+|---|---|---|---|
+| Precision | 50% | 100% | 100% (2 of 2 flags correct) |
+| Recall | 17% | 50% | 33% |
+| Sustained protests caught | 1 of 6 | 3 of 6 | 2 of 6 |
+| Clean solicitations flagged | 1 of 7 | 0 of 7 | 0 of 7 |
+| Run-to-run stability | 90% | 92% | 97% |
+| Cost of the whole run | $0.07 | $0.08 | $0.09 |
 
-V1 flagged an agency's own information system (REMIS) as a brand and missed a task order for a named commercial product's maintenance (AtHoc). V2 states the FAR distinction in the brand rule: an agency-owned system is not a brand; buying or supporting a named commercial product is. V2 was tuned on this same set, so these numbers are not a held-out measurement. The remaining misses are honest limits of a text-only reader: GAO sustained them because the agency could not justify a requirement (a 5,000-gallon tank cap, a feeder capability, an exact labor-category match), which the solicitation text alone does not reveal. Tendr reports signals visible in the text; it does not claim to judge the agency's needs. Full per-case results: `packages/core/eval/results/`.
+V1 flagged an agency's own information system (REMIS) as a brand and missed a task order for a named commercial product's maintenance (AtHoc). V2 stated the FAR distinction: an agency-owned system is not a brand; buying or supporting a named commercial product is. The current rules came from the first live SAM.gov reports: a NASA notice saying "THIS IS A BRAND NAME REQUIREMENT ... AUTHORIZED RESELLERS ONLY" scored 0, because the brand rule only looked at extracted product names and the verbatim check rejected the three-letter brand "HID". Now an explicit brand-name statement fires the signal, upper-case acronyms of 2–3 letters pass the verbatim check as whole words, government systems, networks and certifications are set aside before the brand rule runs, and combined synopsis/solicitations for commercial items only need a reasonable response time (FAR 12.603). The trade-off shows in the table: no false alarms and steadier runs, one borderline over-specification case (a tank-capacity cap) lost. All rule changes were made while looking at this set, so these numbers are not a held-out measurement. The remaining misses are honest limits of a text-only reader: GAO sustained them because the agency could not justify a requirement (a tank cap, a feeder capability, an exact labor-category match), which the solicitation text alone does not reveal. Tendr reports signals visible in the text; it does not claim to judge the agency's needs. Full per-case results: `packages/core/eval/results/`.
 
 ## Track
 
@@ -57,7 +57,7 @@ Per-report x402 sales to agents (no account needed), subscriptions for small bus
 - Stability on gpt-6-luna: in 10 live runs on the same notice, 9 produced the same verdict (30/100, named-brand high + no-lots low); 1 missed the brand signal (5/100). Reports are therefore sold only after independent review, and a report whose signal groups failed is marked partial and never sold.
 
 - Reports read the notice text (SAM.gov description or TED notice); attachments such as the PWS or specifications are not fetched yet, and many restrictive terms live there.
-- The evaluation set is small (13 cases) and V2 rules were tuned on it.
+- The evaluation set is small (13 cases) and the rules were adjusted while looking at it.
 - EU: Poland first; other member states work best-effort with a reduced-confidence note.
 - Reppo verdicts are public on the Reppo feed; reports are public anyway.
 - Signals are heuristics under the FAR (US) or Directive 2014/24/EU (EU). The product says "competition-restriction signals", never "rigged". Small-business set-asides are lawful and never flagged.

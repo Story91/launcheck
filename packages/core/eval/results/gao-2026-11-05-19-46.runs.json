@@ -1,0 +1,519 @@
+[
+  {
+    "caseId": "B-422670",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00167562,
+    "durationMs": 11426,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422670",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S7_NO_LOTS_LARGE_SCOPE",
+        "severity": "low",
+        "reason": "The notice states that projects should be inclusive of two or more facilities, geographically dispersed from one another under one contract. Rule: S7_NO_LOTS_LARGE_SCOPE.",
+        "evidence": [
+          "projects should be inclusive of two or more facilities, geographically dispersed from one another under one contract"
+        ]
+      }
+    ],
+    "costUsd": 0.005324720000000001,
+    "durationMs": 18179,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped",
+      "signals.A: max_tokens is too large: 128053. This model supports at most 128000 completion tokens, whereas you provided 128053.",
+      "signals.C: max_tokens is too large: 128094. This model supports at most 128000 completion tokens, whereas you provided 128094."
+    ]
+  },
+  {
+    "caseId": "B-420119",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names a product in brandOrProductNames and says in notes: \"USDA has standardized on Microsoft Office, email and cloud and has been using these tools for over 20 years.\"",
+        "evidence": [
+          "Microsoft Office",
+          "USDA has standardized on Microsoft Office, email and cloud and has been using these tools for over 20 years."
+        ]
+      }
+    ],
+    "costUsd": 0.006906100000000001,
+    "durationMs": 23267,
+    "notes": [
+      "signals.A: max_tokens is too large: 128197. This model supports at most 128000 completion tokens, whereas you provided 128197.",
+      "signals.B: max_tokens is too large: 128103. This model supports at most 128000 completion tokens, whereas you provided 128103.",
+      "signals.C: max_tokens is too large: 128238. This model supports at most 128000 completion tokens, whereas you provided 128238."
+    ]
+  },
+  {
+    "caseId": "B-420119",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names Microsoft Office and records no equivalence clause; applicable rule: S2_BRAND_LOCK.",
+        "evidence": [
+          "Microsoft Office"
+        ]
+      }
+    ],
+    "costUsd": 0.0016681999999999999,
+    "durationMs": 19699,
+    "notes": []
+  },
+  {
+    "caseId": "B-422670",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0016177499999999998,
+    "durationMs": 32069,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-414987",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00210129,
+    "durationMs": 10758,
+    "notes": []
+  },
+  {
+    "caseId": "B-420119",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The input names Microsoft Office and states that no equivalence clause is present; this meets the S2 brand-lock rule.",
+        "evidence": [
+          "Microsoft Office"
+        ]
+      }
+    ],
+    "costUsd": 0.0016214,
+    "durationMs": 26651,
+    "notes": []
+  },
+  {
+    "caseId": "B-414987",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00213464,
+    "durationMs": 20896,
+    "notes": []
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0016642900000000001,
+    "durationMs": 20239,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-414987",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0022624999999999998,
+    "durationMs": 29279,
+    "notes": []
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00153559,
+    "durationMs": 18327,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00303904,
+    "durationMs": 14152,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-416733",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0018752799999999998,
+    "durationMs": 10382,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-416733",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00198435,
+    "durationMs": 10922,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-408196",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "medium",
+        "reason": "The notice identifies AtHoc maintenance and support; FAR 11.104 addresses brand-name-or-equal descriptions.",
+        "evidence": [
+          "AtHoc Mass Notification Software Maintenance and Support",
+          "AtHoc"
+        ]
+      }
+    ],
+    "costUsd": 0.00176522,
+    "durationMs": 29188,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-408196",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "medium",
+        "reason": "The notice names AtHoc and indicates no equivalence clause; this is assessed under FAR 11.105, which addresses brand-name-only purchase descriptions.",
+        "evidence": [
+          "AtHoc Mass Notification Software Maintenance and Support",
+          "AtHoc"
+        ]
+      }
+    ],
+    "costUsd": 0.0019054099999999997,
+    "durationMs": 35801,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-408196",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names a specific product in the title and technical requirements, and no equivalence language is indicated.",
+        "evidence": [
+          "AtHoc Mass Notification Software Maintenance and Support",
+          "AtHoc",
+          "Open market items (Items 0006, 0007, 0008, and 0009)"
+        ]
+      }
+    ],
+    "costUsd": 0.0037523499999999998,
+    "durationMs": 45754,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.B: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00348918,
+    "durationMs": 13331,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-416733",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00189393,
+    "durationMs": 20092,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.001835,
+    "durationMs": 11618,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0019894699999999997,
+    "durationMs": 20981,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-421525",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00211705,
+    "durationMs": 16034,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422938",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0019440100000000001,
+    "durationMs": 32776,
+    "notes": []
+  },
+  {
+    "caseId": "B-422938",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00218795,
+    "durationMs": 30752,
+    "notes": []
+  },
+  {
+    "caseId": "B-421525",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00162841,
+    "durationMs": 11850,
+    "notes": [
+      "extract.primary: 4 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422938",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0023694500000000004,
+    "durationMs": 42345,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00161144,
+    "durationMs": 10570,
+    "notes": []
+  },
+  {
+    "caseId": "B-421525",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0016830400000000002,
+    "durationMs": 31709,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00179093,
+    "durationMs": 17322,
+    "notes": []
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017329900000000002,
+    "durationMs": 26598,
+    "notes": []
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00158791,
+    "durationMs": 10576,
+    "notes": []
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00154251,
+    "durationMs": 11151,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0019900300000000003,
+    "durationMs": 13895,
+    "notes": []
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0018080700000000002,
+    "durationMs": 27118,
+    "notes": []
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00223335,
+    "durationMs": 26685,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00191953,
+    "durationMs": 37063,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0028317100000000003,
+    "durationMs": 27936,
+    "notes": [
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00170161,
+    "durationMs": 25763,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00144821,
+    "durationMs": 33336,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  }
+]

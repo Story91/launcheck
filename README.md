@@ -14,7 +14,7 @@ Built for [SERV Hackathon 02](https://www.openserv.ai/hackathon-2) (OpenServ, 2â
 
 Reports describe signals in the notice text. They never claim wrongdoing. Small-business set-asides are lawful and never flagged. Tendr is not affiliated with GSA, SAM.gov or any government agency.
 
-**Accuracy:** measured on a ground-truth set built from GAO bid-protest decisions (`pnpm --filter @tendr/core eval`): precision 100%, recall 50%, no false alarms on 7 clean solicitations, 92% run-to-run stability. Details and caveats in `docs/submission/write-up.md`.
+**Accuracy:** measured on a ground-truth set built from GAO bid-protest decisions (`pnpm --filter @tendr/core eval`): precision 100%, recall 33%, no false alarms on 7 clean solicitations, 97% run-to-run stability. Details and caveats in `docs/submission/write-up.md`.
 
 ## How it uses SERV Reasoning
 
