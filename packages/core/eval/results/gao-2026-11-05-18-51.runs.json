@@ -1,0 +1,503 @@
+[
+  {
+    "caseId": "B-422670",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0015622400000000001,
+    "durationMs": 18890,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422670",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00150894,
+    "durationMs": 29157,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422670",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00182549,
+    "durationMs": 29178,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-420119",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "S2_BRAND_LOCK applies because the notice names Microsoft Office and the equivalenceClausePresent value is false.",
+        "evidence": [
+          "Microsoft Office"
+        ]
+      }
+    ],
+    "costUsd": 0.00145214,
+    "durationMs": 31507,
+    "notes": []
+  },
+  {
+    "caseId": "B-414987",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017744800000000002,
+    "durationMs": 10633,
+    "notes": []
+  },
+  {
+    "caseId": "B-420119",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0015357499999999998,
+    "durationMs": 26262,
+    "notes": []
+  },
+  {
+    "caseId": "B-420119",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names Microsoft Office and states that an equivalence clause is absent; the brand-lock rule applies.",
+        "evidence": [
+          "Microsoft Office"
+        ]
+      }
+    ],
+    "costUsd": 0.0014172,
+    "durationMs": 26707,
+    "notes": []
+  },
+  {
+    "caseId": "B-414987",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S3_OVER_SPECIFICATION",
+        "severity": "medium",
+        "reason": "The notice specifies exact tank capacity, dispensable-volume, and payload thresholds; S3 applies to multiple exact technical requirements.",
+        "evidence": [
+          "minimum tank capacity of 3,000 gallons",
+          "minimum required volume is 3000 gallons (dispensable) and 27,000 pounds of payload",
+          "maximum allowed volume is 5000 gallons (dispensable) and 45,000 pounds of payload",
+          "Aircraft with less than 3000-gallon dispensing capacity or greater than 5000-gallon dispensing capacity will not be considered"
+        ]
+      }
+    ],
+    "costUsd": 0.0018889900000000001,
+    "durationMs": 25439,
+    "notes": []
+  },
+  {
+    "caseId": "B-414987",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0018493899999999998,
+    "durationMs": 18317,
+    "notes": []
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0014066299999999999,
+    "durationMs": 10734,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00152623,
+    "durationMs": 23089,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00138323,
+    "durationMs": 26384,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-408196",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00145764,
+    "durationMs": 28359,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-408196",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0015354099999999999,
+    "durationMs": 18729,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-416733",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00165236,
+    "durationMs": 9570,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-408196",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00154147,
+    "durationMs": 27171,
+    "notes": []
+  },
+  {
+    "caseId": "B-416733",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00170274,
+    "durationMs": 11452,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-416733",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0034441199999999997,
+    "durationMs": 20398,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00178431,
+    "durationMs": 15252,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017297600000000003,
+    "durationMs": 23709,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00185242,
+    "durationMs": 23653,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-421525",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0015218900000000001,
+    "durationMs": 23030,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422938",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017457600000000003,
+    "durationMs": 25637,
+    "notes": []
+  },
+  {
+    "caseId": "B-422938",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017220500000000001,
+    "durationMs": 39346,
+    "notes": [
+      "extract.primary: I can't share that."
+    ]
+  },
+  {
+    "caseId": "B-421525",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0015463300000000003,
+    "durationMs": 21214,
+    "notes": [
+      "extract.primary: 4 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00161823,
+    "durationMs": 15043,
+    "notes": []
+  },
+  {
+    "caseId": "B-421525",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0029476299999999997,
+    "durationMs": 22028,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-422938",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017280699999999997,
+    "durationMs": 53655,
+    "notes": []
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0015064100000000001,
+    "durationMs": 11698,
+    "notes": []
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00161284,
+    "durationMs": 24736,
+    "notes": []
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0016036199999999998,
+    "durationMs": 26176,
+    "notes": []
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00163922,
+    "durationMs": 32599,
+    "notes": []
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0015441099999999998,
+    "durationMs": 18785,
+    "notes": []
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0013226000000000002,
+    "durationMs": 10009,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice says to maintain operation of the REMIS system and has no equivalence clause; S2_BRAND_LOCK applies.",
+        "evidence": [
+          "maintain operation of the REMIS system"
+        ]
+      }
+    ],
+    "costUsd": 0.0016476199999999998,
+    "durationMs": 22694,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00166549,
+    "durationMs": 26424,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00279922,
+    "durationMs": 17334,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S8_UNUSUAL_NOTES",
+        "severity": "low",
+        "reason": "The participation conditions include a staff-matching requirement, which is an added participation requirement covered by this rule.",
+        "evidence": [
+          "staff proposed in the technical submittal must be the same staff proposed in the cost submittal"
+        ]
+      }
+    ],
+    "costUsd": 0.00281011,
+    "durationMs": 30587,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "Rule S2_BRAND_LOCK applies because the notice names \"REMIS\" and requires \"maintain operation of the REMIS system\" without an equivalence clause.",
+        "evidence": [
+          "maintain operation of the REMIS system",
+          "REMIS"
+        ]
+      }
+    ],
+    "costUsd": 0.00344613,
+    "durationMs": 46387,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped",
+      "signals.B: degenerate output, retrying"
+    ]
+  }
+]

@@ -1,0 +1,549 @@
+[
+  {
+    "caseId": "B-422670",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00170004,
+    "durationMs": 24465,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-420119",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names Microsoft Office and indicates that no equivalence clause is present; the brand-lock rule applies.",
+        "evidence": [
+          "Microsoft Office"
+        ]
+      }
+    ],
+    "costUsd": 0.00144824,
+    "durationMs": 31984,
+    "notes": []
+  },
+  {
+    "caseId": "B-422670",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017846500000000003,
+    "durationMs": 32208,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422670",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00331324,
+    "durationMs": 32967,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-414987",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00184444,
+    "durationMs": 11783,
+    "notes": []
+  },
+  {
+    "caseId": "B-420119",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names Microsoft Office and states that no equivalence clause is present; under the named-product rule, S2 fires at high severity.",
+        "evidence": [
+          "Microsoft Office"
+        ]
+      }
+    ],
+    "costUsd": 0.0015875000000000002,
+    "durationMs": 41476,
+    "notes": []
+  },
+  {
+    "caseId": "B-420119",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names Microsoft Office and states that no equivalence clause is present; the named-product-without-equivalence rule applies.",
+        "evidence": [
+          "Microsoft Office"
+        ]
+      }
+    ],
+    "costUsd": 0.00158994,
+    "durationMs": 34306,
+    "notes": []
+  },
+  {
+    "caseId": "B-414987",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S3_OVER_SPECIFICATION",
+        "severity": "medium",
+        "reason": "The notice specifies exact aircraft capacity and payload limits; the over-specification rule applies.",
+        "evidence": [
+          "minimum tank capacity of 3,000 gallons",
+          "maximum allowed volume is 5000 gallons (dispensable) and 45,000 pounds of payload",
+          "Aircraft with less than 3000-gallon dispensing capacity or greater than 5000-gallon dispensing capacity will not be considered."
+        ]
+      }
+    ],
+    "costUsd": 0.0022775100000000004,
+    "durationMs": 35203,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-414987",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S3_OVER_SPECIFICATION",
+        "severity": "medium",
+        "reason": "The notice specifies aircraft dispensing-capacity and payload thresholds; the technical-specification signal applies.",
+        "evidence": [
+          "minimum tank capacity of 3,000 gallons",
+          "27,000 pounds of payload",
+          "maximum allowed volume is 5000 gallons (dispensable)",
+          "45,000 pounds of payload",
+          "Aircraft with less than 3000-gallon dispensing capacity or greater than 5000-gallon dispensing capacity will not be considered."
+        ]
+      }
+    ],
+    "costUsd": 0.00203171,
+    "durationMs": 23611,
+    "notes": []
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00150283,
+    "durationMs": 11627,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00183498,
+    "durationMs": 13816,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-413876.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00293718,
+    "durationMs": 32510,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-408196",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice identifies AtHoc for maintenance and support and lists equivalenceClausePresent as false; FAR 11.104 addresses brand-name-or-equal descriptions.",
+        "evidence": [
+          "AtHoc Mass Notification Software Maintenance and Support",
+          "AtHoc"
+        ]
+      }
+    ],
+    "costUsd": 0.00147702,
+    "durationMs": 35679,
+    "notes": []
+  },
+  {
+    "caseId": "B-408196",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names AtHoc and records no equivalence clause; FAR 11.105 addresses items peculiar to one manufacturer.",
+        "evidence": [
+          "AtHoc",
+          "AtHoc Mass Notification Software Maintenance and Support"
+        ]
+      }
+    ],
+    "costUsd": 0.00149692,
+    "durationMs": 31361,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-408196",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "high",
+        "reason": "The notice names AtHoc and states that no equivalence clause is present; the brand-lock rule applies to a named product without an equivalence clause.",
+        "evidence": [
+          "AtHoc Mass Notification Software Maintenance and Support",
+          "AtHoc"
+        ]
+      }
+    ],
+    "costUsd": 0.0019515,
+    "durationMs": 32250,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00167698,
+    "durationMs": 13221,
+    "notes": [
+      "extract.primary: 4 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-416733",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0033126099999999997,
+    "durationMs": 17388,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-416733",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0018844200000000001,
+    "durationMs": 38486,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-416733",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0018164200000000002,
+    "durationMs": 35876,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017989000000000002,
+    "durationMs": 27449,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422388.3",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00306747,
+    "durationMs": 38358,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-422938",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0020082,
+    "durationMs": 30870,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-421525",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00156889,
+    "durationMs": 21247,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-421525",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00160964,
+    "durationMs": 24354,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-422938",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "medium",
+        "reason": "The notice names \"Wideband Global Satellite Communications\" and does not include \"or equal\" wording.",
+        "evidence": [
+          "Wideband Global Satellite Communications"
+        ]
+      }
+    ],
+    "costUsd": 0.0061895000000000006,
+    "durationMs": 54610,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.B: degenerate output, retrying",
+      "signals.C: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-422938",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00420161,
+    "durationMs": 59889,
+    "notes": [
+      "signals.B: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0017644100000000001,
+    "durationMs": 25462,
+    "notes": []
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00167172,
+    "durationMs": 26953,
+    "notes": []
+  },
+  {
+    "caseId": "B-421525",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00159414,
+    "durationMs": 34252,
+    "notes": [
+      "extract.primary: 3 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0028321,
+    "durationMs": 22036,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped",
+      "signals.A: degenerate output, retrying"
+    ]
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00161177,
+    "durationMs": 21107,
+    "notes": []
+  },
+  {
+    "caseId": "B-422886.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0015694099999999998,
+    "durationMs": 31128,
+    "notes": []
+  },
+  {
+    "caseId": "B-424200.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00192516,
+    "durationMs": 20924,
+    "notes": []
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0014638700000000001,
+    "durationMs": 14082,
+    "notes": []
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0014822,
+    "durationMs": 12461,
+    "notes": [
+      "extract.primary: 1 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 0,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.001814,
+    "durationMs": 35150,
+    "notes": []
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 1,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.0016970600000000002,
+    "durationMs": 33061,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped"
+    ]
+  },
+  {
+    "caseId": "B-423172.4",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [],
+    "costUsd": 0.00131446,
+    "durationMs": 20902,
+    "notes": []
+  },
+  {
+    "caseId": "B-424321.2",
+    "run": 2,
+    "status": "pending_verification",
+    "error": null,
+    "fired": [
+      {
+        "id": "S2_BRAND_LOCK",
+        "severity": "medium",
+        "reason": "The notice names a product/system as \"REMIS\" and states \"equivalenceClausePresent\": false, so the rule for named-product references without an equivalence clause applies.",
+        "evidence": [
+          "REMIS"
+        ]
+      }
+    ],
+    "costUsd": 0.0035070200000000004,
+    "durationMs": 52250,
+    "notes": [
+      "extract.primary: 2 non-verbatim extracted item(s) dropped",
+      "signals.B: degenerate output, retrying"
+    ]
+  }
+]
