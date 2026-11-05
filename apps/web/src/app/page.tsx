@@ -2,13 +2,20 @@ import { defaultSearchQuery, searchNotices, searchSamOpportunities, type NoticeS
 import Link from "next/link";
 import { NoticeForm } from "@/components/notice-form";
 import { type MarketItem, TenderMarket } from "@/components/tender-market";
+import { IT_NAICS_PREFIXES, samNoticeStore } from "@/lib/sam-notices";
 import { reportStore } from "@/lib/store";
 import { isReady, strongestQuote, verdictWord } from "@/lib/verdict";
 
-// SAM.gov personal API keys have a small daily request budget: refresh the list a few times a day only.
-export const revalidate = 21600;
+// The SAM.gov extract is imported once a day; an hourly refresh is plenty.
+export const revalidate = 3600;
 
 async function loadNotices(): Promise<{ source: "SAM.gov" | "TED"; notices: NoticeSummary[] }> {
+  try {
+    const imported = await samNoticeStore().listOpen({ naicsPrefixes: IT_NAICS_PREFIXES, limit: 15, now: new Date() });
+    if (imported.length > 0) return { source: "SAM.gov", notices: imported };
+  } catch {
+    /* table missing or database unreachable: try the API, then TED */
+  }
   const apiKey = process.env.SAM_API_KEY;
   if (apiKey) {
     try {

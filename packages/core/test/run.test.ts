@@ -212,3 +212,24 @@ describe("analyzeNotice (pre-fetched text, used by the evaluation set)", () => {
     expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V1", "SIGNALS_C_US_V1"]);
   });
 });
+
+describe("generateReport with imported SAM.gov notices (public daily extract, no API key)", () => {
+  const SAM_ID = "3aeff044414241b595f6a5752d18e242";
+  const flat = { text: "title: HID ID/Access Cards\ndescription: ** THIS IS A BRAND NAME REQUIREMENT **", language: "ENG", buyerPlatform: `https://sam.gov/opp/${SAM_ID}/view` };
+  const noFetch = (async () => {
+    throw new Error("must not fetch");
+  }) as unknown as typeof fetch;
+
+  it("reads the notice from the imported store before calling the API", async () => {
+    const report = await generateReport(SAM_ID, deps({ fetchImpl: noFetch, samNoticeLookup: async (id) => (id === SAM_ID ? flat : null) }));
+    expect(report.status).toBe("pending_verification");
+    expect(report.buyerPlatform).toBe(`https://sam.gov/opp/${SAM_ID}/view`);
+    expect(report.audit.filter((a) => a.step.startsWith("signals.")).map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V1", "SIGNALS_C_US_V1"]);
+  });
+
+  it("explains a miss when the notice is not imported and no API key is set", async () => {
+    const report = await generateReport(SAM_ID, deps({ fetchImpl: noFetch, samNoticeLookup: async () => null }));
+    expect(report.status).toBe("failed");
+    expect(report.error).toMatch(/not in the imported SAM\.gov extract/);
+  });
+});

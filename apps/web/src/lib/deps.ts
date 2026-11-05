@@ -1,4 +1,5 @@
 import { DolphinClient, ReppoClient, ServClient, type PipelineDeps } from "@tendr/core";
+import { samNoticeStore } from "@/lib/sam-notices";
 
 function required(name: string): string {
   const v = process.env[name];
@@ -17,6 +18,7 @@ export function buildPipelineDeps(): PipelineDeps {
     extractModel: process.env.SERV_EXTRACT_MODEL ?? "gemini-3.1-flash-lite",
     dolphinModel: process.env.DOLPHIN_MODEL,
     samApiKey: process.env.SAM_API_KEY,
+    samNoticeLookup: (id) => samNoticeStore().get(id),
   };
 }
 

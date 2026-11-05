@@ -7,7 +7,7 @@ export class NoticeNotFoundError extends Error {
     public readonly noticeId: string,
     detail?: string,
   ) {
-    super(`Notice ${noticeId} was not found on TED${detail ? ` (${detail})` : ""}`);
+    super(`Notice ${noticeId} was not found on ${/^[0-9a-f]{32}$/i.test(noticeId) ? "SAM.gov" : "TED"}${detail ? ` (${detail})` : ""}`);
     this.name = "NoticeNotFoundError";
   }
 }

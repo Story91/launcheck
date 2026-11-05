@@ -25,8 +25,10 @@ export interface PipelineDeps {
   dolphinModel?: string;
   fetchImpl?: typeof fetch;
   now?: () => Date;
-  /** SAM.gov public API key; required for SAM.gov notice ids. */
+  /** SAM.gov public API key; optional fallback for SAM.gov ids that are not in the imported extract. */
   samApiKey?: string;
+  /** Notices imported from the public SAM.gov daily extract (no key, no rate limit); consulted first for SAM.gov ids. */
+  samNoticeLookup?: (noticeId: string) => Promise<FlatNotice | null>;
 }
 
 export const DEFAULT_EXTRACT_MODEL = "gemini-3.1-flash-lite";
@@ -83,7 +85,14 @@ export function jurisdictionFor(noticeId: string): Jurisdiction {
  * and the website XML only as a fallback for notices the API does not return.
  */
 async function ingestNotice(noticeId: string, fetchImpl: typeof fetch, deps: PipelineDeps): Promise<FlatNotice> {
-  if (isSamNoticeId(noticeId)) return fetchSamNotice(noticeId, { apiKey: deps.samApiKey ?? "", fetchImpl, now: deps.now });
+  if (isSamNoticeId(noticeId)) {
+    const imported = deps.samNoticeLookup ? await deps.samNoticeLookup(noticeId) : null;
+    if (imported) return imported;
+    if (!deps.samApiKey && deps.samNoticeLookup) {
+      throw new NoticeNotFoundError(noticeId, "not in the imported SAM.gov extract (active solicitations from the last 30 days with a description)");
+    }
+    return fetchSamNotice(noticeId, { apiKey: deps.samApiKey ?? "", fetchImpl, now: deps.now });
+  }
   try {
     return flattenApiNotice(await fetchNoticeViaApi(noticeId, fetchImpl));
   } catch (e) {

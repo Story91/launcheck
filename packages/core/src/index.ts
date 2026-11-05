@@ -28,3 +28,4 @@ export * from "./reppo/map";
 export * from "./ted/api";
 export * from "./sam/client";
 export * from "./eval/metrics";
+export * from "./sam/extract";

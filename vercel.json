@@ -9,14 +9,43 @@
       "root": "apps/x402",
       "framework": "express",
       "bindings": [
-        { "type": "service", "service": "web", "format": "url", "env": "WEB_INTERNAL_URL" }
+        {
+          "type": "service",
+          "service": "web",
+          "format": "url",
+          "env": "WEB_INTERNAL_URL"
+        }
       ]
     }
   },
   "rewrites": [
-    { "source": "/v1/(.*)", "destination": { "service": "paywall" } },
-    { "source": "/healthz", "destination": { "service": "paywall" } },
-    { "source": "/(.*)", "destination": { "service": "web" } }
+    {
+      "source": "/v1/(.*)",
+      "destination": {
+        "service": "paywall"
+      }
+    },
+    {
+      "source": "/healthz",
+      "destination": {
+        "service": "paywall"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "web"
+      }
+    }
   ],
-  "crons": [{ "path": "/api/cron/reppo", "schedule": "* * * * *" }]
+  "crons": [
+    {
+      "path": "/api/cron/reppo",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/cron/sam-import",
+      "schedule": "15 6 * * *"
+    }
+  ]
 }
