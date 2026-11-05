@@ -19,7 +19,7 @@ export * from "./prompts/signals-c.us.v1";
 export * from "./pipeline/signals";
 export * from "./pipeline/verify";
 export * from "./pipeline/score";
-export * from "./prompts/summary.v1";
+export * from "./prompts/summary.v2";
 export * from "./pipeline/summary";
 export * from "./pipeline/run";
 export * from "./reppo/client";

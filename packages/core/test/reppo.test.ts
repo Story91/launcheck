@@ -130,3 +130,26 @@ describe("reportToArtifact", () => {
     expect(reportToArtifact(huge).payload.length).toBeLessThanOrEqual(40_000);
   });
 });
+
+describe("reportToArtifact for US notices", () => {
+  it("names SAM.gov and FAR for SAM.gov ids and keeps the EU wording for TED ids", async () => {
+    const { reportToArtifact } = await import("../src/reppo/artifact");
+    const base = { status: "pending_verification", noticeLanguage: "ENG", buyerPlatform: null, facts: null, signals: [], riskScore: 0, summary: null, reppo: null, audit: [], costUsd: 0, droppedEvidence: 0, partial: false, error: null, createdAt: "", updatedAt: "" } as const;
+    const us = reportToArtifact({ ...base, noticeId: "3f2a9c41d7e84b6a9b1c0d2e5f6a7b8c" } as never);
+    expect(us.payload).toContain("SAM.gov notice 3f2a9c41d7e84b6a9b1c0d2e5f6a7b8c");
+    expect(us.context).toContain("US federal");
+    expect(us.context).toContain("FAR");
+    expect(us.context).not.toContain("EU public tender");
+    const eu = reportToArtifact({ ...base, noticeId: "722731-2026" } as never);
+    expect(eu.payload).toContain("TED notice 722731-2026");
+    expect(eu.context).toContain("EU public tender");
+  });
+});
+
+describe("summary prompt", () => {
+  it("does not hard-code the EU", async () => {
+    const { SUMMARY_V2 } = await import("../src/prompts/summary.v2");
+    expect(SUMMARY_V2).not.toMatch(/\bEU\b/);
+    expect(SUMMARY_V2).toMatch(/public tender notice/);
+  });
+});

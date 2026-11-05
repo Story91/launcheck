@@ -150,7 +150,7 @@ export async function generateReport(noticeId: string, deps: PipelineDeps, onPro
     } catch (e) {
       // The signals are the product; a missing narrative must not throw away a paid-for evaluation.
       report.summary = templateSummary(extracted.facts.buyer, verified.signals);
-      report.audit.push({ step: "summary", model: deps.servModel, promptVersion: "SUMMARY_V1", requestId: null, inputHash: "", usage: { promptTokens: 0, completionTokens: 0 }, costUsd: null, durationMs: 0, note: `summary unavailable, template used: ${(e as Error).message}` });
+      report.audit.push({ step: "summary", model: deps.servModel, promptVersion: "SUMMARY_V2", requestId: null, inputHash: "", usage: { promptTokens: 0, completionTokens: 0 }, costUsd: null, durationMs: 0, note: `summary unavailable, template used: ${(e as Error).message}` });
     }
 
     onProgress("done");
