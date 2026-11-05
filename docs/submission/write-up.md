@@ -8,7 +8,7 @@ Companies lose days reading solicitations before discovering the requirement is 
 
 Data: SAM.gov publishes a public daily extract of all contract opportunities (no API key, no rate limit; downloading it is allowed by the SAM.gov Terms of Use). A daily cron streams the ~200 MB file in about 11 seconds and keeps the ~12,600 active solicitations from the last 30 days that have a description. Officials' emails and phone numbers are removed before any text reaches a model.
 
-Real data, real decisions, auditable steps: on a live notice from the Polish central bank (3.16 M PLN) it found a required integration with a named vendor's system without an equivalence clause, in 27 seconds, for one cent.
+Real data, real decisions, auditable steps: on a live notice from the Polish central bank (3.16 M PLN) it found a required integration with a named vendor's system without an equivalence clause, in 27 seconds, for a few cents.
 
 ## How it uses SERV Reasoning
 
@@ -40,9 +40,9 @@ We built a ground-truth set from US GAO bid-protest decisions (`packages/core/ev
 | Sustained protests caught | 1 of 6 | 3 of 6 | 2 of 6 |
 | Clean solicitations flagged | 1 of 7 | 0 of 7 | 0 of 7 |
 | Run-to-run stability | 90% | 92% | 97% |
-| Cost of the whole run | $0.07 | $0.08 | $0.09 |
+| Token cost of the whole run | $0.07 | $0.08 | $0.09 |
 
-V1 flagged an agency's own information system (REMIS) as a brand and missed a task order for a named commercial product's maintenance (AtHoc). V2 stated the FAR distinction: an agency-owned system is not a brand; buying or supporting a named commercial product is. The current rules came from the first live SAM.gov reports: a NASA notice saying "THIS IS A BRAND NAME REQUIREMENT ... AUTHORIZED RESELLERS ONLY" scored 0, because the brand rule only looked at extracted product names and the verbatim check rejected the three-letter brand "HID". Now an explicit brand-name statement fires the signal, upper-case acronyms of 2–3 letters pass the verbatim check as whole words, government systems, networks and certifications are set aside before the brand rule runs, and combined synopsis/solicitations for commercial items only need a reasonable response time (FAR 12.603). The trade-off shows in the table: no false alarms and steadier runs, one borderline over-specification case (a tank-capacity cap) lost. All rule changes were made while looking at this set, so these numbers are not a held-out measurement. The remaining misses are honest limits of a text-only reader: GAO sustained them because the agency could not justify a requirement (a tank cap, a feeder capability, an exact labor-category match), which the solicitation text alone does not reveal. Tendr reports signals visible in the text; it does not claim to judge the agency's needs. Full per-case results: `packages/core/eval/results/`.
+V1 flagged an agency's own information system (REMIS) as a brand and missed a task order for a named commercial product's maintenance (AtHoc). V2 stated the FAR distinction: an agency-owned system is not a brand; buying or supporting a named commercial product is. The current rules came from the first live SAM.gov reports: a NASA notice saying "THIS IS A BRAND NAME REQUIREMENT ... AUTHORIZED RESELLERS ONLY" scored 0, because the brand rule only looked at extracted product names and the verbatim check rejected the three-letter brand "HID". Now an explicit brand-name statement fires the signal, upper-case acronyms of 2–3 letters pass the verbatim check as whole words, government systems, networks and certifications are set aside before the brand rule runs, and combined synopsis/solicitations for commercial items only need a reasonable response time (FAR 12.603). The trade-off shows in the table: no false alarms and steadier runs, one borderline over-specification case (a tank-capacity cap) lost. All rule changes were made while looking at this set, so these numbers are not a held-out measurement. The remaining misses are honest limits of a text-only reader: GAO sustained them because the agency could not justify a requirement (a tank cap, a feeder capability, an exact labor-category match), which the solicitation text alone does not reveal. Two later rule changes (deadline facts computed in code from the original posting date, reseller requirements left to the brand signal) touch signals that no case in this set exercises and were not re-measured. Tendr reports signals visible in the text; it does not claim to judge the agency's needs. Full per-case results: `packages/core/eval/results/`.
 
 ## Track
 
@@ -50,7 +50,7 @@ Open Track.
 
 ## Revenue
 
-Per-report x402 sales to agents (no account needed), subscriptions for small businesses bidding in a NAICS range, licences for newsrooms and NGOs. Cost of goods is about $0.01 per report.
+Per-report x402 sales to agents (no account needed), subscriptions for small businesses bidding in a NAICS range, licences for newsrooms and NGOs. Cost of goods is a few cents per report: about $0.01 in model tokens plus SERV add-ons (shadow-agent validations, graph generation, prompt guard) that the API's `usage` field does not report; our audit trail records the token part and links each call to the OpenServ console for the full charge.
 
 ## Limitations
 

@@ -75,4 +75,7 @@ describe("isVerbatim short brand acronyms", () => {
     expect(isVerbatim("HI", src)).toBe(false);
     expect(isVerbatim("SAP", src)).toBe(false);
   });
+  it("does not treat bare numbers as acronyms", () => {
+    expect(isVerbatim("11", normalizeForMatch("due in 11 days"))).toBe(false);
+  });
 });

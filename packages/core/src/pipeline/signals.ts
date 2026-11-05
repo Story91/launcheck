@@ -6,7 +6,7 @@ import type { ChatResult, LlmClient } from "../llm/types";
 import { SIGNALS_A_V2 } from "../prompts/signals-a.v2";
 import { SIGNALS_B_V2 } from "../prompts/signals-b.v2";
 import { SIGNALS_C_V2 } from "../prompts/signals-c.v2";
-import { SIGNALS_A_US_V3 } from "../prompts/signals-a.us.v3";
+import { SIGNALS_A_US_V4 } from "../prompts/signals-a.us.v4";
 import { SIGNALS_B_US_V3 } from "../prompts/signals-b.us.v3";
 import { SIGNALS_C_US_V2 } from "../prompts/signals-c.us.v2";
 import { SIGNALS_SHADOW_HINT, signalsSchema } from "../prompts/signals-shared";
@@ -30,7 +30,7 @@ const GROUP_PROMPTS: Record<GroupKey, { version: string; system: string }> = {
 export type Jurisdiction = "EU" | "US";
 
 const GROUP_PROMPTS_US: Record<GroupKey, { version: string; system: string }> = {
-  A: { version: "SIGNALS_A_US_V3", system: SIGNALS_A_US_V3 },
+  A: { version: "SIGNALS_A_US_V4", system: SIGNALS_A_US_V4 },
   B: { version: "SIGNALS_B_US_V3", system: SIGNALS_B_US_V3 },
   C: { version: "SIGNALS_C_US_V2", system: SIGNALS_C_US_V2 },
 };

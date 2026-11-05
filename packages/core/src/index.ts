@@ -13,7 +13,7 @@ export * from "./prompts/signals-shared";
 export * from "./prompts/signals-a.v2";
 export * from "./prompts/signals-b.v2";
 export * from "./prompts/signals-c.v2";
-export * from "./prompts/signals-a.us.v3";
+export * from "./prompts/signals-a.us.v4";
 export * from "./prompts/signals-b.us.v3";
 export * from "./prompts/signals-c.us.v2";
 export * from "./pipeline/signals";

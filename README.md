@@ -24,7 +24,7 @@ Every model call goes through `https://inference-api.openserv.ai` (default model
 - **`serv_shadow_agent`** with the hint *"every evidence string must be copied verbatim from the input values"* is what makes the quotes verbatim; without it the model paraphrases.
 - **`serv_disable_content_filter`** because the output legitimately echoes labels defined in the system prompt.
 - **Strict `json_schema` output** on every call, validated again with Zod.
-- **Audit trail**: each step records model, prompt version, the `x-openserv-request-id` header (links to the OpenServ console), tokens, cost and latency. A report costs about $0.01.
+- **Audit trail**: each step records model, prompt version, the `x-openserv-request-id` header (links to the OpenServ console), tokens, cost and latency. The token cost of a report is about $0.01; SERV also bills add-ons the `usage` field does not show (shadow-agent validations, graph generation on new prompts, prompt guard), so the real cost is a few cents (see the OpenServ console).
 - Degenerate output (all signals "none" with identical reasons) and prompt-guard refusals are detected and retried once on `gpt-5.4-mini`.
 
 Dolphin (DeepSeek V4.1 Flash, 1M context) is wired as an alternative extractor (`DOLPHIN_PRIMARY=true`); by default extraction runs on SERV `gemini-3.1-flash-lite` (see `docs/superpowers/plans/2026-11-03-tendr.md`, "Day-1 results").

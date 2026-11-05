@@ -29,7 +29,7 @@ export function isVerbatim(candidate: string, normalizedSource: string): boolean
   const needle = normalizeForMatch(candidate).replace(/^"|"$/g, "");
   if (needle.length >= MIN_EVIDENCE_LENGTH) return normalizedSource.includes(needle);
   // 2–3 characters only for upper-case acronyms (brand names such as HID, IBM, HP), never for ordinary short words.
-  const acronym = /^[\p{Lu}\p{N}&]{2,3}$/u.test(candidate.trim());
+  const acronym = /^[\p{Lu}\p{N}&]{2,3}$/u.test(candidate.trim()) && /\p{Lu}/u.test(candidate);
   if (needle.length < MIN_CODE_LENGTH && !(acronym && needle.length >= 2)) return false;
   return new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegExp(needle)}($|[^\\p{L}\\p{N}])`, "u").test(normalizedSource);
 }

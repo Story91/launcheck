@@ -140,9 +140,9 @@ export async function analyzeNotice(
       primaryJsonSchema: deps.dolphin === null,
       jurisdiction,
     });
-    if (jurisdiction === "US") {
+    const computed = jurisdiction === "US" ? usDeadlineFacts(flat.text) : null;
+    if (computed) {
       // Dates and notice type come from the SAM.gov metadata lines, computed in code; keep the model's value when a line is absent.
-      const computed = usDeadlineFacts(flat.text);
       for (const [k, v] of Object.entries(computed) as [keyof typeof computed, string | number | null][]) {
         if (v !== null) (extracted.facts as Record<string, unknown>)[k] = v;
       }
@@ -158,8 +158,14 @@ export async function analyzeNotice(
     if (unavailable === evaluated.signals.length) throw new Error("signal evaluation unavailable on all groups (model refused or returned degenerate output twice)");
     report.partial = unavailable > 0;
 
+    // A deadline signal is about dates: cite the deadline and posting dates from the notice, not whatever the model picked.
+    const deadlineEvidence = [computed?.deadlineForTenders, computed?.publicationDate].filter((x): x is string => !!x);
+    const signals = deadlineEvidence.length
+      ? evaluated.signals.map((s) => (s.id === "S1_SHORT_DEADLINE" && s.fired ? { ...s, evidence: deadlineEvidence } : s))
+      : evaluated.signals;
+
     onProgress("verify");
-    const verified = verifyEvidence(evaluated.signals, flat.text);
+    const verified = verifyEvidence(signals, flat.text);
     report.signals = verified.signals;
     report.droppedEvidence = verified.dropped;
     report.riskScore = scoreSignals(verified.signals);
