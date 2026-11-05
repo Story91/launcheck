@@ -20,6 +20,19 @@ describe("strongestQuote", () => {
     });
     expect(q).toEqual({ text: "DarkTrace", signalId: "S2_BRAND_LOCK" });
   });
+  it("prefers a quote from the notice text over deadline dates, and the longest quote of that signal", () => {
+    const q = strongestQuote({
+      signals: [
+        { id: "S1_SHORT_DEADLINE", fired: true, severity: "high", reason: "", evidence: ["2026-11-04"] },
+        { id: "S2_BRAND_LOCK", fired: true, severity: "high", reason: "", evidence: ["JFrog Artifactory", "Offeror must be an Authorized Reseller/Partner of JFrog"] },
+      ],
+    });
+    expect(q).toEqual({ text: "Offeror must be an Authorized Reseller/Partner of JFrog", signalId: "S2_BRAND_LOCK" });
+  });
+  it("still shows the deadline when it is the only fired signal", () => {
+    const q = strongestQuote({ signals: [{ id: "S1_SHORT_DEADLINE", fired: true, severity: "high", reason: "", evidence: ["2026-11-04"] }] });
+    expect(q?.signalId).toBe("S1_SHORT_DEADLINE");
+  });
   it("returns null when nothing fired", () => {
     expect(strongestQuote({ signals: [] })).toBeNull();
   });
