@@ -33,7 +33,7 @@ describe("importSamNotices", () => {
 });
 
 describe("MemorySamNoticeStore.listOpen", () => {
-  it("lists open notices for the NAICS prefixes, newest first, with the agency's last segment as buyer", async () => {
+  it("lists open notices for the NAICS prefixes, newest first, with the sub-tier agency as buyer (office codes are cryptic)", async () => {
     const store = new MemorySamNoticeStore();
     await store.upsertMany([
       n("b1", { postedAt: "2026-11-01T00:00:00Z" }),
@@ -44,6 +44,6 @@ describe("MemorySamNoticeStore.listOpen", () => {
     ]);
     const list = await store.listOpen({ naicsPrefixes: ["5415", "5182"], limit: 10, now: NOW });
     expect(list.map((x) => x.noticeId.replace(/0+$/, ""))).toEqual(["b2", "nodl", "b1"]);
-    expect(list[0]).toMatchObject({ title: "Notice b2", buyer: "FLC PUGET SOUND", deadline: "2026-11-20T17:00:00-05:00" });
+    expect(list[0]).toMatchObject({ title: "Notice b2", buyer: "DEPT OF THE NAVY", deadline: "2026-11-20T17:00:00-05:00" });
   });
 });

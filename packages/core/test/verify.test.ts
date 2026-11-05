@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeForMatch, verifyEvidence } from "../src/pipeline/verify";
+import { isVerbatim, normalizeForMatch, verifyEvidence } from "../src/pipeline/verify";
 import type { Signal } from "../src/types";
 
 const source = `Description: Wykonanie przez Wykonawcę Usług instalacyjno-wdrożeniowych wraz z integracją z Systemem "DarkTrace" oraz przygotowaniem dokumentacji.
@@ -61,5 +61,18 @@ describe("verifyEvidence", () => {
     const { signals } = verifyEvidence([unfired, sig(["posiadanie konta na platformie MarketPlanet"])], source);
     expect(signals.map((s) => s.id)).toEqual(["S1_SHORT_DEADLINE", "S2_BRAND_LOCK"]);
     expect(signals[0]).toEqual(unfired);
+  });
+});
+
+describe("isVerbatim short brand acronyms", () => {
+  const src = normalizeForMatch("** THIS IS A BRAND NAME REQUIREMENT ** for Requirement: HID ID/Access Cards; IBM storage");
+  it("accepts 2–3 character upper-case names that appear as whole tokens", () => {
+    expect(isVerbatim("HID", src)).toBe(true);
+    expect(isVerbatim("IBM", src)).toBe(true);
+  });
+  it("still rejects short lower-case fragments and acronyms that are only part of a word", () => {
+    expect(isVerbatim("for", src)).toBe(false);
+    expect(isVerbatim("HI", src)).toBe(false);
+    expect(isVerbatim("SAP", src)).toBe(false);
   });
 });

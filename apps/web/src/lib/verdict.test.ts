@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { strongestQuote, verdictWord } from "./verdict";
+import { strongestQuote, verdictTone, verdictWord } from "./verdict";
 
 describe("verdictWord", () => {
   it("maps score bands to one word", () => {
@@ -22,5 +22,13 @@ describe("strongestQuote", () => {
   });
   it("returns null when nothing fired", () => {
     expect(strongestQuote({ signals: [] })).toBeNull();
+  });
+});
+
+describe("verdictTone", () => {
+  it("colours the answer panel by verdict, not always red", () => {
+    expect(verdictTone(60)).toBe("bg-seal");
+    expect(verdictTone(30)).toBe("bg-amber");
+    expect(verdictTone(0)).toBe("bg-moss");
   });
 });

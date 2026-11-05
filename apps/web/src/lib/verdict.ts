@@ -7,6 +7,13 @@ export function verdictWord(score: number): "Likely." | "Possibly." | "Unlikely.
   return "Unlikely.";
 }
 
+/** Background of the answer panel: red only when the answer is "Likely." */
+export function verdictTone(score: number): "bg-seal" | "bg-amber" | "bg-moss" {
+  if (score >= 50) return "bg-seal";
+  if (score >= 25) return "bg-amber";
+  return "bg-moss";
+}
+
 export function isReady(r: Pick<Report, "status">): boolean {
   return r.status !== "generating" && r.status !== "failed" && r.status !== "withheld";
 }

@@ -81,7 +81,7 @@ describe("evaluateSignals", () => {
       C: [ok(JSON.stringify(groupC), "gpt-6-luna-serv-multipath")],
     });
     const res = await evaluateSignals(facts, { ...deps(client), jurisdiction: "US" });
-    expect(res.audit.map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V2", "SIGNALS_C_US_V1"]);
+    expect(res.audit.map((a) => a.promptVersion).sort()).toEqual(["SIGNALS_A_US_V1", "SIGNALS_B_US_V3", "SIGNALS_C_US_V1"]);
     for (const r of requests) {
       expect(r.system).toMatch(/Federal Acquisition Regulation/);
       expect(r.system).not.toMatch(/Directive 2014\/24\/EU/);

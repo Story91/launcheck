@@ -22,12 +22,15 @@ function escapeRegExp(s: string): string {
 
 /**
  * True when `candidate` appears verbatim in the normalized source. Quotes of 12+ characters match as substrings;
- * shorter ones (codes, short names, 4–11 chars) must appear as a whole token so JSON keys and fragments never pass.
+ * shorter ones (codes, short names, 4–11 chars, or 2–3-character upper-case acronyms) must appear as a whole token so
+ * JSON keys and fragments never pass.
  */
 export function isVerbatim(candidate: string, normalizedSource: string): boolean {
   const needle = normalizeForMatch(candidate).replace(/^"|"$/g, "");
   if (needle.length >= MIN_EVIDENCE_LENGTH) return normalizedSource.includes(needle);
-  if (needle.length < MIN_CODE_LENGTH) return false;
+  // 2–3 characters only for upper-case acronyms (brand names such as HID, IBM, HP), never for ordinary short words.
+  const acronym = /^[\p{Lu}\p{N}&]{2,3}$/u.test(candidate.trim());
+  if (needle.length < MIN_CODE_LENGTH && !(acronym && needle.length >= 2)) return false;
   return new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegExp(needle)}($|[^\\p{L}\\p{N}])`, "u").test(normalizedSource);
 }
 

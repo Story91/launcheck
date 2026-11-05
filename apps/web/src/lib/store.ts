@@ -21,6 +21,8 @@ export interface ReportStore {
   incrementReppoAttempts(id: string): Promise<number>;
   findReppoPending(): Promise<Report | null>;
   listRecent(limit: number): Promise<StoredReport[]>;
+  /** Deletes a report and its Reppo queue entry (admin reset, e.g. after a prompt-version bump). */
+  remove(id: string): Promise<void>;
 }
 
 export function placeholderReport(noticeId: string, now = new Date().toISOString()): Report {
@@ -53,6 +55,11 @@ function claimable(existing: { status: Report["status"]; updatedAt: string } | n
 export class MemoryReportStore implements ReportStore {
   private readonly reports = new Map<string, StoredReport>();
   private readonly queue = new Map<string, { enqueuedAt: number; attempts: number }>();
+
+  async remove(id: string) {
+    this.reports.delete(id);
+    this.queue.delete(id);
+  }
 
   async get(id: string) {
     const r = this.reports.get(id);
@@ -151,6 +158,10 @@ function toRow(r: Report & { progress?: string | null }) {
 }
 
 export class DrizzleReportStore implements ReportStore {
+  async remove(id: string) {
+    await db().delete(schema.reppoQueue).where(eq(schema.reppoQueue.noticeId, id));
+    await db().delete(schema.reports).where(eq(schema.reports.noticeId, id));
+  }
   async get(id: string) {
     const rows = await db().select().from(schema.reports).where(eq(schema.reports.noticeId, id)).limit(1);
     return rows[0] ? rowToReport(rows[0]) : null;

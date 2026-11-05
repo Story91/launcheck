@@ -92,3 +92,15 @@ describe("reportStore() in production", () => {
     expect(reportStore()).toBeInstanceOf(MemoryReportStore);
   });
 });
+
+describe("MemoryReportStore.remove", () => {
+  it("deletes the report and its Reppo queue entry so the notice can be generated again", async () => {
+    const store = new MemoryReportStore();
+    expect(await store.claimGeneration("x", 1000)).toBe(true);
+    await store.enqueueReppo("x");
+    await store.remove("x");
+    expect(await store.get("x")).toBeNull();
+    expect(await store.nextReppo()).toBeNull();
+    expect(await store.claimGeneration("x", 1000)).toBe(true);
+  });
+});

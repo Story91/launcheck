@@ -1,6 +1,6 @@
 "use client";
 
-import type { NoticeSummary, Signal } from "@tendr/core";
+import { isSamNoticeId, type NoticeSummary, type Signal } from "@tendr/core";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SignalFingerprint } from "@/components/fingerprint";
@@ -73,7 +73,7 @@ export function TenderMarket({ items, source }: { items: MarketItem[]; source: "
                 className="group flex h-full flex-col gap-2 rounded-2xl border border-rule bg-white p-5 transition-colors hover:border-ink"
               >
                 <span className="text-xs text-mist">{n.buyer}</span>
-                <span className="line-clamp-2 min-h-[2.75rem] font-sans font-semibold text-ink">{n.title.replace(/^[^–]*–[^–]*–\s*/, "")}</span>
+                <span className="line-clamp-2 min-h-[2.75rem] font-sans font-semibold text-ink">{isSamNoticeId(n.noticeId) ? n.title : n.title.replace(/^[^–]*–[^–]*–\s*/, "")}</span>
                 <span className="text-sm text-slate">
                   {noticeSource(n.noticeId, null).label}
                   {n.deadline && ` · due ${n.deadline.slice(0, 10)}`}

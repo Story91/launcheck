@@ -22,11 +22,15 @@ export interface SamNoticeStore {
   count(): Promise<number>;
 }
 
-const lastSegment = (agency: string) => (agency.split(".").pop() ?? agency).trim();
+/** "DEPT OF DEFENSE.DEPT OF THE NAVY.FLC PUGET SOUND" → "DEPT OF THE NAVY": the sub-tier reads better than office codes. */
+const buyerName = (agency: string) => {
+  const parts = agency.split(".").map((p) => p.trim()).filter(Boolean);
+  return parts[1] ?? parts[0] ?? agency;
+};
 const summary = (n: { noticeId: string; title: string; agency: string; responseDeadline: string | null }): NoticeSummary => ({
   noticeId: n.noticeId,
   title: n.title,
-  buyer: lastSegment(n.agency),
+  buyer: buyerName(n.agency),
   deadline: n.responseDeadline,
 });
 
