@@ -31,3 +31,9 @@ The fix workspace exports selected findings and their evidence to the user’s c
 ## Animation research
 
 Reviewed [Motion](https://github.com/motiondivision/motion), [Three.js](https://github.com/mrdoob/three.js), and [React Bits](https://github.com/DavidHDev/react-bits). The selected browser interaction uses original CSS transforms and React state; no third-party component source was copied and no animation dependency was installed. This keeps the entry page light while retaining keyboard controls, a static fallback and reduced-motion support.
+
+## Second layout review
+
+The launch desk now follows the hero directly. A compact numbered process sits inside the same container as the form, a historical first-party report and the provider explanation. Separate logo/process bands, a second proof banner and the duplicate gallery were removed from the homepage. The gallery remains reachable from navigation and the desk. Below the desk are two compact action cards and FAQ.
+
+The link-preview builder can render and download a local 1200×630 PNG in blue, amber or mint. The entered title, description and public hostname form the actual asset, with measured line wrapping. It sends no image request and does not upload the result; instructions explicitly require hosting the file and adding its address to the generated metadata.

@@ -1,5 +1,12 @@
-# X post (draft, ≤ 280 chars)
+# LaunCheck — X draft (not posted)
 
-Tendr reads US federal solicitations from SAM.gov and flags competition-restriction signals, quotes verified verbatim. Tested on GAO bid protests: 0 false alarms. Reasoning on @openservai SERV, review by @reppo, agents pay per report via x402 + @GoKiteAI Passport. #SERVHackathon
+I built LaunCheck because “works on my laptop” isn't a launch test.
 
-_(add demo link; check length and handles before posting)_
+Paste a URL → get findings + screenshots → hand fixes to your coding agent.
+
+AI buys the checks. You get the receipts.
+
+Built with @openservai + @GoKiteAI
+https://launcheck.vercel.app
+
+Attach a short recording showing a real report, its selected fix pack and the before/after comparison. The text is below 280 characters with X’s URL normalization. No paid promotion or social publication has been performed.

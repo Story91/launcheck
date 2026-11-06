@@ -44,5 +44,14 @@
 .lc-builder-output>p { font-size: 14px; color: var(--color-muted); }
 .lc-builder-actions { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
 .lc-builder-output [role="status"] { margin-top: 15px; color: var(--color-ink); }
+.lc-cover-maker { border-top: 1px solid #d3def0; margin-top: 23px; padding-top: 23px; }
+.lc-cover-maker h2 { font-size: 18px; }
+.lc-cover-maker p { font-size: 12px; color: var(--color-muted); margin-top: 10px; }
+.lc-cover-maker canvas { width: 100%; height: auto; display: block; border: 1px solid #c6d3e8; border-radius: 9px; margin-top: 18px; }
+.lc-cover-colors { display: flex; gap: 8px; margin: 15px 0; flex-wrap: wrap; }
+.lc-cover-colors button { display: flex; align-items: center; gap: 7px; border: 1px solid #c5d2e8; border-radius: 6px; background: white; padding: 8px 10px; font-size: 12px; }
+.lc-cover-colors button[aria-pressed="true"] { border-color: #3457cf; box-shadow: 0 0 0 1px #3457cf; }
+.lc-cover-colors span { width: 12px; height: 12px; border-radius: 50%; }
+.lc-cover-maker>.lc-button { width: 100%; font-size: 13px; }
 @media (max-width: 760px) { .lc-fix-grid { grid-template-columns: 1fr; gap: 20px; } .lc-fix-intro { flex-direction: column; align-items: flex-start; } .lc-builder-grid { grid-template-columns: 1fr; gap: 30px; } }
 @media (max-width: 540px) { .lc-fix-workspace { padding: 20px; } .lc-fix-intro h2 { font-size: 24px; } .lc-builder-preview { padding: 20px; } .lc-builder-intro h1 { font-size: 39px; } }

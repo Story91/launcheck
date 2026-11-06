@@ -9,6 +9,7 @@ import "./globals.css";
 import "@/components/launchcheck/launchcheck.css";
 import "@/components/launchcheck/experience.css";
 import "@/components/launchcheck/fix-tools.css";
+import "@/components/launchcheck/launch-desk.css";
 import { experience as text } from "@/components/launchcheck/experience-copy";
 const civicSans = DM_Sans({ variable: "--font-civic-sans", subsets: ["latin", "latin-ext"], display: "swap" });
 const civicDisplay = Manrope({ variable: "--font-civic-display", subsets: ["latin", "latin-ext"], display: "swap" });

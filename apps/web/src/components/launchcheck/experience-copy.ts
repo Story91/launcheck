@@ -22,9 +22,9 @@ export const experience = {
   agentDetails: "How the agent and budget work", planHelp: "You get", planItems: ["Screenshots when the agent buys them", "Findings with suggested fixes", "A fix pack for your coding agent", "A record of each paid check"],
   publicBudget: "Public demo checks use the project’s funded budget. No card or wallet connection needed. Daily limits apply.",
   howLink: "How it works", toolsLink: "Free fix tool", navCheck: "Check a site",
-  toolboxTitle: "Don’t just find it. Do something about it.", toolboxText: "Turn the findings into a focused task for your coding agent. Or fix your link preview with a small piece of code.",
+  toolboxTitle: "Make your next move.", toolboxText: "Useful tools for the last mile before launch.",
   packTitle: "Your next commit starts here.", packText: "Choose the findings you want to tackle. Copy a fix pack with the observations, suggested changes and evidence your coding agent needs.", packAction: "Explore the fix workspace",
-  previewTitle: "Make your link look the part.", previewText: "Write your title and description. Add an image address. Get HTML or Next.js code for your website’s link preview.", previewAction: "Build my link preview", previewFree: "Free tool · No account needed",
+  previewTitle: "Give your link a cover.", previewText: "Create a share image, download it, and get the code for your link preview. All in your browser.", previewAction: "Build my link preview", previewFree: "Free tool · No account needed",
   faqTitle: "A few things to know", faqs: [
     { q: "Will it fix my website for me?", a: "You can generate link-preview code and export a fix pack for your coding agent. LaunCheck doesn’t have access to your source code, so it doesn’t edit or publish your website. After you apply a change, run another check to see whether the finding is gone." },
     { q: "What does a check actually cover?", a: "The public page you enter: its response, page information, selected links and other listed checks. Depending on the plan and available services, the agent can buy wide and narrow screenshots, an independent HTML review or a browser session to try one link. Each report lists what ran and what didn’t." },
@@ -40,6 +40,7 @@ export const experience = {
     example: "This is an example report. Its fix pack uses illustrative data.",
   },
   builder: {
+    imageMaker: "Or make a cover here", imageMakerHint: "Create a 1200 × 630 cover from your title and description. Download it, add it to your website, then enter its public image address above.", imageDownload: "Download cover PNG", imageDone: "Cover downloaded. Upload it to your website and paste its public address above.", imageError: "The cover could not be created. Try again in a different browser.", imageBusy: "Creating cover…", theme: "Cover color", themes: { blue: "Blue", amber: "Amber", mint: "Mint" }, sampleCover: "Your downloadable cover", imageRequired: "Add a title, description and public page address to create your cover.", coverCredit: "Made with LaunCheck",
     title: "Give your link a better first impression.", intro: "Create the title, description and image tags for your page. Copy the code into your project, then check the published page.",
     titleLabel: "Page title", descriptionLabel: "Short description", urlLabel: "Page address", imageLabel: "Preview image address", imageHint: "Use a public image you own. A 1200 × 630 image usually works well. We don’t upload or check the image here.",
     titlePlaceholder: "Your next big thing", descriptionPlaceholder: "Tell people why they should open your link.", urlPlaceholder: "https://your-website.com", imagePlaceholder: "https://your-website.com/preview.png",

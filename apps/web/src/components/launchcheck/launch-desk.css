@@ -1,0 +1,44 @@
+/* One continuous workbench replaces the disconnected logo, process and gallery sections. */
+.lc-launch-desk { scroll-margin-top: 24px; margin-top: 10px; background: white; border: 1px solid var(--color-rule); border-radius: 22px; overflow: clip; }
+.lc-desk-steps { display: flex; list-style: none; padding: 22px 36px; margin: 0; gap: 24px; border-bottom: 1px solid var(--color-rule); background: #f0f4fc; }
+.lc-desk-steps li { display: flex; flex: 1; align-items: center; gap: 12px; font-size: 14px; }
+.lc-desk-steps li>span { width: 27px; height: 27px; display: grid; place-items: center; flex-shrink: 0; border: 1px solid #bdcce7; background: #fff; border-radius: 50%; color: #405d95; font-size: 12px; }
+.lc-desk-steps strong { font-weight: 550; }
+.lc-launch-desk .lc-start-panel { border: 0; border-radius: 0; box-shadow: none; padding: 32px 36px; }
+.lc-launch-desk .lc-start-heading { margin-bottom: 26px; }
+.lc-launch-desk .lc-start-heading h2 { font-size: 32px; }
+.lc-launch-desk .lc-start-heading p { font-size: 14px; }
+.lc-launch-desk .lc-start-grid { gap: 44px; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); }
+.lc-launch-desk .lc-form-aside.lc-has-proof { background: transparent; padding: 0; border-radius: 0; }
+.lc-desk-proof { border: 1px solid #d3dfd8; border-radius: 13px; background: #f4f8f5; padding: 20px; }
+.lc-desk-proof-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; font-size: 11px; color: #4f6458; }
+.lc-desk-proof-heading>span:first-child { font-weight: 650; }
+.lc-desk-proof-image { height: 150px; overflow: hidden; border: 1px solid #cbd8d1; border-radius: 6px; display: block; background: #e6ede8; }
+.lc-desk-proof-image img { width: 100%; height: auto; }
+.lc-desk-proof h3 { font-size: 25px; line-height: 1.2; font-weight: 650; margin: 18px 0 9px; }
+.lc-desk-proof p { font-size: 12px; color: #4b6355; }
+.lc-desk-proof>a:not(.lc-desk-proof-image) { display: flex; gap: 15px; align-items: center; justify-content: space-between; font-size: 13px; margin-top: 16px; color: #274cc3; text-decoration: underline; text-underline-offset: 4px; }
+.lc-desk-proof small { display: block; color: #4f6458; font-size: 11px; margin-top: 14px; line-height: 1.6; }
+.lc-has-proof>p { border: 0; padding-top: 20px; }
+.lc-has-proof>details { margin-top: 8px; }
+.lc-desk-powered { display: flex; flex-wrap: wrap; gap: 25px 40px; align-items: center; padding: 22px 36px; border-top: 1px solid var(--color-rule); }
+.lc-desk-powered>span { display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 650; }
+.lc-desk-powered small { font-size: 11px; color: var(--color-muted); font-weight: 400; }
+.lc-desk-powered>a { display: flex; gap: 12px; align-items: center; font-size: 12px; margin-left: auto; color: #3457cf; }
+.lc-home-new .lc-toolbox { padding: 52px 0 24px; }
+.lc-home-new .lc-toolbox .lc-section-heading { align-items: center; margin-bottom: 22px; }
+.lc-home-new .lc-toolbox h2 { font-size: 32px; max-width: none; }
+.lc-home-new .lc-tool-grid article { position: relative; padding: 28px; }
+.lc-home-new .lc-tool-grid h3 { font-size: 22px; margin-top: 0; padding-right: 65px; }
+.lc-home-new .lc-tool-grid p { max-width: 43ch; margin: 13px 0 22px; }
+.lc-home-new .lc-pack-art, .lc-home-new .lc-preview-art { position: absolute; right: 20px; top: 24px; width: 55px; height: 43px; transform: rotate(-6deg); }
+.lc-home-new .lc-pack-art { padding: 7px; box-shadow: 3px 3px 0 #dce5f8; }
+.lc-home-new .lc-pack-art i { height: 3px; margin: 4px 0; }
+.lc-home-new .lc-pack-art>span, .lc-home-new .lc-pack-art>b { display: none; }
+.lc-home-new .lc-preview-art>span { font-size: 35px; top: -14px; right: 4px; }
+.lc-home-new .lc-preview-art>div { padding: 5px; }
+.lc-home-new .lc-preview-art i { height: 2px; margin: 2px 0; }
+.lc-home-new .lc-faq { padding: 40px 0 20px; gap: 30px; }
+.lc-home-new .lc-faq h2 { font-size: 26px; }
+@media (max-width: 760px) { .lc-launch-desk .lc-start-grid { grid-template-columns: 1fr; gap: 26px; } .lc-desk-steps { padding: 18px 23px; gap: 12px; } .lc-desk-steps li { font-size: 12px; gap: 8px; } .lc-launch-desk .lc-start-panel { padding: 26px 23px; } .lc-desk-powered { padding: 22px 23px; gap: 20px; } .lc-desk-powered>a { margin-left: 0; } }
+@media (max-width: 540px) { .lc-launch-desk { border-radius: 16px; } .lc-desk-steps { padding: 16px; align-items: start; gap: 8px; } .lc-desk-steps li { flex-direction: column; align-items: flex-start; font-size: 11px; line-height: 1.5; } .lc-desk-steps li>span { width: 24px; height: 24px; font-size: 11px; } .lc-launch-desk .lc-start-panel { padding: 24px 18px; } .lc-launch-desk .lc-start-heading h2 { font-size: 28px; } .lc-desk-proof { padding: 17px; } .lc-desk-proof h3 { font-size: 23px; } .lc-desk-powered { padding: 20px 18px; gap: 18px; } .lc-desk-powered>span { flex: 1; min-width: 115px; font-size: 13px; } .lc-desk-powered>a { flex-basis: 100%; } .lc-desk-powered small { font-size: 10px; } .lc-home-new .lc-toolbox { padding: 35px 0 12px; } .lc-home-new .lc-toolbox h2 { font-size: 28px; } .lc-home-new .lc-tool-grid article { padding: 24px; } .lc-home-new .lc-faq { padding-top: 30px; gap: 18px; } }

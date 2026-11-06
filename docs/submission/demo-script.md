@@ -1,14 +1,14 @@
-# Demo script (3 minutes)
+# LaunCheck — recording outline
 
-Before recording: the SAM.gov import has run on production; five US reports pre-generated and through Reppo (start with the NASA "HID ID/Access Cards" solicitation, notice `3aeff044414241b595f6a5752d18e242`, if it is still open; otherwise the open IT notice with the highest score); x402 service deployed; `kpass` logged in with an approved session; OpenServ console open in a second tab; `packages/core/eval/results/LATEST.md` open.
+Recommended length: around 90–120 seconds. This is a presentation recommendation, not a length rule confirmed by the event page. No video has been recorded or submitted by this document.
 
-| Time | Screen | Say |
-|---|---|---|
-| 0:00–0:20 | Home page, open federal IT solicitations | "Thousands of federal solicitations are posted on SAM.gov every week. Before a small business spends days on one, it wants to know: is this written around a single supplier? Tendr reads it for you." |
-| 0:20–0:40 | Click the NASA notice | "Every morning Tendr imports the public SAM.gov extract, no API key, about twelve thousand active solicitations. Generating a report takes about 30 seconds; you can watch the steps: extraction, three SERV reasoning calls, quote verification, summary." |
-| 0:40–1:15 | Report page: risk meter, summary, S2 | "The brand signal fired: the notice says 'THIS IS A BRAND NAME REQUIREMENT' and 'AUTHORIZED RESELLERS ONLY'. Under FAR 11.104 that limits competition to one manufacturer's channel. Every quote is verified by code to appear verbatim in the notice; a quote that is not in the source is dropped, and the flag with it. Small-business set-asides are lawful and never flagged." |
-| 1:15–1:40 | Audit tab, then OpenServ console | "The audit trail: model, prompt version, SERV request id, tokens, cost. gpt-6-luna, the cheapest model, with multipath reasoning graphs and a shadow agent enforcing verbatim quotes. A few cents per report. Same ids in the OpenServ console." |
-| 1:40–2:05 | LATEST.md: GAO evaluation table | "Does it judge correctly? We tested it on GAO bid-protest decisions. Every time it flagged, it was right, and it raised no false alarms on clean solicitations. It caught a third of the sustained protests. The misses need information the text does not contain, and we say so." |
-| 2:05–2:25 | Status badge, Reppo critique | "Before a report is called verified, independent judges on Reppo review it. Accept, revise or reject: verified, disputed, withheld." |
-| 2:25–2:50 | Terminal: `kpass session execute` → 402 → JSON; `kpass activity` | "An agent buys the report over x402 with a Kite Agent Passport, inside the spending limit its owner approved. An unverified report returns 409 and is never charged." |
-| 2:50–3:00 | Home page | "Per-report sales to agents, subscriptions for small businesses by NAICS code, licences for newsrooms and watchdogs. Tendr, Open Track." |
+1. Show https://launcheck.vercel.app and explain the task in one sentence: find public-page launch problems and prepare the next fix.
+2. Open the real broken-demo receipt: https://launcheck.vercel.app/check/lc_9b00787167ca2371f7ac07a3. Show a concrete finding with its observation, not a site-wide score.
+3. Open the purchasing plan and decision log: point to SERV request IDs and why a paid browser capability was selected.
+4. Open the receipt: actual Base-USDC transaction hashes, quotes versus charged amounts, owner allowance. Avoid exposing operator credentials or private account screens.
+5. Open the follow-up: https://launcheck.vercel.app/check/lc_KpScNuw45vmP. Show 6 of 10 fixed and the remaining/unchecked scope. Explain that both reports are historical observations of our own demo.
+6. Select one finding in Fix Workspace and download/copy the pack. Describe it as instructions for a coding agent with project access, not an automatic deployment.
+7. Briefly show /tools/link-preview: editable cover, PNG download and generated HTML/Next.js metadata. Users apply these in their own code.
+8. End with the public app/repository and the Kite track.
+
+A fresh live check is optional for a recording and spends funds. Do not repeat an unknown payment or exceed the authorized cap/expiry. Existing receipts support a complete no-spend walkthrough. Clearly label historical reports and illustrative hero interactions; do not pretend either is a newly executed run.

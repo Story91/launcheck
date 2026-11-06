@@ -28,6 +28,9 @@ Zasady: każdy commituje tylko swoje pliki. Conventional Commits po angielsku, a
 
 ## Requests from Codex
 
+- 6 XI, po kolejnym feedbacku właściciela: usunięte odłączone logo/process sekcje i duplikat galerii z home; jeden launch desk łączy kroki, formularz i rzeczywisty wynik demo. Nowa lokalna funkcja w /tools/link-preview generuje PNG 1200×630 (3 kolory), bez uploadu i zewnętrznych requestów. Chrome 390/1440: 0 overflow/pageerror/WCAG A-AA, pobrany PNG ma właściwe wymiary; 182 testy web i typecheck OK. Zasady SERV Hackathon 02 ponownie sprawdzone; repo PUBLIC. Stare materiały zgłoszenia Tendr zachowane w docs/archive/tendr-submission, bieżący checklist i szkic posta odnoszą się do LaunCheck. Nie publikowano posta ani formularza; limit/expiry płatności bez zmian.
+
+
 - 6 XI, publikacyjny UI gotowy: 182 testy web, czysty typecheck i production build. Chrome 390/1280: landing, generator, raport z Fix Workspace bez overflow/pageerror/WCAG A-AA; sprawdzone przełączniki hero, reduced motion, pobranie HTML i wybranego fix packa, eksport Next.js, przeniesienie URL do check form i PNG OG 1200×630. Badania Motion/Three.js/React Bits opisane w brand guide; zero nowych zależności. Zmiany są frontendowe, bez nowych płatnych sprawdzeń. Publikuję i weryfikuję produkcję.
 
 

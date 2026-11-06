@@ -1,0 +1,76 @@
+{
+  "screens": [
+    {
+      "width": 390,
+      "route": "/?fixture=1",
+      "overflow": false,
+      "violations": [],
+      "sections": [
+        {
+          "class": "lc-launch-hero",
+          "height": 1022
+        },
+        {
+          "class": "lc-launch-desk",
+          "height": 1569
+        },
+        {
+          "class": "lc-toolbox",
+          "height": 667
+        },
+        {
+          "class": "lc-faq",
+          "height": 335
+        }
+      ],
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/tools/link-preview",
+      "overflow": false,
+      "violations": [],
+      "sections": [],
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "route": "/?fixture=1",
+      "overflow": false,
+      "violations": [],
+      "sections": [
+        {
+          "class": "lc-launch-hero",
+          "height": 650
+        },
+        {
+          "class": "lc-launch-desk",
+          "height": 1018
+        },
+        {
+          "class": "lc-toolbox",
+          "height": 381
+        },
+        {
+          "class": "lc-faq",
+          "height": 296
+        }
+      ],
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "route": "/tools/link-preview",
+      "overflow": false,
+      "violations": [],
+      "sections": [],
+      "errors": []
+    }
+  ],
+  "cover": {
+    "width": 1200,
+    "height": 630,
+    "bytes": 95137,
+    "externalRequests": 0
+  }
+}

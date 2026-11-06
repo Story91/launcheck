@@ -1,79 +1,36 @@
-# Checklista zgłoszenia — SERV Hackathon 02
+# LaunCheck — SERV Hackathon 02 checklist
 
-**Deadline: niedziela 15 listopada 2026, 23:59 UTC (00:59 w Polsce, 16 XI).**
-Formularz: https://openserv.typeform.com/submissions02
+Checked 6 November 2026 against the official event page: https://www.openserv.ai/hackathon-2
+Submission form: https://openserv.typeform.com/submissions02
+Deadline: **15 November 2026, 23:59 UTC** (**16 November, 00:59 in Poland**).
+Track: **Kite**. Legacy Tendr drafts are archived under `docs/archive/tendr-submission/` and must not be reused as LaunCheck claims.
 
-## Kontrola 6 XI 2026
+## Required by the published event page
 
-Ta sekcja zastępuje starsze wpisy o brakującym deployu, bazie i kluczu Reppo poniżej; historyczne pomiary pozostają zapisane z datą.
+| Requirement | Current evidence / remaining action |
+| --- | --- |
+| SERV Reasoning in the build | Implemented: plan and evidence-based explanations through ServClient; Shadow Agent marker, schema/evidence checks, request IDs. Actual deployed report `lc_KpScNuw45vmP` retains two successful request IDs. |
+| Public code repository | Confirmed PUBLIC via GitHub on 6 XI: https://github.com/Story91/launcheck. A private repository does not meet the published requirement. |
+| Demo link **or** video | Live app: https://launcheck.vercel.app. Existing reports remain inspectable. A recorded video is recommended, not an additional mandatory item when a demo link is supplied. |
+| Short write-up explaining the product, SERV use and chosen track | Current fact outline in `docs/submission/write-up.md`; owner still needs to write/review the final submission answers. |
+| Post on X by the deadline and its URL in the submission | Current draft in `docs/submission/x-post.md`. No confirmed publication URL; not marked complete. |
+| Send submission through the form | No confirmation of final submission. Deployment is not submission. |
 
-- [x] Publiczna strona produkcyjna odpowiada HTTP 200; `/api/notices` zwraca dane.
-- [x] `/healthz` odpowiada HTTP 200: Kite testnet, pieUSD, cena $0.50.
-- [x] Publiczne API raportu NBP `722731-2026` odpowiada HTTP 200, Reppo `SETTLED`, `sandbox: false`.
-- [x] Lokalne poprawki: identyfikatory SAM.gov w x402, limit oczekiwania na upstream, bezpieczna walidacja JSON, informacja o niedostępnej konfiguracji, zakończenie przerwanego generowania stanem failed i widoczny błąd połączenia w UI.
-- [x] Testy x402 nie wymagają internetu; prawdziwy middleware działa z mockowaną odpowiedzią facilitatora.
-- [x] Weryfikacja lokalna: 198 testów (core 114, web 72, x402 12), TypeScript we wszystkich trzech pakietach i build produkcyjny Next.js przechodzą.
-- [x] Sprzedaż wymaga zakończonego werdyktu Reppo zgodnego ze statusem raportu; zadania cron odmawiają uruchomienia również przy brakującym CRON_SECRET.
-- [x] Produkcyjny paywall zwraca HTTP 402, a cron Reppo bez autoryzacji HTTP 401. Cztery raporty USA widoczne na stronie mają rzeczywiste werdykty SETTLED/revise; kolejny ma PENDING.
-- [x] Poprawki wdrożone 6 XI: commit `d6e6de1`, Vercel success. Na produkcji potwierdzono HTTP 200 strony, dokumentacji i raportu NBP, HTTP 400 dla nieprawidłowego JSON (`null`, liczbowy noticeId), HTTP 401 cron bez autoryzacji oraz HTTP 402 z warunkami płatności dla identyfikatora SAM.gov. Zakup i rozliczenie nadal wymagają osobnego testu z passkey.
-- [ ] Potwierdzić rzeczywisty zakup przez `kpass` na testnecie z konta właściciela (passkey); działające HTTP 402 nie dowodzi rozliczenia płatności.
-- [ ] Potwierdzić komplet pięciu raportów referencyjnych z aktualnymi werdyktami; nie uruchamiano dodatkowych płatnych analiz podczas kontroli.
-- [ ] Wideo, publikacja na X i wysłanie zgłoszenia. Pliki w `docs/submission/` są materiałami roboczymi, nie dowodem publikacji.
-- [ ] Kontrola wizualna w przeglądarce: automatyczne uruchomienie przeglądarki przekroczyło limit czasu; odczyty HTTP nie zastępują tej kontroli.
+The event permits meaningful work on an existing project. Explain the Tendr-to-LaunCheck pivot and which functionality was built during the event. Published judging criteria are creativity, user readiness and revenue potential. The public event page does not state that partner mentions, a hashtag, a three-minute maximum or a paid seller endpoint are mandatory. Mentions and a concise recording are presentation recommendations, not invented rules. The linked Typeform requires interactive access; its field-by-field requirements have not been confirmed here.
 
-## Przed startem kodowania
-- [x] Pre-rejestracja (daje $5 kredytów SERV): https://openserv.typeform.com/registerhack02 (track Dolphin zaznaczony; finalnie zgłaszamy Open)
-- [x] Konto + klucz SERV: https://console.openserv.ai → Settings → Keys → wpisać do `.env`
-- [x] Doładować konto SERV (żądania są odrzucane, gdy saldo nie pokrywa szacowanego sufitu)
-- [x] Dolphin: wallet + Telegram → kupon `API10` ($10) → klucz (zmierzony: za wolny na primary, zostaje jako bulk)
-- [ ] **Reppo: klucz w https://eval.reppo.xyz (tworzy człowiek) → `REPPO_EVAL_API_KEY` w `.env`; bez niego cron zwraca `skipped`**
-- [ ] **Kite: `irm https://cli.gokite.ai/install.ps1 | iex` → `kpass signup init` → passkey w https://agentpassport.ai → `kpass sandbox on` → `kpass faucet drop --token pieUSD` → test na `passport.dev.gokite.ai/x402/test`**
-- [ ] Dołączyć do Discorda OpenServ (https://discord.com/invite/9u724WsWCU) — tam ogłoszą podział nagród i detale tracków
+## Kite fit and actual evidence
 
-## Stan builda (4 XI)
-- [x] `packages/core` pipeline + 62 testy; live run na NBP 722731-2026: 27 s, $0.009, S2 BRAND_LOCK high
-- [x] `apps/web` UI + API + worker Reppo (17 testów), zweryfikowane w przeglądarce
-- [x] `apps/x402` paywall (5 testów)
-- [x] Repo GitHub `Story91/tendr` (main + feat/tendr), historia jako Story91
-- [x] Projekt Vercel `tendr` w teamie Story Project's (prj_fYlagLPSrA3a5sWrOG7NhowedWQA), preset Services, powiązany z GitHubem; 10 zmiennych wgranych (modele, tryby, INTERNAL_SECRET, CRON_SECRET)
-- [x] Produkcja https://tendr-ecru.vercel.app: strona główna 200 publicznie; paywall `/healthz` startuje i zgłasza brak `PAY_TO`; web zwraca 500 do czasu `DATABASE_URL`
-- [ ] W panelu Vercel sprawdzić Settings → Deployment Protection (Vercel Authentication włączona domyślnie; produkcyjny alias odpowiadał 200, previews mogą wymagać logowania)
-- [x] Sekrety wklejone (SERV, Reppo, Dolphin); Neon podłączony przez integrację Vercel (prefix STORAGE → `STORAGE_DATABASE_URL`); tabele utworzone przez `POST /api/admin/migrate` (bearer CRON_SECRET)
-- [x] Ingest przez oficjalne API TED (strona XML ted.europa.eu zwraca z Vercela 202/WAF); raport NBP na produkcji: 35 s, 55/100, S2+S4+S7
-- [x] PAY_TO ustawione; 402 z paywalla podaje prawdziwy adres, Kite testnet, 0.5 pieUSD
-- [x] Cron `/api/cron/reppo` co minutę działa (vercel.json)
-- [x] Pierwsza prawdziwa ewaluacja Reppo na produkcji: NBP 722731-2026 → SETTLED, decision revise, score 77, confidence medium (cytaty verbatim OK, severity OK, uwaga: ton opisów lekko negatywny → do poprawy w prompcie)
-- [ ] **SERV: saldo $0.00 — doładować konto na console.openserv.ai → Settings → Billing; 4 raporty referencyjne padły na "Insufficient credits" i czekają na ponowienie**
-- [ ] 5 raportów referencyjnych z werdyktem Reppo (1/5 gotowy)
-- [ ] Zakup przez `kpass` na testnecie (fallback: Base mainnet USDC do 10 XI)
+- Authenticated Kite Passport agent, owner allowance, daily demo allocation cap and actual Base-USDC purchases.
+- Real screenshots and one public browser navigation attempt; no forms, sign-in or checkout claims.
+- Broken demo: 0.015 USDC. Follow-up: 0.020 USDC and 6 of 10 previous findings fixed. The pair cost **0.035 USDC**, not 0.020.
+- Public-form Quick acceptance: 0.010 USDC, two paid screenshots, two SERV request IDs. All three acceptance runs total 0.045 USDC across seven purchases and six SERV requests.
+- Receipt amounts exclude SERV model/add-on charges. Listed check budgets are not an atomic per-purchase price guarantee; Kite allowance is the settlement control.
+- Evidence files: `.hallmark/acceptance-{before,after,public-form}.json`, `.hallmark/acceptance-integrity.json`, `docs/launchcheck/acceptance-2026-11-06.md`.
 
-## Wymagania twarde (cytaty ze strony)
-- [ ] **"SERV Reasoning must be part of your build."** — i ma to być widoczne (system prompt → graf, marker tools, sufiksy -serv-kronos/-serv-multipath)
-- [ ] Publiczne repo (GitHub)
-- [ ] Demo link **lub** wideo (nie trzeba deployu, ale deploy = "user readiness")
-- [ ] Write-up: co robi · jak używa SERV Reasoning · który track
-- [ ] **Post na X przed deadlinem**, link do posta w formularzu
-- [ ] Oznaczyć @openservai + partnera tracku (@dphnAI / @GoKiteAI / @reppo)
+## Public beta decision
 
-## Kryteria oceny (cytat): "creativity, user readiness and revenue potential"
-- [ ] **Creativity** — problem, którego nikt w Ed. 01 nie dotknął (patrz `docs/research/05-prior-art.md`)
-- [ ] **User readiness** — działający UI, onboarding w <2 min, prawdziwe dane, nie mock
-- [ ] **Revenue potential** — jasny model: kto płaci, ile, za co (x402 per-call to naturalny dowód)
+A public beta announcement is supported by the working application and real payment/observation evidence. Do not describe it as a complete QA team, a site-wide certificate, an automatic code repair service or an active paid API seller. The fix workspace prepares a handoff; the link-preview tool creates code/images locally; users must apply and publish their own changes.
 
-## Co pokazać jurorom w demo (maks. 3 min)
-1. Problem w jednym zdaniu
-2. Wejście = prawdziwe dane
-3. Krok SERV: pokazać system prompt i wynik w konsoli OpenServ (usage/activity) jako "auditable steps"
-4. Decyzja agenta + dowód (trace / verdict / receipt)
-5. Płatność / efekt w świecie
-6. Ile to kosztowało (porównanie model raw vs SERV z Playgrounda)
+Public runs have an owner-approved vendor cap of 1.50 USD/day and expire at **2026-11-15 23:59 UTC**. Current checks can exhaust the shared budget; callers see a paused state. After expiry, live starts stop. Recorded reports remain useful to judges; a recording is especially helpful because judging may be after expiry. Extending spending requires a new owner decision, not an implicit budget increase.
 
-## Harmonogram (14 dni)
-| Dni | Co |
-|---|---|
-| 3–4 XI | wybór pomysłu, spec, plan, klucze, smoke-testy API |
-| 5–8 XI | rdzeń: pętla SERV + integracja partnera + minimalny UI |
-| 9–11 XI | prawdziwe dane, edge-case'y, audit trail, koszty |
-| 12–13 XI | deploy (Vercel), polish UI, README, write-up |
-| 14 XI | wideo demo, post na X, zgłoszenie (bufor 1 dzień) |
-| 15 XI | bufor / poprawki |
+Still separate from this audit: final X publication, final submission, confirmation of account registration/terms in the form, and checking SERV credit availability before a live recording. Do not count old Tendr registrations or a report's historical successful model call as current account/credit verification.

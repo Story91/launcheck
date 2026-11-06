@@ -1,6 +1,6 @@
 # LaunCheck
 
-**Launch with the receipts.** A website-checking agent that chooses evidence within a listed-check budget, buys it through Kite Passport, and returns observations, sources and payment records.
+**Catch the oops. Before the launch.** Check a public launch page, understand what needs attention, and prepare fixes for your coding agent. OpenServ plans the checks; Kite Passport purchases outside evidence with an owner-controlled allowance. Each report includes observations and payment records.
 
 [Application](https://launcheck.vercel.app) · [Source](https://github.com/Story91/launcheck) · [Example receipt](https://launcheck.vercel.app/check/fx_problems) · [Design](docs/superpowers/specs/2026-11-06-launchcheck-design.md)
 
@@ -12,7 +12,8 @@ Built for SERV Hackathon 02, Kite track. The earlier Tendr prototype remains at 
 - **OpenServ SERV Reasoning** chooses useful paid checks and explains existing findings. Code validates the catalogue, budget and evidence references. Reports record request IDs, prompt versions and input hashes. Failed model calls use a labelled rules/template fallback.
 - **Kite Passport** purchases 1280px and 390px browser screenshots, an independent static HTML audit, and (Full tier) a browser session that clicks one eligible public navigation link.
 - Receipts distinguish settled USDC amounts and Base transactions from quotes, refusals, unknown payments and charges without results.
-- Copy an evidence-backed fix brief, check again, and inspect **Fixed X of Y**. An unperformed follow-up check does not establish a fix.
+- Select findings and copy or download an evidence-backed fix pack, check again, and inspect **Fixed X of Y**. An unperformed follow-up check does not establish a fix.
+- Create a 1200×630 share cover locally, download it, and generate HTML or Next.js link-preview metadata at `/tools/link-preview`. Applying the code and hosting the image are the user’s steps.
 - Download receipt PNG/evidence JSON, copy a badge, and share a report link. Gallery publication is curated and restricted to our own demo pages.
 
 Reports are unlisted and excluded from search indexing. Anyone with the link can see the submitted URL, screenshots and evidence. Avoid private data and URLs containing secrets. The creator cookie permits follow-up checks and deletion; active runs and unresolved payments must be settled before deletion.
@@ -33,6 +34,10 @@ SERV token estimates are separate and exclude add-on fees. They are not included
 Screenshots establish appearance. The browser check establishes one navigation observation. LaunCheck does not establish whole-app correctness, accessibility conformance, security, sign-in, forms, checkout or production readiness. It emits no overall score or certification. Vendor scores are dropped; third-party content is untrusted data.
 
 The `/agents` seller interface is **planned**, not an active Base-USDC service. The old Tendr x402 seller uses a different network/asset and is not a LaunCheck integration.
+
+## Hackathon submission
+
+Current requirements and remaining publication steps: [checklist](docs/hackathon-checklist.md). The public beta is deployed; X publication and final form submission are separate owner actions. Historical Tendr submission drafts are archived and do not describe LaunCheck.
 
 ## Development
 
