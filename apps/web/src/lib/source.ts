@@ -1,4 +1,4 @@
-import { isSamNoticeId } from "@tendr/core";
+import { isSamNoticeId } from "@tendr/core/ted/client";
 
 export interface NoticeSource {
   label: "SAM.gov" | "TED";

@@ -1,6 +1,6 @@
 "use client";
 
-import { isValidNoticeId } from "@tendr/core";
+import { isValidNoticeId } from "@tendr/core/ted/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

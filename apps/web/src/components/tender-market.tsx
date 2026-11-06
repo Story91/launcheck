@@ -1,6 +1,7 @@
 "use client";
 
-import { isSamNoticeId, type NoticeSummary, type Signal } from "@tendr/core";
+import { isSamNoticeId } from "@tendr/core/ted/client";
+import type { NoticeSummary, Signal } from "@tendr/core";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SignalFingerprint } from "@/components/fingerprint";

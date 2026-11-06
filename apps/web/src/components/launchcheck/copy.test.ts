@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { copy, reportHeadline, shareText } from "./copy";
-import { BANNED_WORDS } from "@tendr/core";
+import { BANNED_WORDS } from "@tendr/core/launchcheck/wording";
 function strings(value: unknown): string[] { if (typeof value === "string") return [value]; if (value && typeof value === "object") return Object.values(value).flatMap(strings); return []; }
 describe("LaunchCheck public claims", () => {
   it("does not turn limited observations into a quality verdict", () => { const all = [...strings(copy), reportHeadline(11, 0, 1), shareText({ budgetUsd: .15, spentUsd: .1, problems: 0, paidCalls: 4 }), shareText({ budgetUsd: .15, spentUsd: .01, problems: 0, paidCalls: 2, fixed: 2, original: 3 })].join(" ").replace(/security headers/gi, ""); for (const word of BANNED_WORDS) expect(all, word).not.toMatch(new RegExp(`\\b${word}\\b`, "i")); });

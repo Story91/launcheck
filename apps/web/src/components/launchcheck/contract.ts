@@ -12,7 +12,7 @@ export {
   galleryItemSchema,
   gallerySchema,
   checkCreatedSchema,
-} from "@tendr/core";
+} from "@tendr/core/launchcheck/types";
 export type {
   LaunchCheckReport as Report,
   LaunchCheckEvidence as Evidence,
@@ -22,4 +22,4 @@ export type {
   GalleryItem,
   LaunchCheckTier as Tier,
   LaunchCheckVenue as Venue,
-} from "@tendr/core";
+} from "@tendr/core/launchcheck/types";

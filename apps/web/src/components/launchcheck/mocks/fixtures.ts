@@ -4,4 +4,4 @@ export {
   launchCheckFixtureCatalog as fixtureCatalog,
   launchCheckFixtureAgent as fixtureAgent,
   launchCheckFixtureReport as fixtureReport,
-} from "@tendr/core";
+} from "@tendr/core/launchcheck/fixtures";
