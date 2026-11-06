@@ -25,4 +25,11 @@ describe("evidence-backed rerun comparison", () => {
     const diff = compareReports(parent,current)!;
     expect(diff.stillThere).toContain(parent.findings[1].id); expect(diff.new).toEqual([]);
   });
+  it("keeps an unprobed link unresolved even when other link checks succeeded", () => {
+    const parent = launchCheckFixtureReport("fx_problems"), current = launchCheckFixtureReport("fx_fixed");
+    current.evidence.find(e => e.checkId === "link_status")!.fields = { links: [{url:"https://example.com/other",status:200}] };
+    expect(compareReports(parent,current)?.unresolved).toContain("f_link");
+    current.evidence.find(e => e.checkId === "link_status")!.fields = { links: [], discoveryComplete:true, discoveredUrls:["https://example.com/other"] };
+    expect(compareReports(parent,current)?.fixed).toContain("f_link");
+  });
 });

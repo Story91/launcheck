@@ -1,107 +1,34 @@
 {
   "date": "2026-11-06",
-  "spec": "docs/launchcheck/codex-tasks.md",
-  "complete": false,
-  "evidence": {
-    "webTests": 129,
+  "applicationAcceptancePassed": true,
+  "scope": "SERV planning/explanation, Kite purchases, evidence persistence, owner rerun, receipt sharing and compact UI",
+  "validation": {
+    "coreTests": 219,
+    "webTests": 170,
     "typecheck": "passed",
-    "productionBuild": "passed before final clipboard addition; typecheck/tests and browser passed after it",
-    "browser": "scratch/launchcheck-browser-results.json; scratch/launchcheck-compact-check.cjs; scratch/launchcheck-copy-check.cjs"
+    "productionBuild": "passed",
+    "browser": "390px/1280px, no detected WCAG A/AA violations, overflow, missing images or page errors in reviewed screens",
+    "liveBefore": "lc_9b00787167ca2371f7ac07a3",
+    "liveAfter": "lc_KpScNuw45vmP",
+    "settledUsdc": 0.035,
+    "paidTransactions": 5,
+    "servRequests": 4,
+    "fixed": 6,
+    "previousFindings": 10,
+    "pngHashChecks": 5,
+    "integrityArtifact": ".hallmark/acceptance-integrity.json"
   },
-  "requirements": [
-    {
-      "id": 1,
-      "state": "partial",
-      "evidenceOrGap": "Tendr moved to /tendr; LaunchCheck navigation renders; final production deploy pending"
-    },
-    {
-      "id": 2,
-      "state": "partial",
-      "evidenceOrGap": "Catalog and agent API consumed; fixture form/polling verified; live POST still returns 503 executor_offline"
-    },
-    {
-      "id": 3,
-      "state": "partial",
-      "evidenceOrGap": "All supplied report fixtures rendered and inspected; real report persistence/loader not delivered"
-    },
-    {
-      "id": 4,
-      "state": "partial",
-      "evidenceOrGap": "fx_running polling reaches terminal state; actual paid executor not connected"
-    },
-    {
-      "id": 5,
-      "state": "partial",
-      "evidenceOrGap": "Fixture OG HTTP 200 and visual inspection; live report/transaction not available"
-    },
-    {
-      "id": 6,
-      "state": "partial",
-      "evidenceOrGap": "X/copy/badge and fix brief work; real owner rerun/delete API not implemented"
-    },
-    {
-      "id": 7,
-      "state": "verified locally",
-      "evidenceOrGap": "Actual SVG GET handler executed at observation date and +31 days; max-age=3600 confirmed; Chrome screenshot on #fff/#0d1117, no clipped text; stale background #e8eceb with Results older than 30 days. Artifact scratch/launchcheck-captures/badge-age-themes.png; script scratch/launchcheck-badge-check.cjs."
-    },
-    {
-      "id": 8,
-      "state": "partial",
-      "evidenceOrGap": "Broken demo HTML verified; getDemoFixed module absent, fixed mode not integrated"
-    },
-    {
-      "id": 9,
-      "state": "partial",
-      "evidenceOrGap": "Fixture gallery and empty/error states; seller interface honestly marked planned; seller payment not confirmed"
-    },
-    {
-      "id": 10,
-      "state": "verified locally",
-      "evidenceOrGap": "TypeScript JSX AST inspection found only punctuation and decorative symbols outside copy.ts. Seller commands, badge alt, image placeholder and time unit centralized; shared BANNED_WORDS test passes. UI strings received from report/catalog remain provider data, not product claims."
-    },
-    {
-      "id": 11,
-      "state": "pending",
-      "evidenceOrGap": "docs/brand/style-guide.md not delivered"
-    },
-    {
-      "id": 12,
-      "state": "partial",
-      "evidenceOrGap": "7 routes at 390/1280 audited; current report navigation and clipboard tested; production browser audit pending"
-    },
-    {
-      "id": 13,
-      "state": "pending",
-      "evidenceOrGap": "docs/brand/brand-review-2026-11-12.md not delivered"
-    },
-    {
-      "id": 14,
-      "state": "partial",
-      "evidenceOrGap": "Root OG, icon, loading/reduced-motion implemented; final video polish depends on live run"
-    }
-  ],
-  "additionalOwnerRequirement": {
-    "realInteractiveE2E": "not implemented; provider availability/pricing gap recorded in docs/coordination.md",
-    "compactUX": "section navigation implemented; final live screen review pending"
+  "publicExecution": {
+    "ownerApproved": true,
+    "dailyVendorCapUsd": 1.5,
+    "expiresAt": "2026-11-15T23:59:00Z",
+    "activation": "final deployment; verify /api/agent and actual public form after deployment"
   },
-  "authoritativeBackendFiles": [
-    "apps/web/src/app/api/checks/route.ts",
-    "apps/web/src/app/api/checks/[id]/route.ts",
-    "apps/web/src/app/api/checks/[id]/rerun/route.ts"
-  ],
-  "blockingDependencies": [
-    "Claude-owned executor, SERV planning/explanation and persistent report loader",
-    "Real owner rerun/delete",
-    "Demo toggle and brand deliverables",
-    "Seller payment plus interactive browser execution verification"
-  ],
-  "deployment": {
-    "main": "a44fca8b50a1ac9f41cb25f3288cfb44d31bdf18",
-    "origin": "https://tendr-ecru.vercel.app",
-    "http": "home, /check/fx_problems, /agents, /api/agent return 200",
-    "browser": "home/report/agents at 390 and 1280: no overflow, broken images, runtime errors or automated WCAG A/AA violations",
-    "liveRuns": false,
-    "executorOnline": false,
-    "evidence": "scratch/launchcheck-production-check.cjs; scratch/launchcheck-captures/production-home-1280.png"
-  }
+  "boundaries": [
+    "One public browser navigation, not full app coverage",
+    "No forms, sign-in, checkout, Lighthouse or accessibility-conformance claim",
+    "SERV token estimates exclude add-on fees and vendor USDC charges",
+    "Base-USDC seller remains planned",
+    "Repository visibility and hackathon submission are separate owner actions"
+  ]
 }

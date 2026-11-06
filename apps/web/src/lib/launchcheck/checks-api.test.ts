@@ -11,6 +11,7 @@ vi.mock("@/lib/launchcheck/run-store", async (orig) => ({ ...(await orig<typeof 
 vi.mock("@/lib/launchcheck/buyer", () => ({
   kpassBuy: vi.fn(async (req: { url: string }) => ({ exitCode: 0, ok: true, merchantStatus: 200, errorCode: null, userMessage: "Paid", body: req.url.includes("kadec0") ? { items: [{ httpStatus: 200, issues: [] }] } : { png_base64: "UE5H", width: 1280 }, txHash: "0xabc", source: "allowance" })),
 }));
+vi.mock("@/lib/launchcheck/executor", async original => ({ ...await original<typeof import("@/lib/launchcheck/executor")>(), liveRunsEnabled: () => process.env.LAUNCHCHECK_LIVE === "1" }));
 const free: FreeChecksResult = { unreachable: false, error: null, finalUrl: "https://acme.dev/", outcomes: [], blockedLinks: [], linksFound: 0 };
 vi.mock("@/lib/launchcheck/free-runtime", () => ({
   runFreeChecksLive: vi.fn(async () => free),

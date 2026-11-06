@@ -10,10 +10,10 @@ import { runStore } from "@/lib/launchcheck/run-store";
 export const TIER_BUDGET_USD: Record<LaunchCheckTier, number> = { quick: 0.05, standard: 0.15, full: 0.25 };
 export const AGENT = { kiteAgentId: "…d523", agentType: "claude", ownerMasked: "co***@…" };
 
-export const dailyCapUsd = () => Number(process.env.LAUNCHCHECK_DAILY_CAP_USD ?? "1.5");
+export const dailyCapUsd = () => { const value = Number(process.env.LAUNCHCHECK_DAILY_CAP_USD ?? "1.5"); return Number.isFinite(value) && value >= 0 ? value : 0; };
 export const executorConfigured = () => kpassFilesFromEnv(process.env) !== null;
 /** Live runs need the Kite credentials and the owner's explicit switch (LAUNCHCHECK_LIVE=1). */
-export const liveRunsEnabled = () => executorConfigured() && process.env.LAUNCHCHECK_LIVE === "1" && (!process.env.LAUNCHCHECK_LIVE_UNTIL || Date.parse(process.env.LAUNCHCHECK_LIVE_UNTIL) > Date.now());
+export const liveRunsEnabled = () => executorConfigured() && !!process.env.SERV_API_KEY && process.env.LAUNCHCHECK_LIVE === "1" && (!process.env.LAUNCHCHECK_LIVE_UNTIL || Date.parse(process.env.LAUNCHCHECK_LIVE_UNTIL) > Date.now());
 export const today = () => new Date().toISOString().slice(0, 10);
 export const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");
 export const newRunId = () => `lc_${randomBytes(9).toString("base64url").replace(/[-_]/g, "x")}`;

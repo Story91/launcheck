@@ -1,0 +1,678 @@
+{
+  "id": "lc_9b00787167ca2371f7ac07a3",
+  "url": "https://tendr-ecru.vercel.app/demo/acme-launch",
+  "origin": "https://tendr-ecru.vercel.app",
+  "status": "done",
+  "progress": "done",
+  "tier": "full",
+  "mode": "allowance",
+  "budgetUsd": 0.25,
+  "spentUsd": 0.015,
+  "createdAt": "2026-11-06T10:07:59.628Z",
+  "finishedAt": "2026-11-06T10:08:45.583Z",
+  "parentId": null,
+  "cached": false,
+  "summary": {
+    "checksRun": 8,
+    "problems": 10,
+    "nothingFound": 3,
+    "notChecked": 3
+  },
+  "plan": {
+    "buy": [
+      {
+        "checkId": "browser_navigation",
+        "label": "Public navigation in a browser",
+        "vendorHost": "vaaya.ai",
+        "priceUsd": 0.01,
+        "reason": "Checks one same-origin link in a browser after JavaScript rendering, complementing the existing link-status check."
+      },
+      {
+        "checkId": "render_narrow",
+        "label": "Narrow render (390 px)",
+        "vendorHost": "web.cyberwarex.com",
+        "priceUsd": 0.005,
+        "reason": "Shows the page in a 390px-wide browser window, complementing the static HTML inspection with a narrow-layout view."
+      }
+    ],
+    "skip": [
+      {
+        "checkId": "render_desktop",
+        "label": "Desktop render (1280 px)",
+        "priceUsd": 0.005,
+        "reason": "Not selected by the agent within this plan."
+      },
+      {
+        "checkId": "html_audit",
+        "label": "Static HTML second opinion",
+        "priceUsd": 0.08,
+        "reason": "Not selected by the agent within this plan."
+      }
+    ],
+    "plannedUsd": 0.015,
+    "chosenBy": "serv"
+  },
+  "checks": [
+    {
+      "checkId": "page_fetch",
+      "label": "Page response",
+      "kind": "free",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_page_fetch"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "security_headers",
+      "label": "Security headers",
+      "kind": "free",
+      "state": "problem",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_security_headers"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "tls_cert",
+      "label": "TLS certificate",
+      "kind": "free",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_tls_cert"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "share_tags",
+      "label": "Link preview tags",
+      "kind": "free",
+      "state": "problem",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_share_tags"
+      ],
+      "scopeNote": "static HTML only, checked from Vercel iad1"
+    },
+    {
+      "checkId": "og_image_fetch",
+      "label": "Link preview image",
+      "kind": "free",
+      "state": "not_checked",
+      "notCheckedReason": "not_applicable",
+      "evidenceIds": [],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "email_dns",
+      "label": "Email DNS records",
+      "kind": "free",
+      "state": "problem",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_email_dns"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "link_status",
+      "label": "Selected links",
+      "kind": "free",
+      "state": "problem",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_link_status"
+      ],
+      "scopeNote": "checked 4 of 4 links from Vercel iad1"
+    },
+    {
+      "checkId": "browser_navigation",
+      "label": "Public navigation in a browser",
+      "kind": "paid",
+      "state": "problem",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_browser_navigation",
+        "ev_browser_navigation_screen"
+      ],
+      "scopeNote": "Opens this page and clicks one eligible same-origin navigation link in a real 1280px browser. No forms, sign-in, purchases or whole-app coverage."
+    },
+    {
+      "checkId": "render_narrow",
+      "label": "Narrow render (390 px)",
+      "kind": "paid",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_render_narrow"
+      ],
+      "scopeNote": "390px-wide browser window. Not a phone: no touch, no mobile user agent, no device emulation."
+    },
+    {
+      "checkId": "render_desktop",
+      "label": "Desktop render (1280 px)",
+      "kind": "paid",
+      "state": "not_checked",
+      "notCheckedReason": "not_selected",
+      "evidenceIds": [],
+      "scopeNote": "First screen in a real headless browser at 1280 px. Appearance only; no interaction test."
+    },
+    {
+      "checkId": "html_audit",
+      "label": "Static HTML second opinion",
+      "kind": "paid",
+      "state": "not_checked",
+      "notCheckedReason": "not_selected",
+      "evidenceIds": [],
+      "scopeNote": "Static HTML analysis by an independent service, not Lighthouse."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_page_fetch",
+      "checkId": "page_fetch",
+      "kind": "json",
+      "label": "Homepage response",
+      "blobUrl": null,
+      "sha256": "116b72f32b65a343638bdf50574db6b822e426fe1e5135c1862cc2f99d3bfb17",
+      "capturedAt": "2026-11-06T10:08:00.655Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "region": "iad1",
+        "status": 200,
+        "jsShell": true,
+        "finalUrl": "https://tendr-ecru.vercel.app/demo/acme-launch",
+        "elapsedMs": 669,
+        "htmlBytes": 13279,
+        "httpProbe": {
+          "url": "http://tendr-ecru.vercel.app/demo/acme-launch",
+          "error": null,
+          "status": 200,
+          "finalUrl": "https://tendr-ecru.vercel.app/demo/acme-launch",
+          "redirectsToHttps": true
+        },
+        "truncated": false,
+        "linksFound": 4,
+        "textLength": 457,
+        "contentType": "text/html; charset=utf-8",
+        "requestedUrl": "https://tendr-ecru.vercel.app/demo/acme-launch",
+        "redirectChain": []
+      }
+    },
+    {
+      "id": "ev_security_headers",
+      "checkId": "security_headers",
+      "kind": "json",
+      "label": "Homepage response headers",
+      "blobUrl": null,
+      "sha256": "f15e08a0486442b1f4977d23c7304a3d3a6f08d08bfc46041f36894679177d9c",
+      "capturedAt": "2026-11-06T10:08:00.401Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "url": "https://tendr-ecru.vercel.app/demo/acme-launch",
+        "frameAncestors": null,
+        "referrer-policy": null,
+        "x-frame-options": null,
+        "x-content-type-options": null,
+        "content-security-policy": null,
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "content-security-policy-report-only": null
+      }
+    },
+    {
+      "id": "ev_tls_cert",
+      "checkId": "tls_cert",
+      "kind": "json",
+      "label": "TLS certificate",
+      "blobUrl": null,
+      "sha256": "fc33bb4779388da880a3550fd7531ac58bc3284bba86ccc9b506180782b5bfb7",
+      "capturedAt": "2026-11-06T10:08:00.419Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "host": "tendr-ecru.vercel.app",
+        "port": 443,
+        "issuer": "Google Trust Services / WR1",
+        "validTo": "2027-01-29T11:46:09.000Z",
+        "daysLeft": 84,
+        "validFrom": "2026-10-31T11:46:10.000Z",
+        "hostMatches": true,
+        "subjectAltNames": [
+          "*.vercel.app"
+        ]
+      }
+    },
+    {
+      "id": "ev_share_tags",
+      "checkId": "share_tags",
+      "kind": "json",
+      "label": "Link preview and page tags",
+      "blobUrl": null,
+      "sha256": "3a6d52ccc1c43b9b74d1f2eeb2905d30fecac08bb87ddf84bee6191c6f21659a",
+      "capturedAt": "2026-11-06T10:08:00.403Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "static HTML only, checked from Vercel iad1",
+      "fields": {
+        "url": "https://tendr-ecru.vercel.app/demo/acme-launch",
+        "lang": "en",
+        "title": "Acme workspace for planning, collecting and coordinating every detail of your next product launch",
+        "jsShell": true,
+        "ogImage": null,
+        "ogTitle": null,
+        "viewport": null,
+        "canonical": null,
+        "truncated": false,
+        "titleLength": 97,
+        "twitterCard": null,
+        "twitterImage": null,
+        "ogDescription": null,
+        "metaDescription": "A fictional workspace for planning your next launch."
+      }
+    },
+    {
+      "id": "ev_email_dns",
+      "checkId": "email_dns",
+      "kind": "json",
+      "label": "SPF and DMARC TXT records",
+      "blobUrl": null,
+      "sha256": "92680efcda19dc2d7655e3c550ce32f5d1ab7967c4b78e2f9d63245bd276c191",
+      "capturedAt": "2026-11-06T10:08:00.409Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "spf": null,
+        "dmarc": null,
+        "domain": "tendr-ecru.vercel.app",
+        "apexTxt": [],
+        "dmarcTxt": [],
+        "dmarcName": "_dmarc.tendr-ecru.vercel.app",
+        "dmarcPolicy": null
+      }
+    },
+    {
+      "id": "ev_link_status",
+      "checkId": "link_status",
+      "kind": "json",
+      "label": "Link responses",
+      "blobUrl": null,
+      "sha256": "f6bbd7f2dda87b02b885bdf745ca5b93b333aa59c6e7a40ab78e8b7226183b18",
+      "capturedAt": "2026-11-06T10:08:01.452Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked 4 of 4 links from Vercel iad1",
+      "fields": {
+        "links": [
+          {
+            "url": "https://tendr-ecru.vercel.app/",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/",
+            "elapsedMs": 1047,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/gallery",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/gallery",
+            "elapsedMs": 124,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/agents",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/agents",
+            "elapsedMs": 142,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/demo/acme-launch/pricing",
+            "error": null,
+            "method": "HEAD",
+            "result": "broken",
+            "status": 404,
+            "finalUrl": "https://tendr-ecru.vercel.app/demo/acme-launch/pricing",
+            "elapsedMs": 107,
+            "redirects": 0
+          }
+        ],
+        "pageUrl": "https://tendr-ecru.vercel.app/demo/acme-launch",
+        "linksFound": 4,
+        "linksChecked": 4
+      }
+    },
+    {
+      "id": "ev_browser_navigation",
+      "checkId": "browser_navigation",
+      "kind": "json",
+      "label": "Public navigation in a browser",
+      "blobUrl": null,
+      "sha256": "db73194e7b0bdd8e1441a9efcc0ca673f1b707f9010f390bdfd6a25b48c9730b",
+      "capturedAt": "2026-11-06T10:08:17.161Z",
+      "source": {
+        "type": "paid",
+        "vendorHost": "vaaya.ai",
+        "endpoint": "/api/run/browserbase/create_session"
+      },
+      "scopeNote": "Opens this page and clicks one eligible same-origin navigation link in a real 1280px browser. No forms, sign-in, purchases or whole-app coverage.",
+      "fields": {
+        "error": null,
+        "steps": [
+          {
+            "url": "https://tendr-ecru.vercel.app/demo/acme-launch",
+            "action": "open",
+            "httpStatus": 200
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/demo/acme-launch/pricing",
+            "action": "click",
+            "httpStatus": 404
+          }
+        ],
+        "width": 1280,
+        "linkLabel": "Pricing"
+      }
+    },
+    {
+      "id": "ev_browser_navigation_screen",
+      "checkId": "browser_navigation",
+      "kind": "image",
+      "label": "Browser navigation result",
+      "blobUrl": "/api/evidence/lc_9b00787167ca2371f7ac07a3_ev_browser_navigation_screen",
+      "sha256": "d3cddced0c969a3e4e7cefa1ed155863a741ab0f6d51e50985d618ad59bdd112",
+      "capturedAt": "2026-11-06T10:08:17.161Z",
+      "source": {
+        "type": "paid",
+        "vendorHost": "vaaya.ai",
+        "endpoint": "/api/run/browserbase/create_session"
+      },
+      "scopeNote": "Opens this page and clicks one eligible same-origin navigation link in a real 1280px browser. No forms, sign-in, purchases or whole-app coverage.",
+      "fields": {
+        "width": 1280
+      }
+    },
+    {
+      "id": "ev_render_narrow",
+      "checkId": "render_narrow",
+      "kind": "image",
+      "label": "Narrow render (390 px)",
+      "blobUrl": "/api/evidence/lc_9b00787167ca2371f7ac07a3_ev_render_narrow",
+      "sha256": "2a26079a84bec28e367ab9735c14c0e460b1b6ea92adc9b8ec103370821fa726",
+      "capturedAt": "2026-11-06T10:08:26.634Z",
+      "source": {
+        "type": "paid",
+        "vendorHost": "web.cyberwarex.com",
+        "endpoint": "/screenshot"
+      },
+      "scopeNote": "390px-wide browser window. Not a phone: no touch, no mobile user agent, no device emulation.",
+      "fields": {
+        "width": 390,
+        "fullpage": true
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "f_csp_missing",
+      "ruleId": "csp_missing",
+      "checkId": "security_headers",
+      "severity": "fyi",
+      "title": "No Content-Security-Policy header on the homepage response",
+      "observed": "The response from https://tendr-ecru.vercel.app/demo/acme-launch has no Content-Security-Policy header.",
+      "evidenceIds": [
+        "ev_security_headers"
+      ],
+      "explanation": "The recorded response headers for the homepage show no Content-Security-Policy value.",
+      "fix": "Consider adding a Content-Security-Policy header appropriate for the page’s required resources.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_xcto_missing",
+      "ruleId": "xcto_missing",
+      "checkId": "security_headers",
+      "severity": "fyi",
+      "title": "No X-Content-Type-Options header on the homepage response",
+      "observed": "The response from https://tendr-ecru.vercel.app/demo/acme-launch has no X-Content-Type-Options header.",
+      "evidenceIds": [
+        "ev_security_headers"
+      ],
+      "explanation": "The recorded response headers for the homepage show no X-Content-Type-Options value.",
+      "fix": "Consider adding an X-Content-Type-Options header with the value nosniff.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_og_image_missing",
+      "ruleId": "og_image_missing",
+      "checkId": "share_tags",
+      "severity": "fix_before_launch",
+      "title": "Link preview has no image",
+      "observed": "No og:image tag in the static HTML of https://tendr-ecru.vercel.app/demo/acme-launch.",
+      "evidenceIds": [
+        "ev_share_tags"
+      ],
+      "explanation": "The inspected static HTML has no og:image value. This finding is limited to the static HTML inspected.",
+      "fix": "Consider adding an og:image meta tag that points to an appropriate preview image.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_og_title_missing",
+      "ruleId": "og_title_missing",
+      "checkId": "share_tags",
+      "severity": "fix_soon",
+      "title": "Link preview has no og:title",
+      "observed": "No og:title tag in the static HTML of https://tendr-ecru.vercel.app/demo/acme-launch.",
+      "evidenceIds": [
+        "ev_share_tags"
+      ],
+      "explanation": "The inspected static HTML has no og:title value. This finding is limited to the static HTML inspected.",
+      "fix": "Consider adding an og:title meta tag with a concise page title.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_twitter_card_missing",
+      "ruleId": "twitter_card_missing",
+      "checkId": "share_tags",
+      "severity": "fix_soon",
+      "title": "No twitter:card tag",
+      "observed": "No twitter:card tag in the static HTML of https://tendr-ecru.vercel.app/demo/acme-launch.",
+      "evidenceIds": [
+        "ev_share_tags"
+      ],
+      "explanation": "The inspected static HTML has no twitter:card value. This finding is limited to the static HTML inspected.",
+      "fix": "Consider adding a twitter:card meta tag with the card format appropriate for the page.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_viewport_missing",
+      "ruleId": "viewport_missing",
+      "checkId": "share_tags",
+      "severity": "fix_before_launch",
+      "title": "No viewport meta tag",
+      "observed": "No <meta name=\"viewport\"> in the static HTML of https://tendr-ecru.vercel.app/demo/acme-launch.",
+      "evidenceIds": [
+        "ev_share_tags"
+      ],
+      "explanation": "The inspected static HTML has no viewport meta value. This finding is limited to the static HTML inspected.",
+      "fix": "Consider adding a viewport meta tag configured for the page’s responsive layout.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_title_too_long",
+      "ruleId": "title_too_long",
+      "checkId": "share_tags",
+      "severity": "fyi",
+      "title": "The page title is 97 characters long",
+      "observed": "<title> in the static HTML of https://tendr-ecru.vercel.app/demo/acme-launch: \"Acme workspace for planning, collecting and coordinating every detail of your next product launch\".",
+      "evidenceIds": [
+        "ev_share_tags"
+      ],
+      "explanation": "The title in the inspected static HTML is 97 characters long.",
+      "fix": "Consider shortening the page title while retaining its main subject.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_spf_missing",
+      "ruleId": "spf_missing",
+      "checkId": "email_dns",
+      "severity": "fix_soon",
+      "title": "No SPF record for tendr-ecru.vercel.app",
+      "observed": "No TXT record starting with v=spf1 at tendr-ecru.vercel.app.",
+      "evidenceIds": [
+        "ev_email_dns"
+      ],
+      "explanation": "The DNS evidence records no SPF value for tendr-ecru.vercel.app.",
+      "fix": "If this domain is intended to send email, consider publishing an SPF TXT record that reflects its authorized senders.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_dmarc_missing",
+      "ruleId": "dmarc_missing",
+      "checkId": "email_dns",
+      "severity": "fix_soon",
+      "title": "No DMARC record for tendr-ecru.vercel.app",
+      "observed": "No TXT record starting with v=DMARC1 at _dmarc.tendr-ecru.vercel.app.",
+      "evidenceIds": [
+        "ev_email_dns"
+      ],
+      "explanation": "The DNS evidence records no DMARC value at _dmarc.tendr-ecru.vercel.app.",
+      "fix": "If this domain is intended to send email, consider publishing a DMARC TXT record at the recorded name, with a policy appropriate to your domain.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_link_broken",
+      "ruleId": "link_broken",
+      "checkId": "link_status",
+      "severity": "fix_before_launch",
+      "title": "A link on the page returns HTTP 404",
+      "observed": "HEAD https://tendr-ecru.vercel.app/demo/acme-launch/pricing answered HTTP 404.",
+      "evidenceIds": [
+        "ev_link_status",
+        "ev_browser_navigation",
+        "ev_browser_navigation_screen"
+      ],
+      "explanation": "The pricing link points to https://tendr-ecru.vercel.app/demo/acme-launch/pricing, which returned HTTP 404 in the recorded link check and browser navigation.",
+      "fix": "Consider creating the pricing route or updating the link to an existing destination.",
+      "explainedBy": "serv"
+    }
+  ],
+  "receipt": {
+    "lines": [
+      {
+        "n": 1,
+        "checkId": "browser_navigation",
+        "label": "Public navigation in a browser",
+        "vendorHost": "vaaya.ai",
+        "endpoint": "/api/run/browserbase/create_session",
+        "quotedUsd": 0.01,
+        "requestUrl": "https://vaaya.ai/api/run/browserbase/create_session",
+        "paidUsd": 0.01,
+        "source": "allowance",
+        "status": "paid",
+        "httpStatus": 200,
+        "txHash": "0xa4c37b9522a044386ac8aa05b6646b37b138455f2257d6e09921e120d428d451",
+        "explorerUrl": "https://basescan.org/tx/0xa4c37b9522a044386ac8aa05b6646b37b138455f2257d6e09921e120d428d451",
+        "idempotencyKeyShort": "tion",
+        "at": "2026-11-06T10:08:11.717Z",
+        "substitutedFor": null
+      },
+      {
+        "n": 2,
+        "checkId": "render_narrow",
+        "label": "Narrow render (390 px)",
+        "vendorHost": "web.cyberwarex.com",
+        "endpoint": "/screenshot",
+        "quotedUsd": 0.005,
+        "requestUrl": "https://web.cyberwarex.com/screenshot?url=https%3A%2F%2Ftendr-ecru.vercel.app%2Fdemo%2Facme-launch&fullpage=true&width=390",
+        "paidUsd": 0.005,
+        "source": "allowance",
+        "status": "paid",
+        "httpStatus": 200,
+        "txHash": "0xe4d8f6355ca3f11ced2f8c40192ad3e321214b3780f920bc20468aa53bb270e9",
+        "explorerUrl": "https://basescan.org/tx/0xe4d8f6355ca3f11ced2f8c40192ad3e321214b3780f920bc20468aa53bb270e9",
+        "idempotencyKeyShort": "rrow",
+        "at": "2026-11-06T10:08:21.230Z",
+        "substitutedFor": null
+      }
+    ],
+    "totalPaidUsd": 0.015,
+    "budgetUsd": 0.25,
+    "stoppedBy": null,
+    "freeChecks": 7
+  },
+  "agent": {
+    "kiteAgentId": "…d523",
+    "agentType": "claude",
+    "ownerMasked": "co***@…",
+    "network": "Base mainnet (eip155:8453)",
+    "asset": "USDC"
+  },
+  "audit": [
+    {
+      "step": "plan",
+      "model": "gpt-6-luna",
+      "promptVersion": "launchcheck-plan.v1",
+      "requestId": "405f7ff6-5b2d-4ac2-8e91-e43227869049",
+      "consoleUrl": "https://console.openserv.ai/usage",
+      "inputHash": "19955d92813eaf273e828a9761263d892de157343c7cf6efe9790da21a27434e",
+      "costUsd": 0.00040924,
+      "droppedItems": 0,
+      "refused": false
+    },
+    {
+      "step": "explain",
+      "model": "gpt-6-luna",
+      "promptVersion": "launchcheck-explain.v1",
+      "requestId": "1371aa2e-0ff1-411b-8282-c97ac9f3bab4",
+      "consoleUrl": "https://console.openserv.ai/usage",
+      "inputHash": "d7968e5cac075243feb0be768e88e3e1db31a7164e876183080e82ef778a7cdd",
+      "costUsd": 0.0009578400000000001,
+      "droppedItems": 0,
+      "refused": false
+    }
+  ],
+  "notChecked": [
+    "Rendering speed",
+    "Accessibility in a real browser",
+    "Real phones and tablets",
+    "Security beyond the listed headers",
+    "Pages other than the one you entered",
+    "Links beyond the first 10"
+  ],
+  "diff": null,
+  "error": null
+}

@@ -70,6 +70,7 @@ export async function runBrowserJourney(endpoint: string, url: string): Promise<
     const clicked = await waitForPage(opened);
     if (new URL(clicked).origin !== target.origin) throw new Error("Navigation left the requested origin.");
     await new Promise(resolve => setTimeout(resolve, 800));
+    if (new URL(clicked).hash && !await evaluate("!!document.getElementById(decodeURIComponent(location.hash.slice(1)))")) throw new Error("The destination anchor is missing.");
     result.steps.push({ action: "click", url: clicked, httpStatus: statusFor(clicked) });
     const shot = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: false });
     if (typeof shot.data === "string" && shot.data.length < 5_000_000) result.png = Buffer.from(shot.data, "base64");

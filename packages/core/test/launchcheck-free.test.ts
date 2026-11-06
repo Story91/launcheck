@@ -404,8 +404,8 @@ describe("email_dns", () => {
     const { deps } = makeDeps(goodWorld({ txt: { "example.com": [["google-site-verification=abc"]] } }));
     const r = await runFreeChecks("https://example.com/", deps);
     const email = byId(r.outcomes, "email_dns");
-    expect(Object.fromEntries(email.findings.map((f) => [f.ruleId, f.severity]))).toEqual({ spf_missing: "fix_soon", dmarc_missing: "fix_soon" });
-    expect(email.findings.find((f) => f.ruleId === "dmarc_missing")!.explanation).toBe("We found no DMARC record. Signup and waitlist emails from this domain are more likely to land in spam.");
+    expect(Object.fromEntries(email.findings.map((f) => [f.ruleId, f.severity]))).toEqual({ spf_missing: "fyi", dmarc_missing: "fyi" });
+    expect(email.findings.find((f) => f.ruleId === "dmarc_missing")!.explanation).toContain("does not establish an email-delivery problem");
     expectValid(r.outcomes);
   });
   it("flags p=none as fyi and quotes the record", async () => {

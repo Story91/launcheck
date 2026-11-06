@@ -558,14 +558,14 @@ export async function freeCheckEmailDns(page: LaunchCheckFreePage, deps: FreeChe
   const ev = makeEvidence("email_dns", deps, "SPF and DMARC TXT records", fields, scope);
   const drafts: Draft[] = [];
   if (!spf) {
-    drafts.push(draft("spf_missing", "fix_soon", `No SPF record for ${domain}`, `No TXT record starting with v=spf1 at ${domain}.`,
-      "We found no SPF record. Mail providers cannot tell which servers may send email for this domain, so signup and waitlist emails are more likely to land in spam.",
-      "Publish a TXT record such as v=spf1 include:<your email provider> -all at the domain apex."));
+    drafts.push(draft("spf_missing", "fyi", `No SPF record for ${domain}`, `No TXT record starting with v=spf1 at ${domain}.`,
+      "This lookup does not establish whether the website sends mail from this exact hostname. A separate sending domain or hosting subdomain may make this observation inapplicable.",
+      "If this exact domain sends mail, review SPF with the mail provider. Do not change DNS on the basis of this website check alone."));
   }
   if (!dmarcRecord) {
-    drafts.push(draft("dmarc_missing", "fix_soon", `No DMARC record for ${domain}`, `No TXT record starting with v=DMARC1 at ${dmarcName}.`,
-      "We found no DMARC record. Signup and waitlist emails from this domain are more likely to land in spam.",
-      `Publish a TXT record at ${dmarcName}, for example v=DMARC1; p=quarantine; rua=mailto:<your address>.`));
+    drafts.push(draft("dmarc_missing", "fyi", `No DMARC record for ${domain}`, `No TXT record starting with v=DMARC1 at ${dmarcName}.`,
+      "Mail use and inherited organizational-domain policy were not established. Missing a record at this hostname does not establish an email-delivery problem.",
+      "If mail is sent from this domain, review its applicable DMARC policy with the owner and mail provider before changing DNS."));
   } else if (policy === "none") {
     drafts.push(draft("dmarc_p_none", "fyi", "The DMARC policy is p=none", `DMARC record at ${dmarcName}: "${dmarcRecord}".`,
       "With p=none, receiving servers only report failures and take no action on mail that fails the check.",
@@ -647,7 +647,7 @@ export async function freeCheckLinkStatus(page: LaunchCheckFreePage, deps: FreeC
   if (selected.length === 0) return { ...assemble("link_status", [], [], scope, "not_applicable"), blockedLinks: [] };
   const results = await mapLimit(selected, LINK_CONCURRENCY, (l) => probeLink(l, deps));
   const blockedLinks = results.filter((r) => r.result === "blocked").map((r) => r.url);
-  const fields = { pageUrl: page.response.finalUrl, linksFound: found, linksChecked: selected.length, links: results.map(({ text: _text, ...r }) => r) };
+  const fields = { pageUrl: page.response.finalUrl, linksFound: found, linksChecked: selected.length, discoveredUrls: page.html.links.slice(0,500).map(l => l.url), discoveryComplete: found <= 500 && !page.response.truncated, links: results.map(({ text: _text, ...r }) => r) };
   const ev = makeEvidence("link_status", deps, "Link responses", fields, scope);
   const drafts: Draft[] = [];
   for (const r of results) {

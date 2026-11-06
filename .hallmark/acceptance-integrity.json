@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-06T11:09:42.949Z",
+  "reports": [
+    {
+      "id": "lc_9b00787167ca2371f7ac07a3",
+      "spentUsd": 0.015,
+      "images": [
+        {
+          "id": "ev_browser_navigation_screen",
+          "bytes": 29302,
+          "hashMatches": true,
+          "cache": "private, no-store"
+        },
+        {
+          "id": "ev_render_narrow",
+          "bytes": 49910,
+          "hashMatches": true,
+          "cache": "private, no-store"
+        }
+      ],
+      "receiptPngBytes": 73250,
+      "diff": null
+    },
+    {
+      "id": "lc_KpScNuw45vmP",
+      "spentUsd": 0.02,
+      "images": [
+        {
+          "id": "ev_browser_navigation_screen",
+          "bytes": 63429,
+          "hashMatches": true,
+          "cache": "private, no-store"
+        },
+        {
+          "id": "ev_render_desktop",
+          "bytes": 38852,
+          "hashMatches": true,
+          "cache": "private, no-store"
+        },
+        {
+          "id": "ev_render_narrow",
+          "bytes": 47083,
+          "hashMatches": true,
+          "cache": "private, no-store"
+        }
+      ],
+      "receiptPngBytes": 92276,
+      "diff": {
+        "parentId": "lc_9b00787167ca2371f7ac07a3",
+        "parentCheckedAt": "2026-11-06T10:08:45.583Z",
+        "fixed": [
+          "f_og_image_missing",
+          "f_og_title_missing",
+          "f_twitter_card_missing",
+          "f_viewport_missing",
+          "f_title_too_long",
+          "f_link_broken"
+        ],
+        "stillThere": [
+          "f_csp_missing",
+          "f_xcto_missing",
+          "f_spf_missing",
+          "f_dmarc_missing"
+        ],
+        "unresolved": [],
+        "new": []
+      }
+    }
+  ]
+}

@@ -8,7 +8,15 @@ export function compareReports(previous: LaunchCheckReport, current: LaunchCheck
   for (const finding of previous.findings) {
     if (currentKeys.has(key(finding))) { stillThere.push(finding.id); continue; }
     const check = current.checks.find(c => c.checkId === finding.checkId);
-    const observed = check && (check.state === "clear" || check.state === "problem") && check.evidenceIds.some(id => current.evidence.some(e => e.id === id));
+    let observed = !!check && (check.state === "clear" || check.state === "problem") && check.evidenceIds.some(id => current.evidence.some(e => e.id === id));
+    if (observed && finding.checkId === "link_status") {
+      const target = finding.observed.match(/https?:\/\/[^\s<>"']+/)?.[0]?.replace(/[).,;]+$/, "");
+      observed = !!target && current.evidence.filter(e => check!.evidenceIds.includes(e.id)).some(e => {
+        const links = e.fields?.links;
+        const answered = Array.isArray(links) && links.some(l => l && typeof l === "object" && (l as Record<string,unknown>).url === target && typeof (l as Record<string,unknown>).status === "number" && Number((l as Record<string,unknown>).status) >= 200 && Number((l as Record<string,unknown>).status) < 400);
+        return answered || (e.fields?.discoveryComplete === true && Array.isArray(e.fields.discoveredUrls) && !e.fields.discoveredUrls.includes(target));
+      });
+    }
     (observed ? fixed : unresolved).push(finding.id);
   }
   return { parentId: previous.id, parentCheckedAt: previous.finishedAt ?? previous.createdAt, fixed, stillThere, unresolved, new: current.findings.filter(f => !previousKeys.has(key(f))).map(f => f.id) };
