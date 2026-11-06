@@ -5,7 +5,7 @@ import { type MarketItem, TenderMarket } from "@/components/tender-market";
 import { IT_NAICS_PREFIXES, samNoticeStore } from "@/lib/sam-notices";
 import { reportStore } from "@/lib/store";
 import { STATUS_COPY } from "@/components/badges";
-import { isReady, strongestQuote, verdictTone, verdictWord } from "@/lib/verdict";
+import { isReady, strongestQuote } from "@/lib/verdict";
 
 // The SAM.gov extract is imported once a day; an hourly refresh is plenty.
 export const revalidate = 3600;
@@ -70,52 +70,53 @@ export default async function HomePage() {
   const tryNotices = items.filter((i) => !i.analysis).slice(0, 2);
 
   return (
-    <div className="space-y-16">
-      <section className="grid grid-cols-1 overflow-hidden rounded-3xl border border-rule md:grid-cols-2">
-        <div className="flex min-w-0 flex-col gap-6 bg-white p-6 sm:p-12">
-          <h1 className="font-sans! text-[2.5rem] leading-[1.05] break-words font-bold tracking-tight sm:text-5xl">Is this tender written for someone else?</h1>
-          <p className="text-lg text-slate">One question. One link. A sourced answer in about 40 seconds.</p>
+    <div className="civic-home">
+      <section className="civic-hero" aria-labelledby="hero-title">
+        <div className="civic-intro">
+          <h1 id="hero-title">A clearer view of public tenders.</h1>
+          <p className="civic-description">Find competition signals in the fine print. Follow every finding back to its source.</p>
           <NoticeForm />
+          <p className="civic-hint">Free in your browser. No account needed. Usually 20–60 seconds.</p>
           {tryNotices.length > 0 && (
-            <div className="flex min-w-0 flex-col gap-2 text-sm">
+            <div className="civic-examples">
               {tryNotices.map((n) => (
-                <Link key={n.noticeId} href={`/report/${n.noticeId}`} title={n.title} className="max-w-full truncate rounded-full bg-paper-deep px-3 py-1.5 text-slate hover:text-ink">
+                <Link key={n.noticeId} href={`/report/${n.noticeId}`} title={n.title}>
                   Try: {n.title}
                 </Link>
               ))}
             </div>
           )}
-          <p className="mt-auto text-xs text-mist">Reasoning by SERV · reviewed by Reppo · pay-per-report via x402</p>
+          <p className="civic-partners">Reasoning by SERV <span aria-hidden="true">/</span> Independent review by Reppo</p>
         </div>
-        <div className={`flex min-w-0 flex-col justify-center gap-4 p-6 text-white sm:p-12 ${featured ? verdictTone(featured.riskScore) : "bg-seal"}`}>
+        <div className="civic-evidence">
           {featured ? (
             <>
-              <p className="text-sm opacity-80">
-                Answer · {featured.facts?.buyer ?? featured.noticeId}
-                {featured.facts?.title && <span className="block truncate opacity-90" title={featured.facts.title}>{featured.facts.title}</span>}
+              <p className="civic-evidence-label">Inside a real report <span>{source}</span></p>
+              <p className="civic-buyer">
+                {featured.facts?.buyer ?? featured.noticeId}
+                {featured.facts?.title && <span title={featured.facts.title}>{featured.facts.title}</span>}
               </p>
-              <p className="font-sans text-7xl font-extrabold leading-none tracking-tight sm:text-8xl">{verdictWord(featured.riskScore)}</p>
-              <p className="text-lg opacity-90">
-                {firedCount} of {featured.signals.length} signals · {highCount} high · score {featured.riskScore}/100
-              </p>
+              <h2>{firedCount === 0 ? "No signals detected." : `${firedCount} ${firedCount === 1 ? "signal" : "signals"} to look closer at.`}</h2>
+              <p className="civic-signal-detail">{featured.signals.length} signals checked · {highCount} high severity · score {featured.riskScore}/100</p>
               {quote && (
-                <Link href={`/report/${featured.noticeId}`} className="rounded-xl bg-white/12 p-4 leading-relaxed hover:bg-white/20">
+                <Link href={`/report/${featured.noticeId}`} className="civic-quote">
                   <span lang={quoteLang}>“{quote.text}”</span>
-                  <span className="opacity-70"> — {SIGNAL_NAMES[quote.signalId] ?? quote.signalId}, verbatim ✓</span>
+                  <span className="civic-quote-source">{SIGNAL_NAMES[quote.signalId] ?? quote.signalId} · Exact quote from the notice</span>
                 </Link>
               )}
-              <p className="text-sm opacity-80">
-                {STATUS_COPY[featured.status].label} ·{" "}
-                <Link href={`/report/${featured.noticeId}`} className="underline underline-offset-2">
-                  open the full report
+              <p className="civic-evidence-footer">
+                <span>{STATUS_COPY[featured.status].label}</span>
+                <Link href={`/report/${featured.noticeId}`}>
+                  Read report <span aria-hidden="true">↗</span>
                 </Link>
               </p>
             </>
           ) : (
             <>
-              <p className="text-sm opacity-80">The answer comes as one word</p>
-              <p className="font-sans text-7xl font-extrabold leading-none tracking-tight sm:text-8xl">Likely.</p>
-              <p className="text-lg opacity-90">Possibly. · Unlikely. — backed by eight signals and every quote the verdict relies on, verbatim.</p>
+              <p className="civic-evidence-label">Inside every report</p>
+              <h2>Evidence you can read.<br />Reasoning you can check.</h2>
+              <p className="civic-signal-detail">Eight competition signals, exact quotes from the notice and a separate independent review.</p>
+              <div className="civic-quote">Start with a link or choose a tender below.<span className="civic-quote-source">Signals are not findings of wrongdoing.</span></div>
             </>
           )}
         </div>

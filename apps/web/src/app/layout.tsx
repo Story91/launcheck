@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Serif } from "next/font/google";
+import { DM_Sans, Manrope } from "next/font/google";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import "./globals.css";
 
-const plexSans = IBM_Plex_Sans({ variable: "--font-plex-sans", subsets: ["latin", "latin-ext"], weight: ["400", "500", "600"] });
-const plexSerif = IBM_Plex_Serif({ variable: "--font-plex-serif", subsets: ["latin", "latin-ext"], weight: ["400", "500"] });
+const civicSans = DM_Sans({ variable: "--font-civic-sans", subsets: ["latin", "latin-ext"], display: "swap" });
+const civicDisplay = Manrope({ variable: "--font-civic-display", subsets: ["latin", "latin-ext"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Tendr — competition-restriction signals for public tenders",
@@ -14,22 +14,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${plexSans.variable} ${plexSerif.variable} h-full`}>
+    <html lang="en" className={`${civicSans.variable} ${civicDisplay.variable} h-full`}>
       <body className="min-h-full flex flex-col">
-        <header className="border-b border-rule">
-          <div className="mx-auto flex w-full max-w-5xl items-baseline justify-between gap-6 px-4 py-4">
-            <Link href="/" className="font-serif text-xl text-ink">
-              Tendr
+        <a href="#main-content" className="skip-link">Skip to content</a>
+        <header className="site-header">
+          <div className="site-nav">
+            <Link href="/" className="site-brand" aria-label="Tendr home">
+              <span className="brand-mark" aria-hidden="true" />tendr
             </Link>
-            <nav className="flex gap-5 text-sm text-slate">
-              <Link href="/">Notices</Link>
-              <Link href="/api-docs">Buy reports via API</Link>
+            <nav className="site-links" aria-label="Main navigation">
+              <Link href="/">Explore tenders</Link>
+              <Link href="/api-docs">For agents <span aria-hidden="true">↗</span></Link>
             </nav>
           </div>
         </header>
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
+        <main id="main-content" className="site-main">{children}</main>
         <footer className="border-t border-rule">
-          <p className="mx-auto max-w-5xl px-4 py-5 text-xs text-mist">
+          <p className="mx-auto max-w-6xl px-5 py-6 text-xs leading-relaxed text-mist">
             Reports describe competition-restriction signals found in the notice text. They are not findings of wrongdoing. Sources: SAM.gov public data (US federal) and TED (EU). Not affiliated with GSA, SAM.gov or any government agency. Reasoning by SERV, independent review by Reppo.
           </p>
         </footer>

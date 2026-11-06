@@ -28,11 +28,11 @@ export function NoticeForm() {
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-2">
-      <label className="sr-only" htmlFor="ted-link">
-        SAM.gov or TED link
+    <form onSubmit={submit} className="notice-form">
+      <label htmlFor="ted-link">
+        SAM.gov or TED notice
       </label>
-      <div className="flex rounded-2xl border-2 border-ink bg-white focus-within:ring-2 focus-within:ring-tide">
+      <div className="notice-input-group">
         <input
           id="ted-link"
           value={value}
@@ -41,14 +41,15 @@ export function NoticeForm() {
             setError(null);
           }}
           placeholder="Paste a SAM.gov or TED link"
-          className="min-w-0 flex-1 rounded-2xl bg-transparent px-4 py-3.5 text-lg text-ink outline-none placeholder:text-mist"
+          className="notice-input"
           aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "notice-error" : undefined}
         />
-        <button type="submit" className="m-1.5 rounded-xl bg-ink px-4 text-paper hover:bg-slate">
-          Analyze
+        <button type="submit" className="notice-submit">
+          Analyze tender
         </button>
       </div>
-      {error && <p className="text-sm text-seal">{error}</p>}
+      {error && <p id="notice-error" role="alert" className="notice-error">{error}</p>}
     </form>
   );
 }

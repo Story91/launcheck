@@ -1,18 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f6f7f4;
-  --paper-deep: #eceee8;
-  --ink: #161a1d;
-  --slate: #3e4650;
-  --mist: #8a929b;
-  --rule: #d6d9d2;
+  --paper: #f3f6f4;
+  --paper-deep: #e6eeea;
+  --ink: #1c3437;
+  --slate: #4c6264;
+  --mist: #657775;
+  --rule: #d6e1dc;
   --seal: #b4322c;
   --amber: #b7791f;
-  --moss: #4c6a46;
-  --tide: #2f5d8a;
-  --font-serif: var(--font-plex-serif), Georgia, serif;
-  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --moss: #27645e;
+  --tide: #316b85;
 }
 
 @theme inline {
@@ -26,28 +24,28 @@
   --color-amber: var(--amber);
   --color-moss: var(--moss);
   --color-tide: var(--tide);
-  --font-serif: var(--font-serif);
-  --font-sans: var(--font-sans);
+  --font-serif: Georgia, serif;
+  --font-sans: var(--font-civic-sans), system-ui, sans-serif;
 }
 
 html {
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-sans);
+  font-family: var(--font-civic-sans), system-ui, sans-serif;
 }
 
 h1,
 h2,
 h3 {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-family: var(--font-civic-display), system-ui, sans-serif;
+  font-weight: 650;
+  letter-spacing: -0.035em;
 }
 
 blockquote.exhibit {
   border-left: 3px solid var(--rule);
   padding: 0.35rem 0 0.35rem 0.9rem;
-  font-family: var(--font-serif);
+  font-family: Georgia, serif;
   font-size: 1.02rem;
   line-height: 1.55;
   color: var(--ink);
@@ -60,6 +58,107 @@ blockquote.exhibit {
 :focus-visible {
   outline: 2px solid var(--tide);
   outline-offset: 2px;
+}
+
+.site-header { background: #fff; border-bottom: 1px solid var(--rule); }
+.site-nav { max-width: 1152px; margin: auto; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.site-brand { display: inline-flex; align-items: center; gap: 10px; font: 800 29px var(--font-civic-display), sans-serif; letter-spacing: -1.6px; }
+.brand-mark { width: 21px; height: 25px; border: 2px solid var(--moss); border-radius: 4px; position: relative; transform: rotate(-8deg); }
+.brand-mark::after { content: ''; position: absolute; inset: 5px 4px; border-top: 2px solid var(--moss); border-bottom: 2px solid var(--moss); }
+.site-links { display: flex; align-items: center; gap: 26px; font-size: 14px; color: var(--slate); }
+.site-links a { padding: 9px 0; }
+.site-links a:hover { color: var(--moss); }
+.site-main { max-width: 1152px; width: 100%; flex: 1; margin: auto; padding: 28px 24px 52px; }
+.skip-link { position: absolute; top: -80px; left: 16px; z-index: 20; padding: 12px; background: white; color: var(--ink); }
+.skip-link:focus { top: 12px; }
+.civic-home { display: flex; flex-direction: column; gap: 50px; }
+.civic-hero { position: relative; isolation: isolate; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: 44px; padding: 52px 42px; border-radius: 22px; overflow: hidden; color: #fff; background: #223947; }
+.civic-hero::before { content: ''; position: absolute; inset: -12px; z-index: -2; background: url('/images/civic-architecture.jpg') center/cover; filter: blur(3px); }
+.civic-hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgba(14,35,47,.89), rgba(17,40,48,.71) 50%, rgba(19,40,47,.27)); }
+.civic-intro { min-width: 0; }
+.civic-intro h1 { max-width: 13ch; font-size: clamp(36px,4.5vw,54px); line-height: 1.1; font-weight: 650; letter-spacing: -.045em; }
+.civic-description { max-width: 40ch; margin: 20px 0 27px; color: #e4eeed; font-size: 17px; line-height: 1.6; }
+.civic-hint { color: #e0eae7; font-size: 12px; line-height: 1.6; margin-top: 10px; }
+.civic-examples { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 22px; min-width: 0; }
+.civic-examples a { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 6px 10px; border: 1px solid #ffffff40; border-radius: 6px; color: #eef5f2; font-size: 12px; background: #ffffff0a; }
+.civic-examples a:hover { background: #ffffff20; }
+.civic-partners { margin-top: 28px; color: #d0e0db; font-size: 11px; line-height: 1.7; }
+.civic-partners span { margin: 0 8px; opacity: .7; }
+.notice-form { display: flex; flex-direction: column; gap: 8px; }
+.notice-form label { font-size: 12px; font-weight: 600; }
+.notice-input-group { display: flex; padding: 5px; gap: 3px; background: #fff; border: 1px solid #dbe5df; border-radius: 11px; box-shadow: 0 4px 14px #071e2420; }
+.notice-input-group:focus-within { outline: 3px solid #90c4bb; outline-offset: 3px; }
+.notice-input { min-width: 0; width: 100%; flex: 1; border-radius: 6px; padding: 10px 9px; font-size: 16px; color: var(--ink); background: transparent; }
+.notice-input::placeholder { color: var(--mist); font-size: 14px; }
+.notice-submit { flex-shrink: 0; padding: 11px 14px; color: #fff; background: var(--moss); border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.notice-submit:hover { background: #1c514b; }
+.notice-error { font-size: 13px; color: #fff; border-left: 3px solid #ffc3b9; padding: 8px 11px; background: #5b1e26e6; border-radius: 4px; }
+.civic-evidence { min-width: 0; padding: 26px; background: rgba(244,249,246,.96); color: var(--ink); border: 1px solid #ffffff80; border-radius: 15px; box-shadow: 0 16px 45px #0d222633; backdrop-filter: blur(12px); }
+.civic-evidence-label { display: flex; justify-content: space-between; gap: 12px; color: var(--slate); font-size: 12px; margin-bottom: 22px; }
+.civic-evidence-label>span { padding: 2px 7px; background: #e0eae4; border-radius: 4px; font-size: 11px; }
+.civic-buyer { font-size: 12px; color: var(--slate); margin-bottom: 16px; }
+.civic-buyer>span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; color: var(--ink); font-size: 14px; font-weight: 600; margin-top: 4px; }
+.civic-evidence h2 { font-size: 28px; line-height: 1.2; max-width: 20ch; }
+.civic-signal-detail { margin-top: 13px; font-size: 12px; line-height: 1.7; color: var(--slate); }
+.civic-quote { display: block; margin-top: 22px; padding: 16px; border-left: 3px solid var(--moss); border-radius: 0 7px 7px 0; background: #e5eeea; font-size: 15px; line-height: 1.65; overflow-wrap: anywhere; }
+.civic-quote-source { display: block; margin-top: 10px; font-size: 11px; color: var(--slate); }
+.civic-evidence-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; font-size: 12px; color: var(--slate); }
+.civic-evidence-footer a { color: var(--moss); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.market-title { font-size: 30px; line-height: 1.2; }
+.market-subtitle { font-size: 13px; color: var(--slate); margin-top: 8px; max-width: 60ch; line-height: 1.6; }
+.market-filters { display: flex; flex-wrap: wrap; gap: 4px; border: 1px solid var(--rule); padding: 4px; border-radius: 10px; background: #edf2ef; flex-shrink: 0; }
+.market-filter { padding: 8px 12px; border-radius: 7px; font-size: 12px; color: var(--slate); cursor: pointer; }
+.market-filter[aria-pressed=true] { background: #fff; color: var(--moss); box-shadow: 0 1px 4px #243a3012; font-weight: 700; }
+.market-filter:hover { color: var(--ink); background: #ffffff80; }
+.market-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; margin-top: 26px; }
+.market-grid>li { min-width: 0; }
+.tender-card { height: 100%; display: flex; flex-direction: column; padding: 23px; background: #fff; border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 3px 10px #1c343704; transition: border-color .15s, box-shadow .15s; }
+.tender-card:hover { border-color: #77a69b; box-shadow: 0 6px 20px #1c343710; }
+.tender-card-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 19px; font-size: 11px; color: var(--slate); }
+.tender-card-top>span:first-child { padding: 3px 8px; background: var(--paper-deep); color: var(--moss); border-radius: 4px; font-weight: 600; }
+.tender-card-top>span:last-child { padding-top: 3px; }
+.tender-buyer { color: var(--mist); font-size: 12px; overflow-wrap: anywhere; }
+.tender-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; min-height: 72px; margin: 8px 0 16px; font: 650 17px/1.4 var(--font-civic-display), sans-serif; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.tender-deadline { font-size: 12px; color: var(--slate); padding-bottom: 20px; }
+.tender-deadline time { font-weight: 600; }
+.tender-card-bottom { margin-top: auto; padding-top: 17px; display: flex; align-items: end; justify-content: space-between; gap: 12px; border-top: 1px solid #e7eeea; }
+.tender-signals { display: flex; flex-direction: column; gap: 8px; color: var(--slate); font-size: 11px; }
+.tender-score { font: 750 32px/1 var(--font-civic-display), sans-serif; font-variant-numeric: tabular-nums; }
+.tender-analyze { display: inline-flex; gap: 13px; align-items: center; padding: 8px 12px; background: #e8f1ed; border-radius: 7px; color: var(--moss); font-weight: 600; font-size: 12px; }
+.tender-card:hover .tender-analyze { background: var(--moss); color: #fff; }
+.market-empty { padding: 32px 24px; border: 1px dashed #9bb8ac; border-radius: 12px; margin-top: 24px; color: var(--slate); font-size: 14px; }
+
+@media (max-width: 1000px) {
+  .civic-hero { gap: 28px; padding: 38px 28px; }
+  .market-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .notice-input-group { flex-wrap: wrap; }
+  .notice-input { flex-basis: 180px; }
+}
+@media (max-width: 760px) {
+  .site-main { padding: 18px 18px 36px; }
+  .site-nav { padding: 17px 20px; }
+  .site-links { gap: 18px; font-size: 13px; }
+  .civic-hero { grid-template-columns: 1fr; gap: 30px; padding: 32px 24px; border-radius: 16px; }
+  .civic-intro h1 { font-size: 44px; }
+  .civic-description { max-width: 44ch; font-size: 16px; }
+  .civic-evidence { padding: 23px; }
+  .civic-home { gap: 34px; }
+  .civic-examples { margin-top: 18px; }
+  .market-title { font-size: 27px; }
+  .market-filters { align-self: flex-start; }
+}
+@media (max-width: 500px) {
+  .market-grid { grid-template-columns: 1fr; gap: 14px; }
+  .site-brand { font-size: 25px; }
+  .site-links { gap: 14px; font-size: 12px; }
+  .brand-mark { display: none; }
+  .civic-hero { padding: 29px 20px; }
+  .civic-intro h1 { font-size: 38px; }
+  .notice-input-group { flex-direction: column; gap: 4px; }
+  .notice-input { flex-basis: auto; padding: 10px; }
+  .notice-submit { min-height: 44px; }
+  .market-filter { padding: 9px 10px; }
+  .tender-title { min-height: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

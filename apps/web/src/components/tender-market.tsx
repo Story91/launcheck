@@ -39,20 +39,20 @@ export function TenderMarket({ items, source }: { items: MarketItem[]; source: "
   const shown = useMemo(() => filterItems(items, filter), [items, filter]);
 
   return (
-    <section>
+    <section className="tender-market" aria-labelledby="market-title">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-sans! text-3xl font-bold tracking-tight">Open tenders</h2>
-          <p className="mt-1 text-slate">{SUBTITLE[source]}</p>
+          <h2 id="market-title" className="market-title">Explore open tenders</h2>
+          <p className="market-subtitle">{SUBTITLE[source]}</p>
         </div>
-        <div className="flex flex-wrap gap-2 text-sm" role="group" aria-label="Filter tenders">
+        <div className="market-filters" role="group" aria-label="Filter tenders">
           {FILTERS.map((f) => (
             <button
               key={f}
               type="button"
               aria-pressed={filter === f}
               onClick={() => setFilter(f)}
-              className={`rounded-full px-3 py-1.5 ${filter === f ? "bg-ink text-paper" : "bg-paper-deep text-slate hover:text-ink"}`}
+              className="market-filter"
             >
               {f}
             </button>
@@ -61,28 +61,28 @@ export function TenderMarket({ items, source }: { items: MarketItem[]; source: "
       </div>
 
       {shown.length === 0 ? (
-        <p className="mt-6 text-sm text-mist">
+        <p className="market-empty" role="status">
           {items.length === 0 ? `${source} returned no recent notices. Paste a link above instead.` : "No tenders match this filter yet."}
         </p>
       ) : (
-        <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="market-grid">
           {shown.map((n) => (
             <li key={n.noticeId}>
               <Link
                 href={`/report/${n.noticeId}`}
-                className="group flex h-full flex-col gap-2 rounded-2xl border border-rule bg-white p-5 transition-colors hover:border-ink"
+                className="group tender-card"
               >
-                <span className="text-xs text-mist">{n.buyer}</span>
-                <span className="line-clamp-2 min-h-[2.75rem] font-sans font-semibold text-ink">{isSamNoticeId(n.noticeId) ? n.title : n.title.replace(/^[^–]*–[^–]*–\s*/, "")}</span>
-                <span className="text-sm text-slate">
-                  {noticeSource(n.noticeId, null).label}
-                  {n.deadline && ` · due ${n.deadline.slice(0, 10)}`}
+                <span className="tender-card-top"><span>{noticeSource(n.noticeId, null).label}</span><span>{n.analysis ? "Report available" : "Open notice"}</span></span>
+                <span className="tender-buyer">{n.buyer}</span>
+                <span className="tender-title">{isSamNoticeId(n.noticeId) ? n.title : n.title.replace(/^[^–]*–[^–]*–\s*/, "")}</span>
+                <span className="tender-deadline">
+                  {n.deadline ? <>Tenders due <time dateTime={n.deadline}>{n.deadline.slice(0, 10)}</time></> : "Deadline not provided"}
                 </span>
-                <span className="mt-auto flex items-end justify-between border-t border-dashed border-rule pt-3">
+                <span className="tender-card-bottom">
                   {n.analysis ? (
                     <>
-                      <SignalFingerprint signals={n.analysis.signals} />
-                      <span className={`font-sans text-3xl font-extrabold leading-none tabular-nums ${scoreTone(n.analysis.riskScore)}`}>
+                      <span className="tender-signals"><span>{n.analysis.signals.filter((s) => s.fired).length} signals found</span><SignalFingerprint signals={n.analysis.signals} /></span>
+                      <span className={`tender-score ${scoreTone(n.analysis.riskScore)}`}>
                         {n.analysis.riskScore}
                         <span className="text-xs font-normal text-mist">/100</span>
                       </span>
@@ -90,7 +90,7 @@ export function TenderMarket({ items, source }: { items: MarketItem[]; source: "
                   ) : (
                     <>
                       <span className="text-sm text-mist">Not analyzed yet</span>
-                      <span className="rounded-full bg-ink px-3.5 py-2 text-sm text-paper group-hover:bg-slate">+ Analyze</span>
+                      <span className="tender-analyze">Analyze <span aria-hidden="true">↗</span></span>
                     </>
                   )}
                 </span>
