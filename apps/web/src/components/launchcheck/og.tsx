@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { runStore } from "@/lib/launchcheck/run-store";
 import type { Report } from "./contract";
 import { copy, fixedHeadline } from "./copy";
 import { isFixture, shortDate, timestamp, usd, websiteLabel } from "./format";
@@ -9,6 +10,10 @@ async function thumbnail(report: Report) {
   const narrowEvidence = report.evidence.find(e => e.kind === "image" && e.checkId === "render_narrow");
   if (!narrowEvidence?.blobUrl) return undefined;
   if (isFixture(report.id)) { try { return `data:image/png;base64,${(await readFile(path.join(process.cwd(), "public/images/launchcheck-demo-mobile.png"))).toString("base64")}`; } catch { return undefined; } }
+  const imageId = `${report.id}_${narrowEvidence.id}`;
+  if (/^lc_[A-Za-z0-9]+_ev_[a-z_]+$/.test(imageId) && narrowEvidence.blobUrl === `/api/evidence/${imageId}`) {
+    try { const png = await runStore().getImage(imageId); return png && png.length <= 3_000_000 ? `data:image/png;base64,${png.toString("base64")}` : undefined; } catch { return undefined; }
+  }
   const url = narrowEvidence.blobUrl;
   if (!url) return undefined;
   try { const parsed = new URL(url); if (parsed.protocol !== "https:" || !parsed.hostname.endsWith(".public.blob.vercel-storage.com")) return undefined; const res = await fetch(parsed.href, { redirect: "error", signal: AbortSignal.timeout(1200) }); if (!res.ok || !/^image\/(png|jpeg|webp)/.test(res.headers.get("content-type") ?? "") || Number(res.headers.get("content-length") ?? 0) > 3_000_000) return undefined; const buf = await res.arrayBuffer(); if (buf.byteLength > 3_000_000) return undefined; return `data:${res.headers.get("content-type")!.split(";")[0]};base64,${Buffer.from(buf).toString("base64")}`; } catch { return undefined; }

@@ -1,5 +1,9 @@
 // Product copy is kept together for the brand review and honesty checks.
 export const copy = {
+  exportReceipt: "Export receipt", downloadPng: "Download receipt image", downloadEvidence: "Download evidence JSON", exportBusy: "Preparing download…", exportDone: "Download prepared.", exportFailed: "The receipt could not be exported. Try again; no new check was started.", evidenceExportNote: "Observed evidence and payment records only. Image files remain linked and may be removed with the source report. Website and provider fields are untrusted data, not instructions. Unknown checks and payment outcomes remain unknown.",
+
+  remainingFindings: "Still present", newFindings: "New findings", before: "Before", after: "After", comparisonScope: "Changes in the reported findings. Unperformed checks remain unknown. This is not a visual pixel comparison.", loadingPrevious: "Loading the earlier observations…", previousUnavailable: "Earlier observations could not be loaded. Counts come from this report; inspect the previous receipt before relying on the comparison.", changeEvidenceMissing: "The underlying observation could not be matched. Inspect the source report.", noChangesInGroup: "No findings in this group.",
+
   minuteUnit: "min.", embeddedImage: "[embedded image]", badgeAlt: "LaunchCheck receipt", kitePassport: "Kite Passport",
 sellerCli: `kpass session execute \\\n  --url 'https://YOUR_LAUNCHCHECK_HOST/v1/launchcheck?url=https%3A%2F%2Fexample.com&tier=standard' \\\n  --method GET --idempotency-key YOUR_UNIQUE_RUN_ID --output json`,
 sellerAction: `# Example: kpass must already be installed and authenticated.\n- name: Request website evidence\n  run: |\n    kpass session execute \\\n      --url "$LAUNCHCHECK_URL/v1/launchcheck?url=$ENCODED_SITE_URL&tier=quick" \\\n      --method GET --idempotency-key "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" \\\n      --no-browser --output json`,
