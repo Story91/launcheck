@@ -1,0 +1,98 @@
+{
+  "date": "2026-11-06",
+  "spec": "docs/launchcheck/codex-tasks.md",
+  "complete": false,
+  "evidence": {
+    "webTests": 129,
+    "typecheck": "passed",
+    "productionBuild": "passed before final clipboard addition; typecheck/tests and browser passed after it",
+    "browser": "scratch/launchcheck-browser-results.json; scratch/launchcheck-compact-check.cjs; scratch/launchcheck-copy-check.cjs"
+  },
+  "requirements": [
+    {
+      "id": 1,
+      "state": "partial",
+      "evidenceOrGap": "Tendr moved to /tendr; LaunchCheck navigation renders; final production deploy pending"
+    },
+    {
+      "id": 2,
+      "state": "partial",
+      "evidenceOrGap": "Catalog and agent API consumed; fixture form/polling verified; live POST still returns 503 executor_offline"
+    },
+    {
+      "id": 3,
+      "state": "partial",
+      "evidenceOrGap": "All supplied report fixtures rendered and inspected; real report persistence/loader not delivered"
+    },
+    {
+      "id": 4,
+      "state": "partial",
+      "evidenceOrGap": "fx_running polling reaches terminal state; actual paid executor not connected"
+    },
+    {
+      "id": 5,
+      "state": "partial",
+      "evidenceOrGap": "Fixture OG HTTP 200 and visual inspection; live report/transaction not available"
+    },
+    {
+      "id": 6,
+      "state": "partial",
+      "evidenceOrGap": "X/copy/badge and fix brief work; real owner rerun/delete API not implemented"
+    },
+    {
+      "id": 7,
+      "state": "partial",
+      "evidenceOrGap": "SVG endpoint works, timestamp/cache implemented; old badge dark/light render still needs verification"
+    },
+    {
+      "id": 8,
+      "state": "partial",
+      "evidenceOrGap": "Broken demo HTML verified; getDemoFixed module absent, fixed mode not integrated"
+    },
+    {
+      "id": 9,
+      "state": "partial",
+      "evidenceOrGap": "Fixture gallery and empty/error states; seller interface honestly marked planned; seller payment not confirmed"
+    },
+    {
+      "id": 10,
+      "state": "partial",
+      "evidenceOrGap": "Central copy and shared banned words test; commands centralized; remaining metadata/serialized labels require final review"
+    },
+    {
+      "id": 11,
+      "state": "pending",
+      "evidenceOrGap": "docs/brand/style-guide.md not delivered"
+    },
+    {
+      "id": 12,
+      "state": "partial",
+      "evidenceOrGap": "7 routes at 390/1280 audited; current report navigation and clipboard tested; production browser audit pending"
+    },
+    {
+      "id": 13,
+      "state": "pending",
+      "evidenceOrGap": "docs/brand/brand-review-2026-11-12.md not delivered"
+    },
+    {
+      "id": 14,
+      "state": "partial",
+      "evidenceOrGap": "Root OG, icon, loading/reduced-motion implemented; final video polish depends on live run"
+    }
+  ],
+  "additionalOwnerRequirement": {
+    "realInteractiveE2E": "not implemented; provider availability/pricing gap recorded in docs/coordination.md",
+    "compactUX": "section navigation implemented; final live screen review pending"
+  },
+  "authoritativeBackendFiles": [
+    "apps/web/src/app/api/checks/route.ts",
+    "apps/web/src/app/api/checks/[id]/route.ts",
+    "apps/web/src/app/api/checks/[id]/rerun/route.ts"
+  ],
+  "blockingDependencies": [
+    "Claude-owned executor, SERV planning/explanation and persistent report loader",
+    "Real owner rerun/delete",
+    "Demo toggle and brand deliverables",
+    "Seller payment plus interactive browser execution verification"
+  ]
+}
