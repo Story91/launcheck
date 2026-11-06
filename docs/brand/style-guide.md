@@ -1,14 +1,14 @@
 # LaunCheck brand guide
 
-Date: 6 November 2026. Implemented direction: evidence desk, restrained Civic-inspired green and compact report layout.
+Date: 6 November 2026. Updated for the owner’s publication brief: a friendly launch-day workbench, an interactive illustrative browser, and compact evidence reports.
 
 ## Identity
 
-Name: LaunCheck. Headline: **Launch with the receipts.** The memorable artifact connects an observation to its evidence, provider and payment. Actual captures are more useful here than generated background photos.
+Name: LaunCheck. Headline: **Catch the oops. Before the launch.** The memorable artifact connects an observation to its evidence, provider and payment. Actual captures are more useful here than generated background photos.
 
 ## Visual language
 
-Paper `#f5f7f3`, secondary paper `#eaf0e8`, ink `#203b33`, secondary ink `#3f594e`, accent `#275d45`, rule `#cbd6cb`. Manrope headings and DM Sans prose/controls. Monospace is reserved for identifiers and hashes. Use the existing component tokens.
+Paper `#fafbfd`, secondary paper `#eef3fb`, ink `#17243b`, secondary ink `#354661`, accent `#3457cf`, rule `#dce3ee`. The interactive illustration uses warm orange and yellow, separate from outcome colors. Manrope headings and DM Sans prose/controls. Monospace is reserved for identifiers and hashes. Use the existing component tokens.
 
 Left-align report content. Compact rows progressively disclose evidence. Unknown is neutral gray; observed problems use restrained red; observed clear checks use green. Green must not imply an unperformed check succeeded. Preserve visible keyboard focus, 48px primary controls, wrapping IDs, reduced-motion support and 390px layouts.
 
@@ -21,3 +21,13 @@ No overall scores, probabilities, risk grades, rankings or certification. The ex
 ## Sharing
 
 Use actual counts and settled payments. “Fixed X of Y” requires comparable evidence; unknown remains unresolved. “Paid for by an AI agent” describes real paid runs only. Badges link to the receipt and age visibly after 30 days. Never put third-party reports into a gallery without owner consent.
+
+## Publication experience
+
+Lead with the user’s task: paste a page, see what needs attention, prepare fixes, run another check. Wallet identifiers and spending mechanics stay available through disclosure. The homepage browser is explicitly an interactive illustration, never live evidence. A one-time scan explains the checking idea; pointer tilt only runs for fine pointers with motion enabled. Reduced-motion users get the same controls with no moving scan.
+
+The fix workspace exports selected findings and their evidence to the user’s coding agent; it does not modify a repository or mark a finding fixed. Example packs carry `illustrative: true`. The link-preview builder runs locally in the tab, validates public addresses, escapes output, and exports HTML or Next.js metadata. It does not load user-provided images or promise that a platform has refreshed a preview.
+
+## Animation research
+
+Reviewed [Motion](https://github.com/motiondivision/motion), [Three.js](https://github.com/mrdoob/three.js), and [React Bits](https://github.com/DavidHDev/react-bits). The selected browser interaction uses original CSS transforms and React state; no third-party component source was copied and no animation dependency was installed. This keeps the entry page light while retaining keyboard controls, a static fallback and reduced-motion support.

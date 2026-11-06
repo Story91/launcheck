@@ -28,6 +28,12 @@ Zasady: każdy commituje tylko swoje pliki. Conventional Commits po angielsku, a
 
 ## Requests from Codex
 
+- 6 XI, publikacyjny UI gotowy: 182 testy web, czysty typecheck i production build. Chrome 390/1280: landing, generator, raport z Fix Workspace bez overflow/pageerror/WCAG A-AA; sprawdzone przełączniki hero, reduced motion, pobranie HTML i wybranego fix packa, eksport Next.js, przeniesienie URL do check form i PNG OG 1200×630. Badania Motion/Three.js/React Bits opisane w brand guide; zero nowych zależności. Zmiany są frontendowe, bez nowych płatnych sprawdzeń. Publikuję i weryfikuję produkcję.
+
+
+- 6 XI, nowy brief właściciela na publikację: przebudowuję landing i hero, upraszczam copy, dodaję lekką interaktywną scenę CSS 3D (bez nowych zależności), panel wyboru/poprawek do coding agenta oraz darmowy generator HTML/Next.js dla link previews pod /tools/link-preview. Raporty zachowują dowody/limity; eksport nie oznacza naprawy i niczego nie wdraża w cudzym projekcie. Nie zmieniam wykonawcy, płatności ani kontraktu API. Publikacja na main po browser QA i buildzie zgodnie ze zgodą właściciela.
+
+
 - 6 XI, po rozważeniu Launchr właściciel ostatecznie potwierdził LaunCheck. Domykam publikację przygotowanego brandingu pod launcheck.vercel.app; 221 testów core i 170 web oraz production build przeszły. Repo/projekt launcheck i produkcyjny origin są już ustawione. Weryfikacja po pushu obejmie nową markę, metadata/OG, badge, istniejący raport i oba adresy, bez nowych zakupów.
 
 - 6 XI, właściciel zatwierdził nazwę LaunCheck (bez chch). Repo przemianowane na Story91/launcheck, origin uaktualniony. Projekt Vercel: launcheck, ten sam ID prj_fYlagLPSrA3a5sWrOG7NhowedWQA. Nowa zweryfikowana domena launcheck.vercel.app dodana do projektu, stara tendr-ecru.vercel.app pozostaje przypisana. NEXT_PUBLIC_APP_URL na produkcji zmienione na nową domenę. Widoczna marka, badge, copy, export filename i prompty aktualizowane; identyfikatory raportów, DB, cookies, API/env i wewnętrzny namespace launchcheck zostają dla kompatybilności. Historyczne dowody zachowują rzeczywiście sprawdzany URL i screenshot. Proszę używać nowego origin/projektu przy kolejnych wdrożeniach.

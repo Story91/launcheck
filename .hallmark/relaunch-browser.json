@@ -1,0 +1,50 @@
+[
+  {
+    "width": 390,
+    "route": "/?fixture=1",
+    "overflow": false,
+    "violations": [],
+    "heading": "Catch the oops.\nBefore the launch.",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/tools/link-preview",
+    "overflow": false,
+    "violations": [],
+    "heading": "Give your link a better first impression.",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/check/fx_problems",
+    "overflow": false,
+    "violations": [],
+    "heading": "We ran 6 checks. Recorded 2 findings. 1 couldn’t run.",
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "/?fixture=1",
+    "overflow": false,
+    "violations": [],
+    "heading": "Catch the oops.\nBefore the launch.",
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "/tools/link-preview",
+    "overflow": false,
+    "violations": [],
+    "heading": "Give your link a better first impression.",
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "/check/fx_problems",
+    "overflow": false,
+    "violations": [],
+    "heading": "We ran 6 checks. Recorded 2 findings. 1 couldn’t run.",
+    "errors": []
+  }
+]

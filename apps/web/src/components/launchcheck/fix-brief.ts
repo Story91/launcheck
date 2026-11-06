@@ -1,10 +1,11 @@
 import type { Report } from "./contract";
 import { copy } from "./copy";
-import { timestamp, safeWebUrl } from "./format";
+import { timestamp, safeWebUrl, isFixture } from "./format";
 
 // A JSON data block keeps page/provider text distinct from the brief's instructions.
 export function fixBrief(report: Report, reportUrl: string) {
   const data = {
+    illustrative: isFixture(report.id),
     reportUrl: safeWebUrl(reportUrl),
     pageUrl: report.url,
     observedAt: timestamp(report.finishedAt ?? report.createdAt),
