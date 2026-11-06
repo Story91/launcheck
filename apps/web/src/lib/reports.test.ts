@@ -26,6 +26,17 @@ const baseReport = (over: Partial<Report>): Report => ({
 const deps = {} as PipelineDeps;
 
 describe("startGeneration", () => {
+  it("marks a crashed pipeline failed after draining progress writes, allowing retry", async () => {
+    const store = new MemoryReportStore();
+    const generate = async (_id: string, _deps: PipelineDeps, progress?: (step: string) => void) => {
+      progress?.("extract");
+      throw new Error("unexpected failure");
+    };
+    await expect(startGeneration("722731-2026", store, deps, generate as never)).rejects.toThrow("unexpected failure");
+    expect(await store.get("722731-2026")).toMatchObject({ status: "failed", progress: "failed" });
+    expect(await store.nextReppo()).toBeNull();
+    expect(await store.claimGeneration("722731-2026", 300000)).toBe(true);
+  });
   it("creates a generating record, runs the pipeline, stores the result and queues Reppo", async () => {
     const store = new MemoryReportStore();
     const progress: string[] = [];
@@ -137,12 +148,21 @@ describe("internalReportResponse", () => {
 
   it("returns 200 with the report only for verified and disputed", async () => {
     const store = new MemoryReportStore();
-    await store.upsert(baseReport({ status: "verified" }));
+    const reppo: NonNullable<Report["reppo"]> = { evalId: "e", sandbox: false, status: "SETTLED", score: 88, decision: "accept", confidence: "high", critique: null, evidenceBasis: null, submittedAt: "", settledAt: "" };
+    await store.upsert(baseReport({ status: "verified", reppo }));
     const ok = await internalReportResponse(store, "722731-2026", secret, secret);
     expect(ok.status).toBe(200);
     expect((ok.body as Report).riskScore).toBe(35);
-    await store.upsert(baseReport({ status: "disputed" }));
+    await store.upsert(baseReport({ status: "disputed", reppo: { ...reppo, decision: "revise" } }));
     expect((await internalReportResponse(store, "722731-2026", secret, secret)).status).toBe(200);
+  });
+
+  it("does not sell a report with a missing, unfinished or contradictory verdict", async () => {
+    const store = new MemoryReportStore();
+    for (const reppo of [null, { evalId: "e", status: "PENDING", decision: null }, { evalId: "e", status: "SETTLED", decision: "reject" }] as Report["reppo"][]) {
+      await store.upsert(baseReport({ status: "verified", reppo }));
+      expect((await internalReportResponse(store, "722731-2026", secret, secret)).status).toBe(409);
+    }
   });
 
   it("refuses to sell a partial report or one whose verdict came from the Reppo sandbox", async () => {

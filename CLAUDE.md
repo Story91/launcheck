@@ -5,6 +5,8 @@ Hackathon OpenServ "SERV Hackathon — Edition 02", 2–15 listopada 2026, onlin
 
 ## Stan projektu
 
+- **Aktualizacja 6 XI 2026:** `main` jest główną gałęzią, aplikacja działa pod https://tendr-ecru.vercel.app. Obsługuje SAM.gov i TED; Neon, Reppo i odpowiedź 402 są wdrożone. Opis z 4 XI poniżej jest historyczny. Stan bieżącej kontroli i pozostałych zadań: `docs/hackathon-checklist.md` (sekcja „Kontrola 6 XI”).
+
 - **Wybrany pomysł (3 XI 2026): Tendr** — audytowalne raporty sygnałów ograniczenia konkurencji dla ogłoszeń z TED, z werdyktem Reppo i sprzedażą per-call przez x402 (Kite). Spec: `docs/superpowers/specs/2026-11-03-tendr-design.md`. Track: Open (do potwierdzenia).
 - Odrzucone alternatywy i dlaczego: `docs/ideas/2026-11-03-five-ideas.md`, `docs/research/06-prior-art-crypto.md`.
 - Plan: `docs/superpowers/plans/2026-11-03-tendr.md` (14 zadań; stan w ledgerze `.superpowers/sdd/2026-11-03-tendr/progress.md`).

@@ -11,8 +11,8 @@ export const STALE_GENERATION_MS = 5 * 60_000;
 export function isSellable(report: Report): boolean {
   if (report.status !== "verified" && report.status !== "disputed") return false;
   if (report.partial) return false;
-  if (report.reppo?.sandbox) return false;
-  return true;
+  if (!report.reppo || report.reppo.sandbox || report.reppo.status !== "SETTLED") return false;
+  return report.status === "verified" ? report.reppo.decision === "accept" : report.reppo.decision === "revise";
 }
 
 /**
@@ -29,10 +29,20 @@ export async function startGeneration(
   if (!(await store.claimGeneration(noticeId, STALE_GENERATION_MS))) return "exists";
 
   let chain: Promise<void> = Promise.resolve();
-  const report = await generate(noticeId, deps, (step) => {
-    onProgress?.(step);
-    chain = chain.then(() => store.setProgress(noticeId, step)).catch((e) => console.error("progress write failed", e));
-  });
+  let report: Report;
+  try {
+    report = await generate(noticeId, deps, (step) => {
+      onProgress?.(step);
+      chain = chain.then(() => store.setProgress(noticeId, step)).catch((e) => console.error("progress write failed", e));
+    });
+  } catch (error) {
+    await chain;
+    const current = await store.get(noticeId);
+    if (current?.status === "generating") {
+      await store.upsert({ ...current, status: "failed", progress: "failed", error: "Report generation was interrupted. Please try again.", updatedAt: new Date().toISOString() });
+    }
+    throw error;
+  }
   await chain;
   await store.upsert({ ...report, progress: report.status === "failed" ? "failed" : "done" });
   if (report.status === "pending_verification") await store.enqueueReppo(noticeId);

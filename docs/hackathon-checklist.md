@@ -3,6 +3,24 @@
 **Deadline: niedziela 15 listopada 2026, 23:59 UTC (00:59 w Polsce, 16 XI).**
 Formularz: https://openserv.typeform.com/submissions02
 
+## Kontrola 6 XI 2026
+
+Ta sekcja zastępuje starsze wpisy o brakującym deployu, bazie i kluczu Reppo poniżej; historyczne pomiary pozostają zapisane z datą.
+
+- [x] Publiczna strona produkcyjna odpowiada HTTP 200; `/api/notices` zwraca dane.
+- [x] `/healthz` odpowiada HTTP 200: Kite testnet, pieUSD, cena $0.50.
+- [x] Publiczne API raportu NBP `722731-2026` odpowiada HTTP 200, Reppo `SETTLED`, `sandbox: false`.
+- [x] Lokalne poprawki: identyfikatory SAM.gov w x402, limit oczekiwania na upstream, bezpieczna walidacja JSON, informacja o niedostępnej konfiguracji, zakończenie przerwanego generowania stanem failed i widoczny błąd połączenia w UI.
+- [x] Testy x402 nie wymagają internetu; prawdziwy middleware działa z mockowaną odpowiedzią facilitatora.
+- [x] Weryfikacja lokalna: 198 testów (core 114, web 72, x402 12), TypeScript we wszystkich trzech pakietach i build produkcyjny Next.js przechodzą.
+- [x] Sprzedaż wymaga zakończonego werdyktu Reppo zgodnego ze statusem raportu; zadania cron odmawiają uruchomienia również przy brakującym CRON_SECRET.
+- [x] Produkcyjny paywall zwraca HTTP 402, a cron Reppo bez autoryzacji HTTP 401. Cztery raporty USA widoczne na stronie mają rzeczywiste werdykty SETTLED/revise; kolejny ma PENDING.
+- [ ] Wdrożyć poprawki z tej kontroli i powtórzyć test publicznego API.
+- [ ] Potwierdzić rzeczywisty zakup przez `kpass` na testnecie z konta właściciela (passkey); działające HTTP 402 nie dowodzi rozliczenia płatności.
+- [ ] Potwierdzić komplet pięciu raportów referencyjnych z aktualnymi werdyktami; nie uruchamiano dodatkowych płatnych analiz podczas kontroli.
+- [ ] Wideo, publikacja na X i wysłanie zgłoszenia. Pliki w `docs/submission/` są materiałami roboczymi, nie dowodem publikacji.
+- [ ] Kontrola wizualna w przeglądarce: automatyczne uruchomienie przeglądarki przekroczyło limit czasu; odczyty HTTP nie zastępują tej kontroli.
+
 ## Przed startem kodowania
 - [x] Pre-rejestracja (daje $5 kredytów SERV): https://openserv.typeform.com/registerhack02 (track Dolphin zaznaczony; finalnie zgłaszamy Open)
 - [x] Konto + klucz SERV: https://console.openserv.ai → Settings → Keys → wpisać do `.env`

@@ -1,5 +1,6 @@
 import request from "supertest";
-import { describe, expect, it } from "vitest";
+import { HTTPFacilitatorClient } from "@x402/core/server";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createApp } from "../src/server";
 
 const base = {
@@ -9,6 +10,14 @@ const base = {
   priceUsd: "0.50",
   internalSecret: "s3cret",
 };
+
+beforeEach(() => {
+  vi.spyOn(HTTPFacilitatorClient.prototype, "getSupported").mockResolvedValue({
+    kinds: [{ x402Version: 2, scheme: "exact", network: "eip155:2368" }],
+    extensions: [], signers: {},
+  });
+});
+afterEach(() => vi.restoreAllMocks());
 
 describe("paywall", () => {
   it("answers 402 with payment terms when no payment is attached", async () => {
@@ -29,6 +38,22 @@ describe("paywall", () => {
 });
 
 describe("report proxy", () => {
+  it("proxies SAM.gov identifiers as well as TED publication numbers", async () => {
+    const id = "0123456789abcdef0123456789abcdef";
+    const fetchImpl = vi.fn().mockResolvedValue(Response.json({ noticeId: id }));
+    const res = await request(createApp({ ...base, paywall: false, fetchImpl })).get(`/v1/report/${id}`);
+    expect(res.status).toBe(200);
+    expect(res.body.noticeId).toBe(id);
+    expect(fetchImpl.mock.calls[0]?.[0]).toBe(`${base.upstreamUrl}/${id}`);
+    expect(fetchImpl.mock.calls[0]?.[1].signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it("does not expose internal connection details when the upstream fails", async () => {
+    const fetchImpl = vi.fn().mockRejectedValue(new Error("private database address"));
+    const res = await request(createApp({ ...base, paywall: false, fetchImpl })).get('/v1/report/1-2026');
+    expect(res.status).toBe(502);
+    expect(res.body).toEqual({ error: "upstream unreachable" });
+  });
   const upstreamCalls: { url: string; secret: string | null }[] = [];
   const fetchImpl = (async (url: string, init: RequestInit) => {
     upstreamCalls.push({ url, secret: new Headers(init.headers).get("x-internal-secret") });

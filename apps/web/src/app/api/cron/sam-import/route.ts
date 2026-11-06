@@ -13,7 +13,7 @@ export const maxDuration = 300;
  */
 export async function GET(req: Request) {
   const expected = process.env.CRON_SECRET;
-  if (expected && req.headers.get("authorization") !== `Bearer ${expected}`) {
+  if (!expected || req.headers.get("authorization") !== `Bearer ${expected}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const t0 = Date.now();

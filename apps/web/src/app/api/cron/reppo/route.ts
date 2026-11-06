@@ -9,7 +9,7 @@ export const maxDuration = 60;
 /** Vercel cron target (every minute). Also callable locally: curl -H "Authorization: Bearer $CRON_SECRET" localhost:3000/api/cron/reppo */
 export async function GET(req: Request) {
   const expected = process.env.CRON_SECRET;
-  if (expected && req.headers.get("authorization") !== `Bearer ${expected}`) {
+  if (!expected || req.headers.get("authorization") !== `Bearer ${expected}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const reppo = buildReppoClient();

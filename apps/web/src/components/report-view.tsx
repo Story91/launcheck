@@ -17,6 +17,7 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
   const [report, setReport] = useState<Stored | null>(initial);
   const [tab, setTab] = useState<"signals" | "audit">("signals");
   const [stalled, setStalled] = useState(false);
+  const [requestError, setRequestError] = useState<string | null>(null);
   const kicked = useRef(false);
   const startedAt = useRef(Date.now());
 
@@ -24,18 +25,34 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
     kicked.current = true;
     startedAt.current = Date.now();
     setStalled(false);
-    await fetch("/api/reports", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ noticeId }) });
+    setRequestError(null);
+    try {
+      const res = await fetch("/api/reports", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ noticeId }) });
+      if (!res.ok) throw new Error("request failed");
+      setReport(null);
+      return true;
+    } catch {
+      setRequestError("Could not start the report. Please try again.");
+      setStalled(true);
+      return false;
+    }
   }, [noticeId]);
 
   const poll = useCallback(async () => {
-    const res = await fetch(`/api/reports/${noticeId}`, { cache: "no-store" });
-    if (res.status === 404) return;
-    setReport((await res.json()) as Stored);
+    try {
+      const res = await fetch(`/api/reports/${noticeId}`, { cache: "no-store" });
+      if (res.status === 404) return;
+      if (!res.ok) throw new Error("request failed");
+      setReport((await res.json()) as Stored);
+      setRequestError(null);
+    } catch {
+      setRequestError("Could not refresh the report. Check your connection; we will retry automatically.");
+    }
   }, [noticeId]);
 
   // Start generation once when there is no report yet; never re-kick in a loop.
   useEffect(() => {
-    if (!initial && !kicked.current) void kick().then(poll);
+    if (!initial && !kicked.current) void kick().then((started) => { if (started) return poll(); });
   }, [initial, kick, poll]);
 
   // Fast polling while generating; slow polling while the independent verification is pending.
@@ -57,6 +74,7 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
     return (
       <section className="max-w-[70ch]">
         <h1 className="text-3xl">Notice {noticeId}</h1>
+        {requestError && <p role="alert" className="mt-3 text-seal">{requestError}</p>}
         <p className="mt-2 text-slate">Building the report. This usually takes 20 to 60 seconds.</p>
         <div className="mt-6">
           <ProgressSteps progress={report?.progress ?? "queued"} />
@@ -64,7 +82,7 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
         {stalled && (
           <div className="mt-6 text-sm">
             <p className="text-seal">This is taking longer than expected. The run may have been interrupted.</p>
-            <button onClick={() => void kick().then(poll)} className="mt-2 bg-ink px-3 py-1.5 text-paper hover:bg-slate">
+            <button onClick={() => void kick().then((started) => { if (started) return poll(); })} className="mt-2 bg-ink px-3 py-1.5 text-paper hover:bg-slate">
               Start again
             </button>
           </div>
@@ -78,8 +96,9 @@ export function ReportView({ noticeId, initial }: { noticeId: string; initial: S
       <section className="max-w-[70ch]">
         <h1 className="text-3xl">Notice {noticeId}</h1>
         <p className="mt-3 text-seal">{report.error ?? "The report could not be generated."}</p>
+        {requestError && <p role="alert" className="mt-3 text-seal">{requestError}</p>}
         <p className="mt-2 text-sm text-slate">Check the notice id on sam.gov or the publication number on ted.europa.eu, or try again.</p>
-        <button onClick={() => void kick().then(() => setReport(null))} className="mt-4 bg-ink px-3 py-1.5 text-sm text-paper hover:bg-slate">
+        <button onClick={() => void kick()} className="mt-4 bg-ink px-3 py-1.5 text-sm text-paper hover:bg-slate">
           Retry
         </button>
       </section>

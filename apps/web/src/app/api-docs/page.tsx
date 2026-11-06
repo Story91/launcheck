@@ -1,12 +1,12 @@
 export default function ApiDocsPage() {
   // The x402 service shares this deployment's domain (see vercel.json rewrites for /v1 and /healthz).
-  const host = process.env.NEXT_PUBLIC_SITE_URL ?? "https://<your-deployment>";
+  const host = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tendr-ecru.vercel.app";
   return (
     <div className="max-w-[72ch] space-y-8">
       <section>
         <h1 className="text-3xl">Buy a report from your agent</h1>
         <p className="mt-3 text-slate leading-relaxed">
-          Verified reports are sold per call over x402 (HTTP 402 payments). Your agent requests the report, receives a 402 with payment terms, pays in USDC and gets the JSON in the same round trip. Reports that are not yet verified return 409 and are never charged.
+          Independently reviewed reports are sold per call over x402 (HTTP 402 payments). Your agent receives the payment terms, authorizes payment and gets the JSON report. The terms specify the network and token: pieUSD on Kite testnet, USDC.e on Kite mainnet. After payment authorization, unavailable reports return 409 or 404 without settlement. Disputed reports include the reviewer's critique; partial and sandbox reports are not sold.
         </p>
       </section>
       <section>

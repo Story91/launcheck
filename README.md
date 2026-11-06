@@ -44,7 +44,7 @@ docs/           research, spec, plan, submission materials
 ```bash
 pnpm install
 cp .env.example .env        # fill SERV_API_KEY at minimum
-pnpm test                   # 102 unit tests, no network
+pnpm test                   # unit tests, no network
 pnpm --filter @tendr/core test:live   # one real run against TED + SERV
 pnpm --filter @tendr/web dev           # http://localhost:3000 (in-memory store without DATABASE_URL)
 ```

@@ -20,7 +20,7 @@ export interface AppOptions {
   fetchImpl?: typeof fetch;
 }
 
-const NOTICE_ID = /^\d{1,6}-\d{4}$/;
+const NOTICE_ID = /^(?:\d{1,6}-\d{4}|[0-9a-f]{32})$/i;
 const HOP_BY_HOP = new Set(["connection", "keep-alive", "transfer-encoding", "te", "trailer", "upgrade", "host", "content-length", "content-encoding"]);
 
 export function createApp(opts: AppOptions): Express {
@@ -60,14 +60,14 @@ export function createApp(opts: AppOptions): Express {
   app.get("/v1/report/:noticeId", async (req: Request, res: Response) => {
     const noticeId = String(req.params.noticeId ?? "");
     if (!NOTICE_ID.test(noticeId)) {
-      res.status(400).json({ error: "noticeId must be a TED publication number, e.g. 722731-2026" });
+      res.status(400).json({ error: "noticeId must be a SAM.gov notice id (32 hex characters) or a TED publication number, e.g. 722731-2026" });
       return;
     }
     let upstreamRes: globalThis.Response;
     try {
-      upstreamRes = await fetchImpl(`${upstream}/${noticeId}`, { headers: { "x-internal-secret": opts.internalSecret, accept: "application/json" } });
-    } catch (err) {
-      res.status(502).json({ error: "upstream unreachable", detail: String(err) });
+      upstreamRes = await fetchImpl(`${upstream}/${noticeId}`, { headers: { "x-internal-secret": opts.internalSecret, accept: "application/json" }, signal: AbortSignal.timeout(30_000) });
+    } catch {
+      res.status(502).json({ error: "upstream unreachable" });
       return;
     }
     res.status(upstreamRes.status);
