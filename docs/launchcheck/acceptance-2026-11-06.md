@@ -22,4 +22,4 @@ Public labels now say findings rather than treating informational DNS observatio
 
 Public-spending configuration: the owner explicitly approved 1.50 USD/day through 15 November 23:59 UTC. It is separate from Kite's owner allowance and vendor charge reconciliation. SERV token/add-on charges are separate from the USDC receipt.
 
-The Base-USDC LaunchCheck seller remains planned. Repository visibility, final hackathon submission and public social posting are separate from application deployment; this acceptance record does not claim they happened.
+The Base-USDC LaunchCheck seller remains planned. On 6 November, after explicit owner approval and a repeat pattern scan of tracked history, Story91/tendr was made public; GitHub confirmed PUBLIC. Final hackathon submission and public social posting remain separate from application deployment; this record does not claim they happened.
