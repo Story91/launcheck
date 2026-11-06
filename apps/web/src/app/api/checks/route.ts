@@ -1,3 +1,4 @@
+import { creatorToken, isRunOwner } from "@/lib/launchcheck/owner";
 import { tierSchema } from "@tendr/core";
 import { BlockedUrlError } from "@tendr/core/server";
 import { after } from "next/server";
@@ -42,11 +43,12 @@ export async function POST(req: Request) {
   }
 
   const store = runStore();
+  if (await store.getSetting("payment_hold") === "true") return json({ error: "live_runs_paused", reason: "payment_hold" }, 503);
   const ip = (req.headers.get("x-forwarded-for") ?? "unknown").split(",")[0]!.trim();
   const ipHash = sha256(`lc-ip:${ip}`);
 
-  const cached = await store.latestDoneForOrigin(url.origin, new Date(Date.now() - CACHE_MS));
-  if (cached) {
+  const cached = await store.latestDoneForUrl(url.href, tier.data, new Date(Date.now() - CACHE_MS));
+  if (cached && await isRunOwner(req, cached)) {
     const report = await store.getReport(cached);
     return json({ id: cached, reportUrl: `/check/${cached}`, cached: true, checkedAt: report?.finishedAt ?? undefined }, 200);
   }
@@ -58,7 +60,7 @@ export async function POST(req: Request) {
   }
 
   const id = newRunId();
-  const token = newCreatorToken();
+  const token = creatorToken(req) ?? newCreatorToken();
   const target = url.href;
   await store.createRun(queuedReport(id, target, tier.data), { ipHash, creatorHash: sha256(token) });
   after(() => executeRun(id, target, tier.data));

@@ -1,3 +1,4 @@
+import { isLaunchcheckOperator } from "@/lib/launchcheck/operator";
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
 import { runMigration } from "@/lib/db/migrate";
@@ -8,8 +9,7 @@ export const maxDuration = 60;
 
 /** One-off schema bootstrap on the deployed database. Auth: Authorization: Bearer <CRON_SECRET>. */
 export async function POST(req: Request) {
-  const expected = process.env.CRON_SECRET;
-  if (!expected || req.headers.get("authorization") !== `Bearer ${expected}`) {
+  if (!isLaunchcheckOperator(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const url = resolveDatabaseUrl(process.env);

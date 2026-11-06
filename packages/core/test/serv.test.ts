@@ -26,6 +26,16 @@ const okBody = (content: string | null, extra: Record<string, unknown> = {}) => 
 });
 
 describe("ServClient", () => {
+  it("uses completion-token limits for reasoning models and legacy limits for other providers", async () => {
+    const { fetchImpl, calls } = fakeFetch(() => ({ body: okBody('{"ok":true}') }));
+    const serv = new ServClient({ apiKey: "k", fetchImpl });
+    await serv.chat({ model: "gpt-6-luna", system: "sys", user: "usr", maxTokens: 1500 });
+    expect(calls[0]!.body.max_completion_tokens).toBe(1500);
+    expect(calls[0]!.body).not.toHaveProperty("max_tokens");
+    await serv.chat({ model: "other-provider", system: "sys", user: "usr", maxTokens: 1500 });
+    expect(calls[1]!.body.max_tokens).toBe(1500);
+  });
+
   it("sends system prompt, strict json schema and marker tools", async () => {
     const { fetchImpl, calls } = fakeFetch(() => ({ body: okBody('{"ok":true}') }));
     const serv = new ServClient({ apiKey: "k", fetchImpl });

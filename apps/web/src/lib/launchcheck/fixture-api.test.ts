@@ -1,5 +1,6 @@
+vi.mock("server-only", () => ({}));
 import { agentStatusSchema, catalogSchema, checkCreatedSchema, gallerySchema, launchCheckReportSchema } from "@tendr/core";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { GET as getAgent } from "@/app/api/agent/route";
 import { GET as getCatalog } from "@/app/api/catalog/route";
 import { GET as getCheck } from "@/app/api/checks/[id]/route";

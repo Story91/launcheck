@@ -65,6 +65,7 @@ export const MIGRATION_SQL: readonly string[] = [
     "png_base64" text not null,
     "created_at" timestamptz not null default now()
   )`,
+  `create table if not exists lc_settings (key text primary key, value text not null)`,
   `create table if not exists "lc_daily_spend" (
     "day" date primary key,
     "spent_usd" numeric(12, 6) not null default 0

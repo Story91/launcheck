@@ -1,0 +1,30 @@
+{
+  "operation": "0654a60b-cb57-4ee4-8413-c0437a98b877",
+  "status": "success",
+  "exit": 0,
+  "httpStatus": 200,
+  "errorCode": null,
+  "source": "allowance",
+  "responseKeys": [
+    "charged_cents",
+    "data",
+    "ok",
+    "transaction_id"
+  ],
+  "browserConnected": true,
+  "steps": [
+    {
+      "action": "open",
+      "url": "https://tendr-ecru.vercel.app/demo/acme-launch",
+      "httpStatus": 200
+    },
+    {
+      "action": "click",
+      "url": "https://tendr-ecru.vercel.app/demo/acme-launch/pricing",
+      "httpStatus": 404
+    }
+  ],
+  "linkLabel": "Pricing",
+  "error": null,
+  "screenshot": true
+}

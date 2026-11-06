@@ -1,86 +1,71 @@
-# Tendr
+# LaunchCheck
 
-Competition-restriction signal reports for US federal solicitations (SAM.gov) and EU tenders (TED), with verbatim quotes, a full reasoning audit trail, independent verification and per-call sales to agents.
+**Launch with the receipts.** A website-checking agent that chooses evidence within a listed-check budget, buys it through Kite Passport, and returns observations, sources and payment records.
 
-Built for [SERV Hackathon 02](https://www.openserv.ai/hackathon-2) (OpenServ, 2–15 November 2026), Open Track.
+[Application](https://tendr-ecru.vercel.app) · [Example receipt](https://tendr-ecru.vercel.app/check/fx_problems) · [Design](docs/superpowers/specs/2026-11-06-launchcheck-design.md)
 
-## What it does
+Built for SERV Hackathon 02, Kite track. The earlier Tendr prototype remains at `/tendr`; its scheduled jobs are disabled. Historical Tendr evaluation figures do not describe LaunchCheck.
 
-1. You give it a SAM.gov notice id (32 characters, from `sam.gov/opp/<id>/view`) or a TED publication number, or pick one of the open federal IT solicitations on the home page.
-2. It reads the notice (SAM.gov: from the public daily extract a cron imports into Postgres, no API key needed; TED: official search API), extracts the facts (buyer, value, deadline, criteria, conditions, named products) and evaluates **eight competition-restriction signals** (FAR rules for US notices, Directive 2014/24/EU for EU notices): short deadline, named brand or incumbent system, over-specification, experience tied to one supplier, low price weight with subjective criteria, disproportionate financial conditions, no lots across a broad scope, unusual organisational requirements.
-3. Every signal that fires must cite a quote that the code verifies **verbatim against the notice text** (never against model output). Quotes that are not in the notice are dropped and the signal is unfired; extracted facts are filtered the same way before the signal step sees them.
-4. The report is published immediately as *pending independent verification*, then sent to **Reppo's Evaluation API**; the verdict becomes *verified*, *disputed* or *withheld*.
-5. Verified reports are sold per call over **x402** on the Kite network; an agent with a **Kite Agent Passport** buys one inside the spending limits its owner approved.
+## What works
 
-Reports describe signals in the notice text. They never claim wrongdoing. Small-business set-asides are lawful and never flagged. Tendr is not affiliated with GSA, SAM.gov or any government agency.
+- Deterministic public-page checks: response, selected headers, certificate, sharing metadata/image, mail DNS and selected links.
+- **OpenServ SERV Reasoning** chooses useful paid checks and explains existing findings. Code validates the catalogue, budget and evidence references. Reports record request IDs, prompt versions and input hashes. Failed model calls use a labelled rules/template fallback.
+- **Kite Passport** purchases 1280px and 390px browser screenshots, an independent static HTML audit, and (Full tier) a browser session that clicks one eligible public navigation link.
+- Receipts distinguish settled USDC amounts and Base transactions from quotes, refusals, unknown payments and charges without results.
+- Copy an evidence-backed fix brief, check again, and inspect **Fixed X of Y**. An unperformed follow-up check does not establish a fix.
+- Download receipt PNG/evidence JSON, copy a badge, and share a report link. Gallery publication is curated and restricted to our own demo pages.
 
-**Accuracy:** measured on a ground-truth set built from GAO bid-protest decisions (`pnpm --filter @tendr/core eval`): precision 100%, recall 33%, no false alarms on 7 clean solicitations, 97% run-to-run stability. Details and caveats in `docs/submission/write-up.md`.
+Reports are unlisted and excluded from search indexing. Anyone with the link can see the submitted URL, screenshots and evidence. Avoid private data and URLs containing secrets. The creator cookie permits follow-up checks and deletion; active runs and unresolved payments must be settled before deletion.
 
-## How it uses SERV Reasoning
+## Prices and boundaries
 
-Every model call goes through `https://inference-api.openserv.ai` (default model `gpt-6-luna`):
+| Purchased capability | Listed USD | Scope |
+| --- | ---: | --- |
+| Desktop screenshot | 0.005 | First screen, 1280px browser |
+| Narrow screenshot | 0.005 | 390px window; not a phone emulator |
+| Independent HTML audit | 0.08 | Static HTML; not Lighthouse |
+| Browser navigation | 0.01 | One eligible public same-origin link; Full only |
 
-- **Signal matrix as three `-serv-multipath` calls.** Each group of signals is a decision tree in a stable system prompt that SERV compiles into a bounded reasoning graph (cached 30 days per prompt). Splitting eight signals into three short prompts keeps the cheapest model stable.
-- **`serv_shadow_agent`** with the hint *"every evidence string must be copied verbatim from the input values"* is what makes the quotes verbatim; without it the model paraphrases.
-- **`serv_disable_content_filter`** because the output legitimately echoes labels defined in the system prompt.
-- **Strict `json_schema` output** on every call, validated again with Zod.
-- **Audit trail**: each step records model, prompt version, the `x-openserv-request-id` header (links to the OpenServ console), tokens, cost and latency. The token cost of a report is about $0.01; SERV also bills add-ons the `usage` field does not show (shadow-agent validations, graph generation on new prompts, prompt guard), so the real cost is a few cents (see the OpenServ console).
-- Degenerate output (all signals "none" with identical reasons) and prompt-guard refusals are detected and retried once on `gpt-5.4-mini`.
+Quick/Standard/Full allocate listed-check budgets of $0.05/$0.15/$0.25. The agent can skip services. Free checks are never purchased. Before payment we reject unsupported offers and offers above the listed price. Kite's owner-configured allowance controls settlement spending; the CLI exposes no atomic per-request price ceiling. Receipt amounts come from completed Base USDC activity. Unknown payments stop subsequent purchases in the run and trigger operator reconciliation.
 
-Dolphin (DeepSeek V4.1 Flash, 1M context) is wired as an alternative extractor (`DOLPHIN_PRIMARY=true`); by default extraction runs on SERV `gemini-3.1-flash-lite` (see `docs/superpowers/plans/2026-11-03-tendr.md`, "Day-1 results").
+SERV token estimates are separate and exclude add-on fees. They are not included in vendor USDC totals.
+
+Screenshots establish appearance. The browser check establishes one navigation observation. LaunchCheck does not establish whole-app correctness, accessibility conformance, security, sign-in, forms, checkout or production readiness. It emits no overall score or certification. Vendor scores are dropped; third-party content is untrusted data.
+
+The `/agents` seller interface is **planned**, not an active Base-USDC service. The old Tendr x402 seller uses a different network/asset and is not a LaunchCheck integration.
+
+## Development
+
+Requires Node 24 and pnpm 10.32.1.
+
+```sh
+pnpm install
+cp .env.example .env
+pnpm --filter @tendr/web dev
+pnpm --filter @tendr/core test
+pnpm --filter @tendr/web test
+pnpm --filter @tendr/web typecheck
+pnpm --filter @tendr/web build
+```
+
+Without a database, local reports use memory and disappear on restart. Explicitly illustrative `fx_*` reports never pay. Real execution requires Neon Postgres, `SERV_API_KEY` and owner-managed Kite configuration. Linux kpass is fetched and checksum-checked during the Vercel build. Credentials are sensitive environment values, excluded from browser bundles and exports.
+
+| Setting | Purpose |
+| --- | --- |
+| `DATABASE_URL` | Durable Neon reports, evidence and ledger |
+| `SERV_API_KEY`, `SERV_MODEL` | Reasoning API; default `gpt-6-luna` |
+| `NEXT_PUBLIC_APP_URL` | Canonical public origin |
+| `KPASS_CONFIG_JSON_B64`, `KPASS_AGENT_JSON_B64`, `KPASS_SESSIONS_JSON_B64` | Owner-managed sensitive Passport configuration |
+| `LAUNCHCHECK_LIVE` | Explicit public-execution switch; `1` enables |
+| `LAUNCHCHECK_LIVE_UNTIL` | Public execution expiry |
+| `LAUNCHCHECK_DAILY_CAP_USD` | Daily vendor allocation cap; default `1.5` |
+| `CRON_SECRET` | Owner-only fixed administrative actions |
+| `LAUNCHCHECK_PROMPT_GUARD` | Optional SERV input guard; evidence validation always applies |
+
+Public starts/reruns are rate-limited. A write-ahead payment record survives an interrupted function. The owner can reconcile unknown outcomes through read-only Kite activity at `/api/admin/launchcheck-reconcile`; it never retries a purchase. `/api/admin/launchcheck-demo` controls the first-party demo and featured receipt. These endpoints require owner authentication.
 
 ## Repository
 
-```
-packages/core   pipeline: SAM.gov extract + API, TED client, flatteners, SERV/Dolphin clients, prompts, signals, verification, scoring, Reppo
-apps/web        Next.js app (Vercel): home, report page with live progress, audit tab, API, Reppo cron worker
-apps/x402       Express service from the Kite x402 template: GET /v1/report/{noticeId} behind a 402 paywall
-vercel.json     one Vercel project with two services (web + x402), /v1 and /healthz routed to x402, crons for Reppo and the daily SAM.gov import
-docs/           research, spec, plan, submission materials
-```
+`packages/core/src/launchcheck` contains deterministic checks, normalization, browser navigation, comparison, SERV reasoning and the pipeline. `@tendr/core/server` isolates Node-only code. `apps/web` contains Next.js UI/API, persistence and the Kite CLI adapter. `docs/coordination.md` records integration decisions.
 
-## Quick start
-
-```bash
-pnpm install
-cp .env.example .env        # fill SERV_API_KEY at minimum
-pnpm test                   # unit tests, no network
-pnpm --filter @tendr/core test:live   # one real run against TED + SERV
-pnpm --filter @tendr/web dev           # http://localhost:3000 (in-memory store without DATABASE_URL)
-```
-
-### Environment
-
-| Variable | Purpose |
-|---|---|
-| `SERV_API_KEY` | SERV Reasoning key from console.openserv.ai (required) |
-| `SERV_MODEL` | default `gpt-6-luna`; `SERV_FALLBACK_MODEL` default `gpt-5.4-mini`; `SERV_EXTRACT_MODEL` default `gemini-3.1-flash-lite` |
-| `DOLPHIN_API_KEY`, `DOLPHIN_PRIMARY` | optional bulk extractor (lighthouse.dphn.ai) |
-| `REPPO_EVAL_API_KEY`, `REPPO_SANDBOX` | Reppo Evaluation API; sandbox=true gives free placeholder verdicts |
-| `DATABASE_URL` | Neon Postgres (omit locally for an in-memory store) |
-| `INTERNAL_SECRET` | shared secret between `apps/x402` and `/api/internal/report` |
-| `CRON_SECRET` | protects `/api/cron/reppo` (runs every minute on Vercel) |
-| `PAY_TO`, `KITE_NETWORK`, `PRICE_USD` | `apps/x402` seller configuration; the upstream comes from the Vercel service binding `WEB_INTERNAL_URL` (or `UPSTREAM_URL` when run alone) |
-
-### Buying a report with Kite Agent Passport
-
-```bash
-kpass session create --task-summary "buy tender report" --max-amount-per-tx 1 --max-total-amount 5 --ttl 24h --assets USDC --output json
-# approve with your passkey, then
-kpass session execute --url https://<deployment>/v1/report/722731-2026 --method GET --output json
-kpass activity --limit 5
-```
-
-Reports that are not yet verified answer `409 { status, retryAfterSeconds }` and are never charged.
-
-## Deploy (Vercel)
-
-Import the repository as one project (root `./`, preset *Services*); `vercel.json` declares the `web` (Next.js) and `paywall` (Express, directory `apps/x402`) services, routes `/v1/*` and `/healthz` to x402 and everything else to web, binds `WEB_INTERNAL_URL` into x402, and schedules `/api/cron/reppo` every minute and `/api/cron/sam-import` daily at 06:15 UTC. Set the environment variables above on the project, then run `pnpm --filter @tendr/web db:push` once with `DATABASE_URL` to create the tables.
-
-## Example
-
-TED 722731-2026, Narodowy Bank Polski, "System wykrywania anomalii w ruchu SMTP w oparciu o Self-Learning AI", 3.16 M PLN, price 100%: risk 30/100, **named brand or incumbent system: high** ("Integracja z Systemem DarkTrace", "Microsoft Exchange"), no lots across a broad scope: low. Two SERV calls plus extraction, 27 s, $0.009.
-
-## License
-
-MIT for this repository. `apps/x402/src/kite.ts` is adapted from gokite-ai/kite-x402-services (Apache-2.0).
+Artifacts under `.hallmark` distinguish synthetic examples, service smoke tests and deployed end-to-end runs. Passing unit tests is not a security audit or a guarantee of third-party availability.

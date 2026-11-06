@@ -26,6 +26,7 @@ const { POST } = await import("@/app/api/checks/route");
 const { GET, DELETE } = await import("@/app/api/checks/[id]/route");
 const post = (body: unknown, ip = "1.2.3.4") => new Request("http://localhost/api/checks", { method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": ip }, body: JSON.stringify(body) });
 const params = (id: string) => ({ params: Promise.resolve({ id }) });
+let ownerCookie = "";
 
 describe("POST /api/checks (live)", () => {
   beforeEach(() => {
@@ -46,6 +47,7 @@ describe("POST /api/checks (live)", () => {
     expect(id).toMatch(/^lc_[A-Za-z0-9]{10,}$/);
     expect(reportUrl).toBe(`/check/${id}`);
     const cookie = res.headers.get("set-cookie") ?? "";
+    ownerCookie = cookie.split(";")[0]!;
     expect(cookie).toMatch(/lc_creator=/);
     await Promise.all(tasks);
     const got = await GET(new Request(`http://localhost/api/checks/${id}`, { headers: { cookie: cookie.split(";")[0]! } }), params(id));
@@ -58,9 +60,18 @@ describe("POST /api/checks (live)", () => {
   });
 
   it("serves a recent finished run for the same site instead of buying again", async () => {
-    const res = await POST(post({ url: "https://acme.dev/", tier: "standard", venue: "x" }, "9.9.9.9"));
+    const request = post({ url: "https://acme.dev/", tier: "standard", venue: "x" }, "9.9.9.9");
+    request.headers.set("cookie",ownerCookie);
+    const res = await POST(request);
     expect(res.status).toBe(200);
     expect(await res.json()).toMatchObject({ cached: true });
+  });
+
+  it("does not disclose an unlisted report through another visitor's URL cache lookup", async () => {
+    const response = await POST(post({ url: "https://acme.dev/", tier: "standard" },"8.8.8.8"));
+    expect(response.status).toBe(201);
+    expect(await response.json()).toMatchObject({cached:false});
+    await Promise.all(tasks);
   });
 
   it("blocks private addresses, rejects bad input, rate limits per IP and pauses when live runs are off", async () => {
@@ -81,6 +92,7 @@ describe("POST /api/checks (live)", () => {
     const { id } = (await res.json()) as { id: string };
     const cookie = (res.headers.get("set-cookie") ?? "").split(";")[0]!;
     expect((await DELETE(new Request(`http://localhost/api/checks/${id}`, { method: "DELETE" }), params(id))).status).toBe(403);
+    await Promise.all(tasks);
     expect((await DELETE(new Request(`http://localhost/api/checks/${id}`, { method: "DELETE", headers: { cookie } }), params(id))).status).toBe(204);
   });
 });

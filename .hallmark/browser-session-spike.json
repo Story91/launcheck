@@ -1,0 +1,24 @@
+{
+  "operation": "28533f58-35d8-4b9d-93a2-35c28daf039a",
+  "status": "success",
+  "exit": 0,
+  "httpStatus": 200,
+  "errorCode": null,
+  "source": "allowance",
+  "responseKeys": [
+    "charged_cents",
+    "data",
+    "ok",
+    "transaction_id"
+  ],
+  "browserConnected": true,
+  "pageStatus": 200,
+  "pricingUrl": "https://tendr-ecru.vercel.app/demo/acme-launch/pricing",
+  "pricingStatus": 404,
+  "steps": [
+    "Opened demo in a purchased remote browser",
+    "Located the Pricing link in rendered DOM",
+    "Followed the real link and captured its response"
+  ],
+  "evidence": "scratch/launchcheck-captures/paid-browser-pricing.png"
+}

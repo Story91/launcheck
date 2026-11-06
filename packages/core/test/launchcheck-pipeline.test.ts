@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { launchCheckReasoning } from "../src/launchcheck/serv";
 import type { FreeChecksResult } from "../src/launchcheck/engine";
 import { runLaunchCheck, type BuyResult, type LaunchCheckPipelineDeps } from "../src/launchcheck/pipeline";
 import { launchCheckReportSchema, type LaunchCheckReport } from "../src/launchcheck/types";
@@ -103,4 +104,39 @@ describe("runLaunchCheck", () => {
     expect(r.spentUsd).toBe(0);
     expect(launchCheckReportSchema.safeParse(r).success).toBe(true);
   });
+  it("records an actual amount different from the quote", async () => {
+    const { d } = deps({ buys: [{ exitCode: 0, ok: true, merchantStatus: 200, errorCode: null, userMessage: null, body: pngBody, txHash: null, source: "allowance", paidUsd: .007 }] });
+    const report = await runLaunchCheck(input, d);
+    expect(report.receipt.lines[0]).toMatchObject({ quotedUsd: .005, paidUsd: .007 });
+    expect(report.spentUsd).toBeCloseTo(.092);
+  });
+  it("stops after an unresolved amount instead of showing the quote as paid", async () => {
+    const { d, bought } = deps({ buys: [{ exitCode: 0, ok: true, merchantStatus: 200, errorCode: null, userMessage: null, body: pngBody, txHash: null, source: "allowance", paidUsd: null }] });
+    const report = await runLaunchCheck(input, d);
+    expect(bought).toHaveLength(1);
+    expect(report.receipt.lines[0].status).toBe("payment_unknown");
+    expect(report.spentUsd).toBe(0);
+    expect(report.receipt.stoppedBy).toBe("our_cap");
+  });
+
+  it("runs SERV planning and explanation around real check execution, preserving the audit", async () => {
+    const chat = vi.fn().mockResolvedValueOnce({ content: JSON.stringify({ buy: [{ checkId: "render_desktop", reason: "Collect browser evidence" }] }), refusal: null, guardRefused: false, usage: { promptTokens: 100, completionTokens: 20 }, requestId: "plan_request", model: "test", costUsd: .001, durationMs: 1 }).mockResolvedValueOnce({ content: JSON.stringify({ explanations: [] }), refusal: null, guardRefused: false, usage: { promptTokens: 100, completionTokens: 20 }, requestId: "explain_request", model: "test", costUsd: .001, durationMs: 1 });
+    const { d, bought } = deps({ reasoning: launchCheckReasoning({ chat }, "test") });
+    const r = await runLaunchCheck(input, d);
+    expect(chat).toHaveBeenCalledTimes(2); expect(bought).toHaveLength(1);
+    expect(r.plan?.chosenBy).toBe("serv"); expect(r.audit.map(a => a.requestId)).toEqual(["plan_request", "explain_request"]);
+    expect(r.checks.find(c => c.checkId === "html_audit")?.notCheckedReason).toBe("not_selected");
+    expect(launchCheckReportSchema.safeParse(r).success).toBe(true);
+  });
+
+  it("turns an actual browser navigation result into evidence without retaining session credentials", async () => {
+    const { d } = deps({ buys: [{ exitCode: 0, ok: true, merchantStatus: 200, errorCode: null, userMessage: null, txHash: null, source: "allowance", paidUsd: .01, body: { data: { connectUrl: "wss://connect.browserbase.com?sessionId=private-session" } } }], navigateBrowser: async () => ({ steps: [{ action: "open", url: "https://acme.dev/", httpStatus: 200 }, { action: "click", url: "https://acme.dev/pricing", httpStatus: 404 }], linkLabel: "Pricing", png: Buffer.from("PNG"), error: null }) });
+    const r = await runLaunchCheck({ ...input, tier: "full" }, d);
+    expect(r.checks.find(c => c.checkId === "browser_navigation")?.state).toBe("problem");
+    expect(r.findings.some(f => f.ruleId === "browser_navigation_http_error")).toBe(true);
+    expect(r.evidence.some(e => e.checkId === "browser_navigation" && e.kind === "image")).toBe(true);
+    expect(JSON.stringify(r)).not.toContain("private-session");
+    expect(r.spentUsd).toBeCloseTo(.10);
+  });
+
 });

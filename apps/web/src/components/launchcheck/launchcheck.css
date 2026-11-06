@@ -255,7 +255,7 @@ html, body { overflow-x: clip; }
 .lc-changes { border: 1px solid var(--color-rule); border-radius: 10px; padding: var(--space-lg); margin: var(--space-lg) 0; background: var(--color-paper-2); }
 .lc-changes h2 { font-size: 24px; margin-bottom: var(--space-sm); }
 .lc-change-dates { display: flex; flex-wrap: wrap; gap: var(--space-sm) var(--space-lg); margin: var(--space-md) 0; font-size: 12px; }
-.lc-change-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); margin: var(--space-lg) 0; }
+.lc-change-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); margin: var(--space-lg) 0; }
 .lc-change-groups details { min-width: 0; border-top: 1px solid var(--color-rule); padding-top: var(--space-sm); }
 .lc-change-groups summary { display: flex; justify-content: space-between; gap: var(--space-sm); }
 .lc-change-groups summary strong { font-family: var(--font-outlier); }
@@ -263,3 +263,15 @@ html, body { overflow-x: clip; }
 .lc-change-groups li { margin-top: var(--space-md); font-size: 13px; overflow-wrap: anywhere; }
 .lc-change-groups p { margin-top: var(--space-sm); font-size: 12px; }
 @media (max-width: 640px) { .lc-change-groups { grid-template-columns: minmax(0, 1fr); gap: var(--space-md); } }
+
+.lc-check-filters { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-lg); }
+.lc-check-filters button { display: inline-flex; gap: var(--space-sm); align-items: center; padding: var(--space-sm) var(--space-md); border: 1px solid var(--color-rule); border-radius: 6px; color: var(--color-ink); background: var(--color-paper); font: inherit; font-size: 12px; cursor: pointer; }
+.lc-check-filters button[aria-pressed="true"] { border-color: var(--color-accent); background: var(--color-paper-2); }
+.lc-check-filters button:hover { border-color: var(--color-accent); }
+.lc-check-filters span { font-family: var(--font-outlier); }
+
+.lc-browser-steps { margin: var(--space-md) 0; }
+.lc-browser-steps ol { padding-left: var(--space-lg); }
+.lc-browser-steps li { margin: var(--space-md) 0; font-size: 12px; }
+.lc-browser-steps a, .lc-browser-steps span { display: block; margin-top: var(--space-xs); }
+.lc-browser-steps span { font-family: var(--font-outlier); }

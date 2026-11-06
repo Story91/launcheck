@@ -3,7 +3,7 @@
 // normalizers keep a fixed set of fields and drop ad/advisory blocks and vendor scores.
 import type { LaunchCheckFinding, LaunchCheckTier } from "./types";
 
-export type PaidCheckId = "render_desktop" | "render_narrow" | "html_audit";
+export type PaidCheckId = "render_desktop" | "render_narrow" | "html_audit" | "browser_navigation";
 
 export interface PaidCheck {
   checkId: PaidCheckId;
@@ -18,6 +18,12 @@ export interface PaidCheck {
 }
 
 export const PAID_CHECKS: PaidCheck[] = [
+  {
+    checkId: "browser_navigation", label: "Public navigation in a browser", vendorHost: "vaaya.ai",
+    endpoint: "/api/run/browserbase/create_session", priceUsd: 0.01, tiers: ["full"],
+    scopeNote: "Opens this page and clicks one eligible same-origin navigation link in a real 1280px browser. No forms, sign-in, purchases or whole-app coverage.",
+    reason: "Tests whether a public link actually navigates after JavaScript renders; a screenshot alone cannot establish this.",
+  },
   {
     checkId: "render_desktop",
     label: "Desktop render (1280 px)",
@@ -56,11 +62,14 @@ export interface PaidRequest {
   url: string;
   method: "GET" | "POST";
   headers: Record<string, string>;
+  body?: Record<string, unknown>;
 }
 
 export function buildPaidRequest(checkId: PaidCheckId, target: string): PaidRequest {
   const u = encodeURIComponent(target);
   switch (checkId) {
+    case "browser_navigation":
+      return { url: "https://vaaya.ai/api/run/browserbase/create_session", method: "POST", headers: { "Content-Type": "application/json" }, body: {} };
     case "render_desktop":
       return { url: `https://web.cyberwarex.com/screenshot?url=${u}&fullpage=false&width=1280`, method: "GET", headers: { "X-No-Advert": "1" } };
     case "render_narrow":
@@ -134,5 +143,7 @@ export function receiptStatusFor(r: { exitCode: number; ok: boolean; merchantSta
   if (r.errorCode === "payment_settled_unfulfilled") return "failed_charged";
   if (r.errorCode && REFUSED.has(r.errorCode)) return "refused_by_kite";
   if (r.exitCode === 0 && r.ok) return r.merchantStatus !== null && r.merchantStatus >= 200 && r.merchantStatus < 300 ? "paid" : "failed_charged";
-  return "failed_not_charged";
+  // Usage/authentication failures precede payment. A transport failure or killed CLI may happen after settlement.
+  if (r.exitCode === 2 || r.exitCode === 3) return "failed_not_charged";
+  return "payment_unknown";
 }

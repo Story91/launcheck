@@ -42,6 +42,6 @@ export async function GET(req: Request) {
     allowance: meter ? { leftUsd: meter.leftUsd, limitUsd: meter.limitUsd, period: meter.period, resetsAt: meter.resetsAt, readAt: meter.readAt } : null,
     demo: { capUsd: cap, leftUsd: Math.max(0, Math.round((cap - spent) * 1e6) / 1e6), resetsAt: tomorrow.toISOString() },
     executor: { online, lastSeenAt: online && cache ? new Date(cache.at).toISOString() : null, where: "vercel" },
-    liveRuns: liveRunsEnabled() && online,
+    liveRuns: liveRunsEnabled() && online && (await runStore().getSetting("payment_hold").catch(() => "true")) !== "true",
   });
 }

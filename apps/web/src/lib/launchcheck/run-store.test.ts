@@ -40,4 +40,37 @@ describe("MemoryRunStore", () => {
     expect((await s.getImage("lc_1_ev_x"))?.toString()).toBe("PNG");
     expect(await s.getImage("missing")).toBeNull();
   });
+  it("removes a deleted run's images without affecting another run", async () => {
+    const s = new MemoryRunStore();
+    await s.createRun(report("lc_a"), { ipHash: "ip", creatorHash: "owner" });
+    await s.saveImage("image_a", "lc_a", Buffer.from("A"));
+    await s.saveImage("image_b", "lc_b", Buffer.from("B"));
+    await s.deleteRun("lc_a");
+    expect(await s.getReport("lc_a")).toBeNull();
+    expect(await s.getImage("image_a")).toBeNull();
+    expect((await s.getImage("image_b"))?.toString()).toBe("B");
+  });
+
+  it("reconciles quoted reservations with actual charges and holds the cap when the outcome is unknown", async () => {
+    const s = new MemoryRunStore();
+    await s.reserveDailySpend("2026-11-06",.005,.1);
+    await s.settleDailySpend("2026-11-06",.005,.007,.1);
+    expect(await s.dailySpend("2026-11-06")).toBeCloseTo(.007);
+    await s.reserveDailySpend("2026-11-06",.005,.1);
+    await s.settleDailySpend("2026-11-06",.005,null,.1);
+    expect(await s.dailySpend("2026-11-06")).toBe(.1);
+    expect(await s.reserveDailySpend("2026-11-06",.005,.1)).toBe(false);
+  });
+  it("only releases a payment hold after every recorded outcome is resolved", async () => {
+    const s = new MemoryRunStore(), r = report("lc_pending");
+    r.receipt.lines = [{...r.receipt.lines[0]!,status:"payment_unknown",paidUsd:0}]; r.spentUsd = 0;
+    await s.createRun(r,{ipHash:"ip",creatorHash:"owner"}); await s.setSetting("payment_hold","true");
+    const day = new Date().toISOString().slice(0,10);
+    expect(await s.releasePaymentHoldIfResolved(day)).toBe(false);
+    r.receipt.lines[0]!.status = "failed_charged"; r.receipt.lines[0]!.paidUsd = .007; r.spentUsd = .007;
+    await s.saveReport(r);
+    expect(await s.releasePaymentHoldIfResolved(day)).toBe(true);
+    expect(await s.dailySpend(day)).toBeCloseTo(.007); expect(await s.getSetting("payment_hold")).toBe("false");
+  });
+
 });

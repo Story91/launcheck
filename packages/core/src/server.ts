@@ -3,3 +3,8 @@ export * from "./launchcheck/engine";
 export * from "./launchcheck/paid";
 export * from "./launchcheck/pipeline";
 export * from "./launchcheck/free";
+
+export * from "./launchcheck/serv";
+export * from "./launchcheck/browser";
+
+export * from "./launchcheck/compare";

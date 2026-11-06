@@ -1,3 +1,4 @@
+import type { Report } from "./contract";
 import { copy } from "./copy";
 export const usd = (value: number) => `$${value.toFixed(Math.abs(value * 100 - Math.round(value * 100)) > 0.00001 ? 3 : 2)}`;
 export function safeWebUrl(input: string): string | null { try { const url = new URL(input); return ["http:", "https:"].includes(url.protocol) && !url.username && !url.password ? url.href : null; } catch { return null; } }
@@ -18,3 +19,7 @@ export function shortDate(value: string) { const date = new Date(value); return 
 export function explorerUrl(value: string | null): string | null { const url = value && safeWebUrl(value); if (!url) return null; const parsed = new URL(url); return parsed.protocol === "https:" && parsed.hostname === "basescan.org" && /^\/tx\/0x[a-f\d]{64}$/i.test(parsed.pathname) ? url : null; }
 export const isFixture = (id: string) => /^fx_(problems|clean|unreachable|running|fixed)$/.test(id);
 export function escapeXml(value: string) { return value.replace(/[<>&"']/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[c]!)); }
+
+export function checkSpend(report: Report, checkId: string): number | null | undefined { const lines = report.receipt.lines.filter(line => line.checkId === checkId); if (!lines.length) return undefined; return lines.some(line => line.status === "payment_unknown") ? null : lines.reduce((sum, line) => sum + line.paidUsd, 0); }
+
+export const originalFindingCount = (diff: NonNullable<Report["diff"]>) => diff.fixed.length + diff.stillThere.length + (diff.unresolved?.length ?? 0);

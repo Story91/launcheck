@@ -64,7 +64,10 @@ export class OpenAiCompatibleClient implements LlmClient {
       body.response_format = { type: "json_object" };
     }
     if (req.tools?.length) body.tools = req.tools;
-    if (req.maxTokens !== undefined) body.max_tokens = req.maxTokens;
+    if (req.maxTokens !== undefined) {
+      // OpenAI reasoning models reject the legacy max_tokens field (confirmed by the SERV live smoke).
+      body[/^(gpt-[56]|o[1-9])/.test(req.model) ? "max_completion_tokens" : "max_tokens"] = req.maxTokens;
+    }
     if (req.temperature !== undefined) body.temperature = req.temperature;
 
     const t0 = Date.now();

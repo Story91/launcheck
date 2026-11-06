@@ -1,0 +1,33 @@
+{
+  "inputMode": "illustrative fixture, not live website observations",
+  "inferenceMode": "live SERV",
+  "plan": {
+    "usedServ": true,
+    "buy": [],
+    "audit": {
+      "step": "plan",
+      "model": "gpt-6-luna",
+      "promptVersion": "launchcheck-plan.v1",
+      "requestId": "00353513-f855-4c94-aed0-36aac99c98b8",
+      "consoleUrl": "https://console.openserv.ai/usage",
+      "inputHash": "59d7badc97a8c888039ebf9dff40a22f78f79aed49a25c44471f847b524b015d",
+      "costUsd": 0.00019656,
+      "droppedItems": 0,
+      "refused": false
+    }
+  },
+  "explain": {
+    "audit": {
+      "step": "explain",
+      "model": "gpt-6-luna",
+      "promptVersion": "launchcheck-explain.v1",
+      "requestId": "652d90e1-ce62-4229-99f9-93420bda0da6",
+      "consoleUrl": "https://console.openserv.ai/usage",
+      "inputHash": "eb6e4fc1475a28b2571bbb32fb64b359b2c74b5e9a593b54d73ab3f379187fe1",
+      "costUsd": 0.00027339,
+      "droppedItems": 0,
+      "refused": false
+    },
+    "explained": 2
+  }
+}

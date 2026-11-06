@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buyResultFrom, findTxHash } from "@/lib/launchcheck/buyer";
+import { buyResultFrom, findTxHash, findSettlement, acceptablePaymentOffer } from "@/lib/launchcheck/buyer";
+
+it("refuses changed prices, alternative higher offers, other assets and variable-price offers before payment", () => {
+  const offer = { scheme: "exact", network: "eip155:8453", asset: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", amount: "5000" };
+  expect(acceptablePaymentOffer({ accepts: [offer] },.005)).toBe(true);
+  for (const bad of [{ ...offer, amount: "5001" }, { ...offer, scheme: "upto" }, { ...offer, network: "eip155:1" }, { ...offer, asset: "OTHER" }]) expect(acceptablePaymentOffer({ accepts: [offer,bad] },.005)).toBe(false);
+  expect(acceptablePaymentOffer({ accepts: [] },.005)).toBe(false);
+});
 
 const activity = {
   status: "success",
@@ -26,5 +33,21 @@ describe("buyResultFrom", () => {
     const refused = buyResultFrom({ exitCode: 6, json: { status: "error", error_code: "wallet_empty", user_message: "Top up" } });
     expect(refused).toMatchObject({ ok: false, errorCode: "wallet_empty", body: null, txHash: null });
     expect(buyResultFrom({ exitCode: 1, json: null })).toMatchObject({ ok: false, errorCode: null, merchantStatus: null });
+  });
+});
+
+
+describe("confirmed settlement amounts", () => {
+  const url = "https://web.cyberwarex.com/screenshot?url=https%3A%2F%2Facme.dev";
+  const since = new Date("2026-11-06T03:00:00Z");
+  const event = { kind: "x402_payment", status: "completed", occurred_at: "2026-11-06T03:00:02Z", details: { transaction: { chain_id: 8453, asset_symbol: "USDC", decimals: 6, amount_raw: "7000", tx_hash: `0x${"a".repeat(64)}`, session_type: "allowance", x402: { request_url: url } } } };
+  it("uses the completed activity amount rather than the listed price", () => {
+    expect(findSettlement({ events: [event] }, url, since)).toMatchObject({ paidUsd: .007, source: "allowance" });
+  });
+  it("refuses an ambiguous match and unrelated assets or failed transfers", () => {
+    expect(findSettlement({ events: [event, event] }, url, since)).toBeNull();
+    expect(findSettlement({ events: [{ ...event, status: "failed" }] }, url, since)).toBeNull();
+    expect(findSettlement({ events: [{ ...event, details: { transaction: { ...event.details.transaction, asset_symbol: "OTHER" } } }] }, url, since)).toBeNull();
+    expect(findSettlement({ events: [event] }, url + "x", since)).toBeNull();
   });
 });

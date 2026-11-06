@@ -5,6 +5,7 @@ import { findBannedWords } from "../src/launchcheck/wording";
 describe("paid check registry", () => {
   it("only lists checks whose price was confirmed by a real purchase", () => {
     expect(PAID_CHECKS.map((c) => [c.checkId, c.priceUsd])).toEqual([
+      ["browser_navigation", 0.01],
       ["render_desktop", 0.005],
       ["render_narrow", 0.005],
       ["html_audit", 0.08],
@@ -67,6 +68,6 @@ describe("receiptStatusFor", () => {
     expect(receiptStatusFor({ exitCode: 6, ok: false, merchantStatus: null, errorCode: "recurring_budget_exhausted" })).toBe("refused_by_kite");
     expect(receiptStatusFor({ exitCode: 7, ok: false, merchantStatus: null, errorCode: "payment_outcome_pending" })).toBe("payment_unknown");
     expect(receiptStatusFor({ exitCode: 2, ok: false, merchantStatus: null, errorCode: "route_unavailable" })).toBe("failed_not_charged");
-    expect(receiptStatusFor({ exitCode: 1, ok: false, merchantStatus: null, errorCode: "provider_unavailable" })).toBe("failed_not_charged");
+    expect(receiptStatusFor({ exitCode: 1, ok: false, merchantStatus: null, errorCode: "provider_unavailable" })).toBe("payment_unknown");
   });
 });

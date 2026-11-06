@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
     "/api/internal/launchcheck/**": ["./.kpass-bin/**"],
     "/api/agent": ["./.kpass-bin/**"],
     "/api/checks": ["./.kpass-bin/**"],
+    "/api/checks/*/rerun": ["./.kpass-bin/**"],
+    "/api/admin/launchcheck-probe": ["./.kpass-bin/**"],
+    "/api/admin/launchcheck-reconcile": ["./.kpass-bin/**"],
   },
   turbopack: {
     rules: {

@@ -8,7 +8,7 @@ export const tierSchema = z.enum(["quick", "standard", "full"]);
 export const venueSchema = z.enum(["product_hunt", "show_hn", "x", "other"]);
 export const runStatusSchema = z.enum(["queued", "prechecking", "planning", "buying", "explaining", "done", "failed", "unreachable"]);
 export const checkStateSchema = z.enum(["pending", "running", "problem", "clear", "not_checked"]);
-export const notCheckedReasonSchema = z.enum(["over_budget", "vendor_error", "timeout", "payment_unknown", "not_applicable", "kite_refused", "blocked_from_our_server"]);
+export const notCheckedReasonSchema = z.enum(["over_budget", "not_selected", "vendor_error", "timeout", "payment_unknown", "not_applicable", "kite_refused", "blocked_from_our_server"]);
 export const severitySchema = z.enum(["fix_before_launch", "fix_soon", "fyi"]);
 export const receiptStatusSchema = z.enum(["paid", "skipped_budget", "failed_not_charged", "failed_charged", "payment_unknown", "refused_by_kite"]);
 export const stoppedBySchema = z.enum(["our_cap", "kite_policy", "allowance_empty"]);
@@ -40,8 +40,9 @@ export const receiptLineSchema = z.object({
   vendorHost: z.string(),
   endpoint: z.string(),
   quotedUsd: amount,
+  requestUrl: z.string().optional(),
   paidUsd: amount,
-  source: z.enum(["allowance", "session"]),
+  source: z.enum(["allowance", "session", "unknown"]),
   status: receiptStatusSchema,
   httpStatus: z.number().nullable(),
   txHash: z.string().nullable(),
@@ -116,12 +117,12 @@ export const launchCheckReportSchema = z.object({
     requestId: z.string().nullable(),
     consoleUrl: z.string().nullable(),
     inputHash: z.string(),
-    costUsd: amount,
+    costUsd: amount.nullable(),
     droppedItems: z.number(),
     refused: z.boolean(),
   })),
   notChecked: z.array(z.string()),
-  diff: z.object({ parentId: z.string(), parentCheckedAt: z.string(), fixed: z.array(z.string()), stillThere: z.array(z.string()), new: z.array(z.string()) }).nullable(),
+  diff: z.object({ parentId: z.string(), parentCheckedAt: z.string(), fixed: z.array(z.string()), stillThere: z.array(z.string()), unresolved: z.array(z.string()).optional(), new: z.array(z.string()) }).nullable(),
   error: z.string().nullable().optional(),
 });
 
@@ -153,6 +154,7 @@ export const galleryItemSchema = z.object({
   spentUsd: amount,
   thumbUrl: z.string().nullable(),
   fixed: z.boolean(),
+  paymentUnknown: z.boolean().optional(),
 });
 export const gallerySchema = z.object({ items: z.array(galleryItemSchema) });
 
