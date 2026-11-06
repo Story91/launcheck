@@ -5,6 +5,8 @@ Hackathon OpenServ "SERV Hackathon — Edition 02", 2–15 listopada 2026, onlin
 
 ## Stan projektu
 
+- **Zmiana kierunku 6 XI 2026: LaunchCheck, track Kite.** Agent z Kite Passport kupuje w ramach limitu sprawdzenia strony u płatnych usług x402 (USDC na Base) i oddaje dowody oraz paragon. Spec: `docs/superpowers/specs/2026-11-06-launchcheck-design.md`. Podział pracy Claude (backend, Kite, SERV, API, dane) i Codex (UI): `docs/coordination.md`, brief Codexa: `docs/launchcheck/codex-tasks.md`. Sprawdzian płatności i katalog usług: `docs/research/07-launchcheck-kite-spike.md`. `kpass` działa w funkcji Vercela (logowanie z env `KPASS_*_JSON_B64`, Sensitive); płatność z serwera potwierdzona 6 XI. Tendr jest zamrożony pod `/tendr`. Node przypięty do 24.x (26.x psuje buildy Vercela).
+
 - **Aktualizacja 6 XI 2026:** `main` jest główną gałęzią, aplikacja działa pod https://tendr-ecru.vercel.app. Obsługuje SAM.gov i TED; Neon, Reppo i odpowiedź 402 są wdrożone. Opis z 4 XI poniżej jest historyczny. Stan bieżącej kontroli i pozostałych zadań: `docs/hackathon-checklist.md` (sekcja „Kontrola 6 XI”).
 
 - **Wybrany pomysł (3 XI 2026): Tendr** — audytowalne raporty sygnałów ograniczenia konkurencji dla ogłoszeń z TED, z werdyktem Reppo i sprzedażą per-call przez x402 (Kite). Spec: `docs/superpowers/specs/2026-11-03-tendr-design.md`. Track: Open (do potwierdzenia).

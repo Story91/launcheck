@@ -40,3 +40,11 @@ Przykładowe wywołanie każdej usługi: `ksearch service search <słowa> --exam
 - Faucet (`kpass faucet drop`) działa tylko na staging/testnet; na produkcji jest zablokowany. Usługi z katalogu i tak rozliczają się w prawdziwym USDC na Base.
 - Nasz `apps/x402` przyjmuje pieUSD na Kite testnet: przy LaunchCheck trzeba to ujednolicić z Base USDC, jeśli mamy też sprzedawać.
 - Dokumentacja Kite: https://docs.gokite.ai/passport , zasilanie portfela: https://docs.gokite.ai/passport/payments/funding.md
+
+## Gate 1: kpass na Vercelu (6 XI 2026) — przeszedł
+
+- Build pobiera `kpass_6.13.1_linux_amd64.tar.gz` (bundle 110) i weryfikuje przypięty sha256 (`apps/web/scripts/fetch-kpass.mjs`). Binarka jest dołączana do funkcji przez `outputFileTracingIncludes`.
+- Logowanie: trzy zmienne `KPASS_CONFIG_JSON_B64`, `KPASS_AGENT_JSON_B64`, `KPASS_SESSIONS_JSON_B64` (Sensitive w Vercel, przygotowane `scripts/kpass-to-vercel-env.ps1`), odtwarzane w `/tmp/kp/.kite-passport` z `HOME`/`KPASS_HOME` wskazującymi na `/tmp/kp`.
+- `GET /api/admin/kpass-status` (darmowe): binarka działa (0.35 s), zalogowany, agent `claude` …d523, allowance $9.915 z $10.
+- `POST /api/admin/kpass-probe` (płatne, stały cel): screenshot cyberwarex tendr-ecru.vercel.app, **$0.005 z allowance, 6 s**, HTTP 200, PNG 401 311 B, sha256 `cbc72f7f…2ee2e1`.
+- `payment.payment_response.reference` był pusty w odpowiedzi `session execute`. Hash jest w `kpass activity --kind x402_payment --output json` → `events[].details.transaction.tx_hash` (tu `0xe40a38e3…bbb0f70`, `chain_id` 8453, USDC `0x8335…2913`, `amount_raw` 5000, `x402.request_url`). Paragon: po zakupie dopasować zdarzenie po `request_url` i czasie, link `https://basescan.org/tx/<hash>`.
