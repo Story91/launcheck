@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   // The Kite Passport CLI (scripts/fetch-kpass.mjs) must ship with the functions that pay for checks.
   outputFileTracingIncludes: {
     "/api/admin/kpass-status": ["./.kpass-bin/**"],
+    "/api/admin/kpass-probe": ["./.kpass-bin/**"],
     "/api/internal/launchcheck/**": ["./.kpass-bin/**"],
     "/api/agent": ["./.kpass-bin/**"],
   },

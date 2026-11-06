@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { kpassChildEnv, kpassFilesFromEnv, sanitizeAllowance, sanitizeStatus } from "@/lib/launchcheck/kpass-runtime";
+import { kpassChildEnv, kpassFilesFromEnv, sanitizeAllowance, sanitizeExecute, sanitizeStatus } from "@/lib/launchcheck/kpass-runtime";
 
 const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString("base64");
 
@@ -44,5 +44,24 @@ describe("sanitizeAllowance", () => {
       limitUsd: 10, leftUsd: 9.915, period: "weekly", resetsAt: "2026-11-13T01:33:28Z", readAt: "2026-11-06T12:00:00Z", state: "active",
     });
     expect(sanitizeAllowance({ state: "none" }, "2026-11-06T12:00:00Z")).toBeNull();
+  });
+});
+
+describe("sanitizeExecute", () => {
+  it("keeps the receipt and the merchant result shape, drops the image body and secrets", () => {
+    const raw = {
+      status: "success",
+      source: "allowance",
+      user_message: "Paid USD 0.005 from your account allowance. Left this week: USD 9.91 of USD 10.",
+      session_id: "agent_session_secret",
+      payment: { payment_response: { reference: "0xabc123" }, amount: "5000", private_key: "0xdead" },
+      x402: { status_code: 200, parsed_response_body: { png_base64: "iVBORw0KGgo=", mime: "image/png", width: 1280, next_step: { price_usdc: 3 } } },
+    };
+    const s = sanitizeExecute(raw);
+    expect(s).toEqual({ ok: true, source: "allowance", userMessage: raw.user_message, merchantStatus: 200, txHash: "0xabc123", errorCode: null, pngBytes: 8, pngSha256: expect.stringMatching(/^[0-9a-f]{64}$/) });
+    expect(JSON.stringify(s)).not.toMatch(/iVBOR|0xdead|agent_session/);
+  });
+  it("reports the error code when the payment did not go through", () => {
+    expect(sanitizeExecute({ status: "error", error_code: "wallet_empty", user_message: "Top up." })).toMatchObject({ ok: false, errorCode: "wallet_empty", txHash: null, pngBytes: null });
   });
 });

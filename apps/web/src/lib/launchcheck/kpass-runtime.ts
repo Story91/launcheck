@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { chmod, copyFile, mkdir, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -120,4 +121,21 @@ export async function runKpass(args: string[], timeoutMs = 60_000): Promise<Kpas
       resolve({ exitCode, json });
     });
   });
+}
+
+/** `kpass session execute` reduced to the receipt plus a fingerprint of the merchant result (never the body itself). */
+export function sanitizeExecute(raw: unknown) {
+  const r = obj(raw), payment = obj(r.payment), x402 = obj(r.x402), body = obj(x402.parsed_response_body);
+  const ref = obj(payment.payment_response).reference;
+  const png = typeof body.png_base64 === "string" ? Buffer.from(body.png_base64, "base64") : null;
+  return {
+    ok: r.status === "success",
+    source: typeof r.source === "string" ? r.source : null,
+    userMessage: typeof r.user_message === "string" ? r.user_message : null,
+    merchantStatus: typeof x402.status_code === "number" ? x402.status_code : null,
+    txHash: typeof ref === "string" ? ref : null,
+    errorCode: typeof r.error_code === "string" ? r.error_code : null,
+    pngBytes: png ? png.length : null,
+    pngSha256: png ? createHash("sha256").update(png).digest("hex") : null,
+  };
 }
