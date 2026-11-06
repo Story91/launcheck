@@ -6,7 +6,12 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts",
+    "./launchcheck/types": "./src/launchcheck/types.ts",
+    "./launchcheck/fixtures": "./src/launchcheck/fixtures.ts",
+    "./launchcheck/wording": "./src/launchcheck/wording.ts",
+    "./ted/client": "./src/ted/client.ts"
   },
   "scripts": {
     "test": "vitest run",

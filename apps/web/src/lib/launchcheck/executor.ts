@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
-import { emptyReport, runLaunchCheck, type LaunchCheckReport, type LaunchCheckTier } from "@tendr/core";
+import type { LaunchCheckReport, LaunchCheckTier } from "@tendr/core";
+import { emptyReport, runLaunchCheck } from "@tendr/core/server";
 import { kpassBuy } from "@/lib/launchcheck/buyer";
 import { runFreeChecksLive } from "@/lib/launchcheck/free-runtime";
 import { kpassFilesFromEnv } from "@/lib/launchcheck/kpass-runtime";

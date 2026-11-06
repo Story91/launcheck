@@ -1,4 +1,5 @@
-import { PAID_CHECKS, type Catalog } from "@tendr/core";
+import type { Catalog } from "@tendr/core";
+import { PAID_CHECKS } from "@tendr/core/server";
 import { TIER_BUDGET_USD } from "@/lib/launchcheck/executor";
 import { json } from "@/lib/launchcheck/fixture-mode";
 

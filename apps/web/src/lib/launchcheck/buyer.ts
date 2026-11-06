@@ -1,4 +1,4 @@
-import type { BuyResult, PaidRequest } from "@tendr/core";
+import type { BuyResult, PaidRequest } from "@tendr/core/server";
 import { runKpass, type KpassResult } from "@/lib/launchcheck/kpass-runtime";
 
 type Json = Record<string, unknown>;

@@ -1,4 +1,5 @@
-import { launchCheckReportSchema, type FreeChecksResult } from "@tendr/core";
+import { launchCheckReportSchema } from "@tendr/core";
+import type { FreeChecksResult } from "@tendr/core/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRunStore } from "@/lib/launchcheck/run-store";
 
@@ -15,7 +16,7 @@ vi.mock("@/lib/launchcheck/free-runtime", () => ({
   runFreeChecksLive: vi.fn(async () => free),
   assertPublicUrlLive: vi.fn(async (url: string) => {
     if (url.includes("127.0.0.1")) {
-      const { BlockedUrlError } = await import("@tendr/core");
+      const { BlockedUrlError } = await import("@tendr/core/server");
       throw new BlockedUrlError("private_address");
     }
   }),

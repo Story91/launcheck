@@ -1,4 +1,4 @@
-import { assertPublicUrl, runFreeChecks, type FreeCheckDeps } from "@tendr/core";
+import { assertPublicUrl, runFreeChecks, type FreeCheckDeps } from "@tendr/core/server";
 import { lookup, resolveTxt } from "node:dns/promises";
 import { connect } from "node:tls";
 
