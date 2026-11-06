@@ -34,3 +34,6 @@ scratch/
 
 # executing-plans workspace (ledger, briefs, review packages)
 .superpowers/
+
+# Kite Passport CLI fetched at build time
+.kpass-bin/

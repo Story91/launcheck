@@ -30,3 +30,6 @@ export * from "./sam/client";
 export * from "./eval/metrics";
 export * from "./sam/extract";
 export * from "./pipeline/us-deadline";
+export * from "./launchcheck/types";
+export * from "./launchcheck/wording";
+export * from "./launchcheck/fixtures";
