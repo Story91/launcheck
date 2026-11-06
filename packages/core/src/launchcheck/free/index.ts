@@ -1,4 +1,4 @@
-// Entry point of the free LaunchCheck checks: page_fetch first; if the page is unreachable the run stops at $0,
+// Entry point of the free LaunCheck checks: page_fetch first; if the page is unreachable the run stops at $0,
 // otherwise the remaining checks run in parallel and come back in the spec table order (section 4.1).
 import { BlockedUrlError, type CheckOutcome, type FreeCheckDeps, type FreeChecksResult } from "../engine";
 import {

@@ -1,5 +1,5 @@
 import { compareReports } from "./compare";
-// One LaunchCheck run end to end: free checks on our server, a budgeted purchase plan, paid checks bought through Kite,
+// One LaunCheck run end to end: free checks on our server, a budgeted purchase plan, paid checks bought through Kite,
 // and a report with evidence and an itemised receipt. All I/O is injected; the report is saved after every step so the
 // UI can show live progress.
 import { createHash } from "node:crypto";

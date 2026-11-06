@@ -15,7 +15,7 @@ export const maxDuration = 300;
 const RUNS_PER_IP_PER_HOUR = 3;
 const CACHE_MS = 24 * 3600 * 1000;
 
-/** Start a LaunchCheck run: free checks on our server, then paid checks bought by the agent within the tier budget. */
+/** Start a LaunCheck run: free checks on our server, then paid checks bought by the agent within the tier budget. */
 export async function POST(req: Request) {
   let body: Record<string, unknown>;
   try {

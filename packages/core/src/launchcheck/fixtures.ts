@@ -1,4 +1,4 @@
-// Fixture reports served by the LaunchCheck API in fixture mode (ids fx_*). Ported from the UI mocks so both sides
+// Fixture reports served by the LaunCheck API in fixture mode (ids fx_*). Ported from the UI mocks so both sides
 // render the same cases. Content is illustrative: "example" hashes and hosts are not measurements.
 import type { AgentStatus, Catalog, GalleryItem, LaunchCheckReport } from "./types";
 import { NOT_CHECKED_DEFAULTS } from "./wording";

@@ -1,4 +1,4 @@
-// The seven free LaunchCheck checks (spec 2026-11-06 section 4.1). Every finding comes from a deterministic rule with
+// The seven free LaunCheck checks (spec 2026-11-06 section 4.1). Every finding comes from a deterministic rule with
 // template copy (explainedBy "template"); copy follows the wording rules in ../wording.ts (no verdicts, no claims).
 import { createHash } from "node:crypto";
 import { isIP } from "node:net";
@@ -97,7 +97,7 @@ function resolveHttpUrl(href: string, base: string): string | null {
   }
 }
 
-/** Small tokenizer-based extractor for the tags LaunchCheck reads. Script/style/template/comment content is skipped. */
+/** Small tokenizer-based extractor for the tags LaunCheck reads. Script/style/template/comment content is skipped. */
 export function parseLaunchCheckHtml(html: string, baseUrl: string): LaunchCheckParsedHtml {
   const cleaned = html
     .replace(/<!--[\s\S]*?-->/g, " ")

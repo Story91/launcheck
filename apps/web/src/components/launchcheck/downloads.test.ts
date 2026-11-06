@@ -12,7 +12,7 @@ describe("receipt exports", () => {
     expect(output.report).not.toHaveProperty("isRequester");
   });
   it("labels examples and produces filenames without path separators", () => {
-    expect(exportFilename("fx_fixed", "png")).toBe("launchcheck-example-fx_fixed.png");
+    expect(exportFilename("fx_fixed", "png")).toBe("launcheck-example-fx_fixed.png");
     expect(exportFilename("../../x", "json")).not.toContain("/");
   });
   it("rejects an unavailable image rather than downloading an error page", async () => {

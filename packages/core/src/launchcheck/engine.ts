@@ -1,4 +1,4 @@
-// Shared shapes for the LaunchCheck executor: free checks (our server) and paid checks (bought through Kite) both
+// Shared shapes for the LaunCheck executor: free checks (our server) and paid checks (bought through Kite) both
 // produce CheckOutcome values that the pipeline assembles into a LaunchCheckReport.
 import type { LaunchCheckCheck, LaunchCheckEvidence, LaunchCheckFinding } from "./types";
 

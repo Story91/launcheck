@@ -11,7 +11,7 @@ import { GET as getGallery } from "@/app/api/gallery/route";
 const params = (id: string) => ({ params: Promise.resolve({ id }) });
 const post = (body: unknown) => new Request("http://localhost/api/checks", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
-describe("LaunchCheck API in fixture mode", () => {
+describe("LaunCheck API in fixture mode", () => {
   it("serves fixture reports that match the contract", async () => {
     for (const id of ["fx_problems", "fx_clean", "fx_unreachable", "fx_fixed"]) {
       const res = await getCheck(new Request(`http://localhost/api/checks/${id}`), params(id));

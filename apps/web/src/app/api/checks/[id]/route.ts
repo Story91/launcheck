@@ -4,7 +4,7 @@ import { runStore } from "@/lib/launchcheck/run-store";
 
 export const dynamic = "force-dynamic";
 
-/** GET a LaunchCheck report. Fixture ids (fx_*) come from @tendr/core; real runs from the store. */
+/** GET a LaunCheck report. Fixture ids (fx_*) come from @tendr/core; real runs from the store. */
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const fixture = fixtureReportFor(id);

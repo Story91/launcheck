@@ -1,10 +1,10 @@
-# LaunchCheck
+# LaunCheck
 
 **Launch with the receipts.** A website-checking agent that chooses evidence within a listed-check budget, buys it through Kite Passport, and returns observations, sources and payment records.
 
-[Application](https://tendr-ecru.vercel.app) · [Example receipt](https://tendr-ecru.vercel.app/check/fx_problems) · [Design](docs/superpowers/specs/2026-11-06-launchcheck-design.md)
+[Application](https://launcheck.vercel.app) · [Source](https://github.com/Story91/launcheck) · [Example receipt](https://launcheck.vercel.app/check/fx_problems) · [Design](docs/superpowers/specs/2026-11-06-launchcheck-design.md)
 
-Built for SERV Hackathon 02, Kite track. The earlier Tendr prototype remains at `/tendr`; its scheduled jobs are disabled. Historical Tendr evaluation figures do not describe LaunchCheck.
+Built for SERV Hackathon 02, Kite track. The earlier Tendr prototype remains at `/tendr`; its scheduled jobs are disabled. Historical Tendr evaluation figures do not describe LaunCheck.
 
 ## What works
 
@@ -30,9 +30,9 @@ Quick/Standard/Full allocate listed-check budgets of $0.05/$0.15/$0.25. The agen
 
 SERV token estimates are separate and exclude add-on fees. They are not included in vendor USDC totals.
 
-Screenshots establish appearance. The browser check establishes one navigation observation. LaunchCheck does not establish whole-app correctness, accessibility conformance, security, sign-in, forms, checkout or production readiness. It emits no overall score or certification. Vendor scores are dropped; third-party content is untrusted data.
+Screenshots establish appearance. The browser check establishes one navigation observation. LaunCheck does not establish whole-app correctness, accessibility conformance, security, sign-in, forms, checkout or production readiness. It emits no overall score or certification. Vendor scores are dropped; third-party content is untrusted data.
 
-The `/agents` seller interface is **planned**, not an active Base-USDC service. The old Tendr x402 seller uses a different network/asset and is not a LaunchCheck integration.
+The `/agents` seller interface is **planned**, not an active Base-USDC service. The old Tendr x402 seller uses a different network/asset and is not a LaunCheck integration.
 
 ## Development
 

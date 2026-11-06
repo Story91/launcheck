@@ -7,7 +7,7 @@ export function evidenceExport(report: Report, reportUrl: string) {
   return JSON.stringify({ format: "launchcheck-evidence.v1", reportUrl, note: copy.evidenceExportNote, report: observations }, null, 2);
 }
 export function exportFilename(id: string, kind: "png" | "json") {
-  return `launchcheck-${isFixture(id) ? "example-" : ""}${id.replace(/[^a-zA-Z0-9_-]/g, "_")}.${kind}`;
+  return `launcheck-${isFixture(id) ? "example-" : ""}${id.replace(/[^a-zA-Z0-9_-]/g, "_")}.${kind}`;
 }
 export async function receiptPng(id: string): Promise<Blob> {
   const response = await fetch(`/check/${encodeURIComponent(id)}/opengraph-image`, { cache: "no-store", signal: AbortSignal.timeout(15000) });

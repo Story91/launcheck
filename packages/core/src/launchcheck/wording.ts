@@ -1,4 +1,4 @@
-// Honesty rules for every user-facing LaunchCheck string (spec section 10): no verdicts, no scores, no safety claims.
+// Honesty rules for every user-facing LaunCheck string (spec section 10): no verdicts, no scores, no safety claims.
 // copy.test.ts in apps/web and the core tests scan strings with findBannedWords().
 
 export const BANNED_WORDS = [

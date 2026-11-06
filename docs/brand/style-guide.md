@@ -1,10 +1,10 @@
-# LaunchCheck brand guide
+# LaunCheck brand guide
 
 Date: 6 November 2026. Implemented direction: evidence desk, restrained Civic-inspired green and compact report layout.
 
 ## Identity
 
-Name: LaunchCheck. Headline: **Launch with the receipts.** The memorable artifact connects an observation to its evidence, provider and payment. Actual captures are more useful here than generated background photos.
+Name: LaunCheck. Headline: **Launch with the receipts.** The memorable artifact connects an observation to its evidence, provider and payment. Actual captures are more useful here than generated background photos.
 
 ## Visual language
 

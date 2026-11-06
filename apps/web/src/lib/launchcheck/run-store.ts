@@ -2,7 +2,7 @@ import { neon } from "@neondatabase/serverless";
 import { launchCheckReportSchema, type LaunchCheckReport } from "@tendr/core";
 import { resolveDatabaseUrl } from "@/lib/db/url";
 
-/** Persistence for LaunchCheck runs: the report JSON per run, screenshots, and the daily spend ledger. */
+/** Persistence for LaunCheck runs: the report JSON per run, screenshots, and the daily spend ledger. */
 export interface RunStore {
   createRun(report: LaunchCheckReport, meta: { ipHash: string; creatorHash: string }): Promise<void>;
   saveReport(report: LaunchCheckReport): Promise<void>;

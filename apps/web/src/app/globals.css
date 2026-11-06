@@ -166,5 +166,5 @@ blockquote.exhibit {
   * { animation: none !important; transition: none !important; }
 }
 
-/* LaunchCheck keeps the document within the viewport. */
+/* LaunCheck keeps the document within the viewport. */
 html, body { overflow-x: clip; }

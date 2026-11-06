@@ -1,4 +1,4 @@
-// LaunchCheck API contract (frozen 7 Nov 2026). Mirrors docs/launchcheck/codex-tasks.md; the UI validates every
+// LaunCheck API contract (frozen 7 Nov 2026). Mirrors docs/launchcheck/codex-tasks.md; the UI validates every
 // response against these schemas. Change only through docs/coordination.md.
 import { z } from "zod";
 
@@ -168,7 +168,7 @@ export const checkCreatedSchema = z.object({
   estimateUsd: z.number().optional(),
 });
 
-/** Error bodies of the LaunchCheck API (HTTP 400/403/429/503). */
+/** Error bodies of the LaunCheck API (HTTP 400/403/429/503). */
 export const launchCheckErrorSchema = z.discriminatedUnion("error", [
   z.object({ error: z.literal("invalid_url") }),
   z.object({ error: z.literal("blocked_url"), reason: z.string() }),
