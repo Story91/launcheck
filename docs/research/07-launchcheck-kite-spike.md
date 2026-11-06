@@ -16,6 +16,8 @@ kpass session execute --url 'https://web.cyberwarex.com/screenshot?url=https%3A%
 
 Odpowiedź: `status: success`, `source: allowance`, HTTP 200, PNG 1280 px w `x402.parsed_response_body.png_base64` (ok. 400 KB). Koszt: **0.005 USD** z allowance („Left this week: USD 9.995 of USD 10”). Bez sesji i bez passkeya: w ramach allowance agent płaci sam.
 
+Drugie wywołanie: `GET https://api.kadec0.xyz/v1/website-audit?url=https%3A%2F%2Ftendr-ecru.vercel.app`, **0.08 USD** z allowance, HTTP 200. Zwraca jeden obiekt: status HTTP, HTTPS, czas ładowania HTML (0.53 s), title i meta description z długościami, liczbę nagłówków h1–h6 i ich teksty, obrazy bez `alt`, liczbę linków wewnętrznych i zewnętrznych, `lang`, viewport, Open Graph, `issues[]` i `score` (dla Tendr: 100, brak problemów). To statyczna analiza HTML, nie Lighthouse: nie mierzy wydajności renderowania ani dostępności w przeglądarce i nie zgłosiła braku tagów Open Graph. W LaunchCheck jest jednym z dowodów, obok screenshotów i sprawdzenia linków, a nie oceną całej strony.
+
 ## Usługi z katalogu do LaunchCheck
 
 Wyszukiwanie `ksearch service search <słowa>` działa lokalnie, bez konta i bez opłat. Wszystkie poniżej: x402, USDC na Base.
