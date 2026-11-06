@@ -9,7 +9,7 @@ import { extractFacts } from "./extract";
 import { scoreSignals } from "./score";
 import { UNAVAILABLE_REASON, evaluateSignals, type Jurisdiction } from "./signals";
 import { summarize } from "./summary";
-import { usDeadlineFacts } from "./us-deadline";
+import { usDeadlineFacts, usDeadlineSignal } from "./us-deadline";
 import { verifyEvidence } from "./verify";
 
 export type ProgressStep = "ingest" | "extract" | "signals" | "verify" | "summary" | "done" | "failed";
@@ -158,11 +158,9 @@ export async function analyzeNotice(
     if (unavailable === evaluated.signals.length) throw new Error("signal evaluation unavailable on all groups (model refused or returned degenerate output twice)");
     report.partial = unavailable > 0;
 
-    // A deadline signal is about dates: cite the deadline and posting dates from the notice, not whatever the model picked.
-    const deadlineEvidence = [computed?.deadlineForTenders, computed?.publicationDate].filter((x): x is string => !!x);
-    const signals = deadlineEvidence.length
-      ? evaluated.signals.map((s) => (s.id === "S1_SHORT_DEADLINE" && s.fired ? { ...s, evidence: deadlineEvidence } : s))
-      : evaluated.signals;
+    // US: the deadline signal is arithmetic on SAM.gov dates plus a notice-type check, so code decides it (FAR 5.203, 12.603).
+    const s1 = computed ? usDeadlineSignal(computed, flat.text) : null;
+    const signals = s1 ? evaluated.signals.map((s) => (s.id === "S1_SHORT_DEADLINE" ? s1 : s)) : evaluated.signals;
 
     onProgress("verify");
     const verified = verifyEvidence(signals, flat.text);
