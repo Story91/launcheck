@@ -5,7 +5,7 @@ export class ApiError extends Error { constructor(message: string, public code: 
 async function json(response: Response) {
   let body: Record<string, unknown>; try { body = await response.json(); } catch { throw new ApiError(copy.api.unavailable, "unavailable"); }
   if (!response.ok) { const code = typeof body.error === "string" ? body.error : "unavailable"; const reason = typeof body.reason === "string" ? body.reason : "paused"; const seconds = typeof body.retryAfterSec === "number" ? body.retryAfterSec : undefined;
-    const message = code === "live_runs_paused" ? copy.api[reason as "paused"] ?? copy.api.paused : code === "rate_limited" ? `${copy.api.rate_limited} ${Math.ceil((seconds ?? 60) / 60)} min.` : code === "invalid_url" ? copy.api.invalid_url : code === "blocked_url" ? copy.api.blocked_url : response.status === 403 || response.status === 401 ? copy.api.auth : copy.api.unavailable;
+    const message = code === "live_runs_paused" ? copy.api[reason as "paused"] ?? copy.api.paused : code === "rate_limited" ? `${copy.api.rate_limited} ${Math.ceil((seconds ?? 60) / 60)} ${copy.minuteUnit}` : code === "invalid_url" ? copy.api.invalid_url : code === "blocked_url" ? copy.api.blocked_url : response.status === 403 || response.status === 401 ? copy.api.auth : copy.api.unavailable;
     throw new ApiError(message, code, seconds);
   } return body;
 }

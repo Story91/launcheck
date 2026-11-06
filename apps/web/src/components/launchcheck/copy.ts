@@ -1,5 +1,6 @@
 // Product copy is kept together for the brand review and honesty checks.
 export const copy = {
+  minuteUnit: "min.", embeddedImage: "[embedded image]", badgeAlt: "LaunchCheck receipt", kitePassport: "Kite Passport",
 sellerCli: `kpass session execute \\\n  --url 'https://YOUR_LAUNCHCHECK_HOST/v1/launchcheck?url=https%3A%2F%2Fexample.com&tier=standard' \\\n  --method GET --idempotency-key YOUR_UNIQUE_RUN_ID --output json`,
 sellerAction: `# Example: kpass must already be installed and authenticated.\n- name: Request website evidence\n  run: |\n    kpass session execute \\\n      --url "$LAUNCHCHECK_URL/v1/launchcheck?url=$ENCODED_SITE_URL&tier=quick" \\\n      --method GET --idempotency-key "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" \\\n      --no-browser --output json`,
 

@@ -41,8 +41,8 @@
     },
     {
       "id": 7,
-      "state": "partial",
-      "evidenceOrGap": "SVG endpoint works, timestamp/cache implemented; old badge dark/light render still needs verification"
+      "state": "verified locally",
+      "evidenceOrGap": "Actual SVG GET handler executed at observation date and +31 days; max-age=3600 confirmed; Chrome screenshot on #fff/#0d1117, no clipped text; stale background #e8eceb with Results older than 30 days. Artifact scratch/launchcheck-captures/badge-age-themes.png; script scratch/launchcheck-badge-check.cjs."
     },
     {
       "id": 8,
@@ -56,8 +56,8 @@
     },
     {
       "id": 10,
-      "state": "partial",
-      "evidenceOrGap": "Central copy and shared banned words test; commands centralized; remaining metadata/serialized labels require final review"
+      "state": "verified locally",
+      "evidenceOrGap": "TypeScript JSX AST inspection found only punctuation and decorative symbols outside copy.ts. Seller commands, badge alt, image placeholder and time unit centralized; shared BANNED_WORDS test passes. UI strings received from report/catalog remain provider data, not product claims."
     },
     {
       "id": 11,
@@ -94,5 +94,14 @@
     "Real owner rerun/delete",
     "Demo toggle and brand deliverables",
     "Seller payment plus interactive browser execution verification"
-  ]
+  ],
+  "deployment": {
+    "main": "a44fca8b50a1ac9f41cb25f3288cfb44d31bdf18",
+    "origin": "https://tendr-ecru.vercel.app",
+    "http": "home, /check/fx_problems, /agents, /api/agent return 200",
+    "browser": "home/report/agents at 390 and 1280: no overflow, broken images, runtime errors or automated WCAG A/AA violations",
+    "liveRuns": false,
+    "executorOnline": false,
+    "evidence": "scratch/launchcheck-production-check.cjs; scratch/launchcheck-captures/production-home-1280.png"
+  }
 }
