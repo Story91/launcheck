@@ -2,39 +2,14 @@ import type { Metadata } from "next";
 import { DM_Sans, Manrope } from "next/font/google";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Mark } from "@/components/launchcheck/icons";
+import { copy } from "@/components/launchcheck/copy";
+import { appOrigin } from "@/components/launchcheck/server";
 import "./globals.css";
-
+import "@/components/launchcheck/launchcheck.css";
 const civicSans = DM_Sans({ variable: "--font-civic-sans", subsets: ["latin", "latin-ext"], display: "swap" });
 const civicDisplay = Manrope({ variable: "--font-civic-display", subsets: ["latin", "latin-ext"], display: "swap" });
-
-export const metadata: Metadata = {
-  title: "Tendr — competition-restriction signals for public tenders",
-  description: "Auditable competition-restriction signal reports for US federal (SAM.gov) and EU (TED) tenders, with verbatim quotes and independent verification.",
-};
-
+export const metadata: Metadata = { metadataBase: new URL(appOrigin()), title: `${copy.brand} — ${copy.hero}`, description: copy.lede, icons: { icon: "/icon.svg" } };
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en" className={`${civicSans.variable} ${civicDisplay.variable} h-full`}>
-      <body className="min-h-full flex flex-col">
-        <a href="#main-content" className="skip-link">Skip to content</a>
-        <header className="site-header">
-          <div className="site-nav">
-            <Link href="/" className="site-brand" aria-label="Tendr home">
-              <span className="brand-mark" aria-hidden="true" />tendr
-            </Link>
-            <nav className="site-links" aria-label="Main navigation">
-              <Link href="/">Explore tenders</Link>
-              <Link href="/api-docs">For agents <span aria-hidden="true">↗</span></Link>
-            </nav>
-          </div>
-        </header>
-        <main id="main-content" className="site-main">{children}</main>
-        <footer className="border-t border-rule">
-          <p className="mx-auto max-w-6xl px-5 py-6 text-xs leading-relaxed text-mist">
-            Reports describe competition-restriction signals found in the notice text. They are not findings of wrongdoing. Sources: SAM.gov public data (US federal) and TED (EU). Not affiliated with GSA, SAM.gov or any government agency. Reasoning by SERV, independent review by Reppo.
-          </p>
-        </footer>
-      </body>
-    </html>
-  );
+  return <html lang="en" className={`${civicSans.variable} ${civicDisplay.variable} h-full overflow-x-clip`}><body className="lc-shell min-h-full flex flex-col overflow-x-clip"><a href="#main-content" className="skip-link">{copy.skip}</a><header className="lc-header"><div className="lc-nav"><Link href="/" className="lc-wordmark" aria-label={copy.brand}><Mark/>{copy.brand}</Link><nav aria-label={copy.home}><Link href="/gallery">{copy.gallery}</Link><Link href="/agents">{copy.agents}</Link></nav></div></header><main id="main-content" className="lc-main">{children}</main><footer className="lc-footer"><div><div><Link className="lc-wordmark" href="/"><Mark/>{copy.brand}</Link><p>{copy.footer}</p><p>{copy.footerScope}</p></div><nav><Link href="/gallery">{copy.gallery}</Link><Link href="/agents">{copy.agents}</Link></nav></div></footer></body></html>;
 }

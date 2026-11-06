@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-06",
+  "scope": "app",
+  "genre": "modern-minimal",
+  "direction": "Existing Evidence/Civic direction requested by owner",
+  "preserved": [
+    {
+      "source": "apps/web/src/app/layout.tsx:10",
+      "detail": "DM Sans and Manrope fonts"
+    },
+    {
+      "source": "apps/web/src/components/launchcheck/tokens.css:1",
+      "detail": "Paper, forest green, shared spacing and focus tokens"
+    }
+  ],
+  "introduced": [
+    {
+      "source": "apps/web/src/app/page.tsx:8",
+      "detail": "Launch receipt as the signature, actual Tendr screenshots explicitly labeled illustrative"
+    },
+    {
+      "source": "apps/web/src/components/launchcheck/report.tsx:1",
+      "detail": "Evidence, scope, unknown outcomes and line-by-line charges"
+    }
+  ],
+  "material": {
+    "real": "Owner project screenshots and supplied provider prices",
+    "illustrative": "Core fixtures, explicitly labeled example data",
+    "absent": "No customer metrics, testimonials or quality score"
+  },
+  "verification": {
+    "browser": "7 routes at 390 and 1280 pixels; no overflow, broken images or automated WCAG A/AA violations",
+    "interaction": "URL validation, budget selection, fixture polling and truthful live offline state"
+  }
+}

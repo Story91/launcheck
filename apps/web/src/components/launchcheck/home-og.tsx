@@ -1,0 +1,3 @@
+import { ImageResponse } from "next/og";
+import { copy } from "./copy";
+export function homeImage() { const palette = { paper: "#f5f7f3", ink: "#203b33", muted: "#50665d", accent: "#275d45", white: "#ffffff" }; return new ImageResponse(<div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", padding: 72, background: palette.paper, color: palette.ink, fontFamily: "sans-serif" }}><span style={{ fontSize: 30 }}>{copy.brand}</span><h1 style={{ fontSize: 90, letterSpacing: -4, lineHeight: 1.05, maxWidth: 850 }}>{copy.hero}</h1><p style={{ fontSize: 28, maxWidth: 850, color: palette.muted }}>{copy.lede}</p><div style={{ marginTop: "auto", display: "flex", fontSize: 20 }}>{copy.footer}</div></div>, { width: 1200, height: 630 }); }

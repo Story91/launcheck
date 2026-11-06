@@ -1,0 +1,40 @@
+[
+  {
+    "date": "2026-11-06",
+    "shape": "app screen",
+    "theme": "existing brand",
+    "axes": "light/geometric-sans/cool",
+    "hero": "evidence and receipt",
+    "nav": "top bar",
+    "footer": "scope and providers",
+    "imagery": "actual Tendr captures labeled illustrative",
+    "photos": [],
+    "entry": "apps/web/src/app/page.tsx",
+    "signature": "evidence receipt",
+    "sections": [
+      "hero",
+      "run form",
+      "gallery",
+      "process",
+      "scope",
+      "examples"
+    ],
+    "waived": [],
+    "prompt": "LaunchCheck frontend using Hallmark with the existing Evidence/Civic direction",
+    "floorFails": 0,
+    "reflexFindings": 0,
+    "finishReview": {
+      "mode": "subagent",
+      "findings": 4,
+      "resolved": 4,
+      "heroReview": "not separately performed; app-screen scope"
+    },
+    "warningsAnswered": {
+      "3": "Error stripe denotes an alert only. Findings use full hairline borders.",
+      "25": "30ch applies to short one-sentence captions.",
+      "F24": "Proof edge defines the screenshot boundary; shadow separates the receipt from the paper.",
+      "28a": "Report/gallery captures sit below the primary heading; landing hero image is eager.",
+      "F19": "Inherited typography is retained for Tendr compatibility."
+    }
+  }
+]

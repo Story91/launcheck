@@ -1,4 +1,5 @@
 @import "tailwindcss";
+html, body { overflow-x: clip; }
 
 :root {
   --paper: #f3f6f4;
@@ -164,3 +165,6 @@ blockquote.exhibit {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* LaunchCheck keeps the document within the viewport. */
+html, body { overflow-x: clip; }
