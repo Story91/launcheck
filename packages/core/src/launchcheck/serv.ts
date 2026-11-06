@@ -52,14 +52,15 @@ export function launchCheckReasoning(client: LlmClient, model: string, options: 
       return { buy, skip: candidates.filter(c => !buy.includes(c)), reasons, audit, usedServ };
     },
     async explain(report) {
-      const input = report.findings.slice(0, 50).map(f => ({ findingId: f.id, title: f.title, observed: f.observed.slice(0, 1000), evidence: report.evidence.filter(e => f.evidenceIds.includes(e.id)).map(e => ({ id: e.id, source: e.source, scope: e.scopeNote, fields: e.fields })) }));
+      // TXT observations do not establish mail use or inherited policy. Preserve their conditional rule explanations.
+      const input = report.findings.filter(f => f.checkId !== "email_dns").slice(0, 50).map(f => ({ findingId: f.id, title: f.title, observed: f.observed.slice(0, 1000), evidence: report.evidence.filter(e => f.evidenceIds.includes(e.id)).map(e => ({ id: e.id, source: e.source, scope: e.scopeNote, fields: e.fields })) }));
       const { result, audit } = await call("explain", { findings: input, notChecked: report.notChecked }, explainSystem);
       const findings = report.findings.map(f => ({ ...f }));
       if (result && !audit.refused) try {
         const data = parseJsonContent(result, explainSchema); const seen = new Set<string>();
         for (const item of data.explanations) {
           const finding = findings.find(f => f.id === item.findingId);
-          if (!finding || seen.has(item.findingId) || !item.evidenceIds.length || item.evidenceIds.some(id => !finding.evidenceIds.includes(id) || !report.evidence.some(e => e.id === id)) || findBannedWords(item.explanation + " " + item.fix).length) { audit.droppedItems++; continue; }
+          if (!finding || finding.checkId === "email_dns" || seen.has(item.findingId) || !item.evidenceIds.length || item.evidenceIds.some(id => !finding.evidenceIds.includes(id) || !report.evidence.some(e => e.id === id)) || findBannedWords(item.explanation + " " + item.fix).length) { audit.droppedItems++; continue; }
           seen.add(item.findingId); finding.explanation = item.explanation; finding.fix = item.fix; finding.explainedBy = "serv";
         }
       } catch { audit.droppedItems++; }

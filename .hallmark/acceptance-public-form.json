@@ -1,0 +1,581 @@
+{
+  "id": "lc_2gV1xiNI53ZM",
+  "url": "https://tendr-ecru.vercel.app/",
+  "origin": "https://tendr-ecru.vercel.app",
+  "status": "done",
+  "progress": "done",
+  "tier": "quick",
+  "mode": "allowance",
+  "budgetUsd": 0.05,
+  "spentUsd": 0.01,
+  "createdAt": "2026-11-06T11:15:44.935Z",
+  "finishedAt": "2026-11-06T11:16:21.479Z",
+  "parentId": null,
+  "cached": false,
+  "summary": {
+    "checksRun": 9,
+    "problems": 2,
+    "nothingFound": 8,
+    "notChecked": 0
+  },
+  "plan": {
+    "buy": [
+      {
+        "checkId": "render_desktop",
+        "label": "Desktop render (1280 px)",
+        "vendorHost": "web.cyberwarex.com",
+        "priceUsd": 0.005,
+        "reason": "Adds a real-browser view of the first screen at 1280 px; existing checks do not cover browser rendering."
+      },
+      {
+        "checkId": "render_narrow",
+        "label": "Narrow render (390 px)",
+        "vendorHost": "web.cyberwarex.com",
+        "priceUsd": 0.005,
+        "reason": "Adds a real-browser view in a 390 px-wide window; existing checks do not cover narrow-window rendering."
+      }
+    ],
+    "skip": [],
+    "plannedUsd": 0.01,
+    "chosenBy": "serv"
+  },
+  "checks": [
+    {
+      "checkId": "page_fetch",
+      "label": "Page response",
+      "kind": "free",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_page_fetch"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "security_headers",
+      "label": "Security headers",
+      "kind": "free",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_security_headers"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "tls_cert",
+      "label": "TLS certificate",
+      "kind": "free",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_tls_cert"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "share_tags",
+      "label": "Link preview tags",
+      "kind": "free",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_share_tags"
+      ],
+      "scopeNote": "static HTML only, checked from Vercel iad1"
+    },
+    {
+      "checkId": "og_image_fetch",
+      "label": "Link preview image",
+      "kind": "free",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_og_image_fetch"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "email_dns",
+      "label": "Email DNS records",
+      "kind": "free",
+      "state": "problem",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_email_dns"
+      ],
+      "scopeNote": "checked from Vercel iad1"
+    },
+    {
+      "checkId": "link_status",
+      "label": "Selected links",
+      "kind": "free",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_link_status"
+      ],
+      "scopeNote": "checked 8 of 9 links from Vercel iad1"
+    },
+    {
+      "checkId": "render_desktop",
+      "label": "Desktop render (1280 px)",
+      "kind": "paid",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_render_desktop"
+      ],
+      "scopeNote": "First screen in a real headless browser at 1280 px. Appearance only; no interaction test."
+    },
+    {
+      "checkId": "render_narrow",
+      "label": "Narrow render (390 px)",
+      "kind": "paid",
+      "state": "clear",
+      "notCheckedReason": null,
+      "evidenceIds": [
+        "ev_render_narrow"
+      ],
+      "scopeNote": "390px-wide browser window. Not a phone: no touch, no mobile user agent, no device emulation."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_page_fetch",
+      "checkId": "page_fetch",
+      "kind": "json",
+      "label": "Homepage response",
+      "blobUrl": null,
+      "sha256": "4d19130ea9ec3edf13065c178f761b0420b5cd40a6358be9ede60c3e84c411b1",
+      "capturedAt": "2026-11-06T11:15:46.071Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "region": "iad1",
+        "status": 200,
+        "jsShell": true,
+        "finalUrl": "https://tendr-ecru.vercel.app/",
+        "elapsedMs": 616,
+        "htmlBytes": 23295,
+        "httpProbe": {
+          "url": "http://tendr-ecru.vercel.app/",
+          "error": null,
+          "status": 200,
+          "finalUrl": "https://tendr-ecru.vercel.app/",
+          "redirectsToHttps": true
+        },
+        "truncated": false,
+        "linksFound": 9,
+        "textLength": 1683,
+        "contentType": "text/html; charset=utf-8",
+        "requestedUrl": "https://tendr-ecru.vercel.app/",
+        "redirectChain": []
+      }
+    },
+    {
+      "id": "ev_security_headers",
+      "checkId": "security_headers",
+      "kind": "json",
+      "label": "Homepage response headers",
+      "blobUrl": null,
+      "sha256": "a80c15794bbc2b5d1f816b4a1e9c2d164c5cc6183b00b82f8f25f58b74a1b1f7",
+      "capturedAt": "2026-11-06T11:15:45.655Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "url": "https://tendr-ecru.vercel.app/",
+        "frameAncestors": "'none'",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-frame-options": null,
+        "x-content-type-options": "nosniff",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "content-security-policy-report-only": null
+      }
+    },
+    {
+      "id": "ev_tls_cert",
+      "checkId": "tls_cert",
+      "kind": "json",
+      "label": "TLS certificate",
+      "blobUrl": null,
+      "sha256": "fc33bb4779388da880a3550fd7531ac58bc3284bba86ccc9b506180782b5bfb7",
+      "capturedAt": "2026-11-06T11:15:45.685Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "host": "tendr-ecru.vercel.app",
+        "port": 443,
+        "issuer": "Google Trust Services / WR1",
+        "validTo": "2027-01-29T11:46:09.000Z",
+        "daysLeft": 84,
+        "validFrom": "2026-10-31T11:46:10.000Z",
+        "hostMatches": true,
+        "subjectAltNames": [
+          "*.vercel.app"
+        ]
+      }
+    },
+    {
+      "id": "ev_share_tags",
+      "checkId": "share_tags",
+      "kind": "json",
+      "label": "Link preview and page tags",
+      "blobUrl": null,
+      "sha256": "e671a78eae8e518bffcc79fbaa7e349444f165e38e1accac1a12e2519230646b",
+      "capturedAt": "2026-11-06T11:15:45.657Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "static HTML only, checked from Vercel iad1",
+      "fields": {
+        "url": "https://tendr-ecru.vercel.app/",
+        "lang": "en",
+        "title": "LaunchCheck — Launch with the receipts.",
+        "jsShell": true,
+        "ogImage": "https://tendr-ecru.vercel.app/opengraph-image?ab9c32cbd51e499c",
+        "ogTitle": "LaunchCheck — Launch with the receipts.",
+        "viewport": "width=device-width, initial-scale=1",
+        "canonical": null,
+        "truncated": false,
+        "titleLength": 39,
+        "twitterCard": "summary_large_image",
+        "twitterImage": "https://tendr-ecru.vercel.app/opengraph-image?ab9c32cbd51e499c",
+        "ogDescription": "Your agent buys the checks. You get the evidence and receipt.",
+        "metaDescription": "Your agent buys the checks. You get the evidence and receipt."
+      }
+    },
+    {
+      "id": "ev_og_image_fetch",
+      "checkId": "og_image_fetch",
+      "kind": "json",
+      "label": "Link preview image request",
+      "blobUrl": null,
+      "sha256": "87000b06ea605625821e4ad82cf70c9471e27e38547acb756d355b100f0be76a",
+      "capturedAt": "2026-11-06T11:15:45.802Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "url": "https://tendr-ecru.vercel.app/opengraph-image?ab9c32cbd51e499c",
+        "bytes": 52116,
+        "status": 200,
+        "finalUrl": "https://tendr-ecru.vercel.app/opengraph-image?ab9c32cbd51e499c",
+        "elapsedMs": 144,
+        "truncated": false,
+        "contentType": "image/png",
+        "contentLength": 52116,
+        "redirectChain": []
+      }
+    },
+    {
+      "id": "ev_email_dns",
+      "checkId": "email_dns",
+      "kind": "json",
+      "label": "SPF and DMARC TXT records",
+      "blobUrl": null,
+      "sha256": "92680efcda19dc2d7655e3c550ce32f5d1ab7967c4b78e2f9d63245bd276c191",
+      "capturedAt": "2026-11-06T11:15:45.665Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked from Vercel iad1",
+      "fields": {
+        "spf": null,
+        "dmarc": null,
+        "domain": "tendr-ecru.vercel.app",
+        "apexTxt": [],
+        "dmarcTxt": [],
+        "dmarcName": "_dmarc.tendr-ecru.vercel.app",
+        "dmarcPolicy": null
+      }
+    },
+    {
+      "id": "ev_link_status",
+      "checkId": "link_status",
+      "kind": "json",
+      "label": "Link responses",
+      "blobUrl": null,
+      "sha256": "21c8eedcd7b314426353284f1ea829c71e433aae6e3d0e7189d2e78956266ff3",
+      "capturedAt": "2026-11-06T11:15:45.911Z",
+      "source": {
+        "type": "free",
+        "vendorHost": null,
+        "endpoint": null
+      },
+      "scopeNote": "checked 8 of 9 links from Vercel iad1",
+      "fields": {
+        "links": [
+          {
+            "url": "https://tendr-ecru.vercel.app/gallery",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/gallery",
+            "elapsedMs": 224,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/agents",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/agents",
+            "elapsedMs": 140,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/check/lc_KpScNuw45vmP",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/check/lc_KpScNuw45vmP",
+            "elapsedMs": 155,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/check/fx_problems",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/check/fx_problems",
+            "elapsedMs": 216,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/check/fx_clean",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/check/fx_clean",
+            "elapsedMs": 133,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/check/fx_unreachable",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/check/fx_unreachable",
+            "elapsedMs": 53,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/check/fx_running",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/check/fx_running",
+            "elapsedMs": 111,
+            "redirects": 0
+          },
+          {
+            "url": "https://tendr-ecru.vercel.app/check/fx_fixed",
+            "error": null,
+            "method": "HEAD",
+            "result": "ok",
+            "status": 200,
+            "finalUrl": "https://tendr-ecru.vercel.app/check/fx_fixed",
+            "elapsedMs": 58,
+            "redirects": 0
+          }
+        ],
+        "pageUrl": "https://tendr-ecru.vercel.app/",
+        "linksFound": 9,
+        "linksChecked": 8,
+        "discoveredUrls": [
+          "https://tendr-ecru.vercel.app/",
+          "https://tendr-ecru.vercel.app/gallery",
+          "https://tendr-ecru.vercel.app/agents",
+          "https://tendr-ecru.vercel.app/check/lc_KpScNuw45vmP",
+          "https://tendr-ecru.vercel.app/check/fx_problems",
+          "https://tendr-ecru.vercel.app/check/fx_clean",
+          "https://tendr-ecru.vercel.app/check/fx_unreachable",
+          "https://tendr-ecru.vercel.app/check/fx_running",
+          "https://tendr-ecru.vercel.app/check/fx_fixed"
+        ],
+        "discoveryComplete": true
+      }
+    },
+    {
+      "id": "ev_render_desktop",
+      "checkId": "render_desktop",
+      "kind": "image",
+      "label": "Desktop render (1280 px)",
+      "blobUrl": "/api/evidence/lc_2gV1xiNI53ZM_ev_render_desktop",
+      "sha256": "f820de544489a95baf128d2ec8e6dcbacb01968395881ac83776957ba44a1c04",
+      "capturedAt": "2026-11-06T11:15:58.324Z",
+      "source": {
+        "type": "paid",
+        "vendorHost": "web.cyberwarex.com",
+        "endpoint": "/screenshot"
+      },
+      "scopeNote": "First screen in a real headless browser at 1280 px. Appearance only; no interaction test.",
+      "fields": {
+        "width": 1280,
+        "fullpage": false
+      }
+    },
+    {
+      "id": "ev_render_narrow",
+      "checkId": "render_narrow",
+      "kind": "image",
+      "label": "Narrow render (390 px)",
+      "blobUrl": "/api/evidence/lc_2gV1xiNI53ZM_ev_render_narrow",
+      "sha256": "dd42d3899d89dc0d5f14166d37d141417ffaaf8acc13f4bc0d09467b77a82448",
+      "capturedAt": "2026-11-06T11:16:08.203Z",
+      "source": {
+        "type": "paid",
+        "vendorHost": "web.cyberwarex.com",
+        "endpoint": "/screenshot"
+      },
+      "scopeNote": "390px-wide browser window. Not a phone: no touch, no mobile user agent, no device emulation.",
+      "fields": {
+        "width": 390,
+        "fullpage": true
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "f_spf_missing",
+      "ruleId": "spf_missing",
+      "checkId": "email_dns",
+      "severity": "fyi",
+      "title": "No SPF record for tendr-ecru.vercel.app",
+      "observed": "No TXT record starting with v=spf1 at tendr-ecru.vercel.app.",
+      "evidenceIds": [
+        "ev_email_dns"
+      ],
+      "explanation": "The attached DNS evidence shows no SPF value for tendr-ecru.vercel.app in the checked scope.",
+      "fix": "Propose publishing an SPF TXT record for the domain that lists its authorized email senders.",
+      "explainedBy": "serv"
+    },
+    {
+      "id": "f_dmarc_missing",
+      "ruleId": "dmarc_missing",
+      "checkId": "email_dns",
+      "severity": "fyi",
+      "title": "No DMARC record for tendr-ecru.vercel.app",
+      "observed": "No TXT record starting with v=DMARC1 at _dmarc.tendr-ecru.vercel.app.",
+      "evidenceIds": [
+        "ev_email_dns"
+      ],
+      "explanation": "The attached DNS evidence shows no DMARC TXT value at _dmarc.tendr-ecru.vercel.app in the checked scope.",
+      "fix": "Propose adding a DMARC TXT record at _dmarc.tendr-ecru.vercel.app with a policy appropriate for the domain’s email setup.",
+      "explainedBy": "serv"
+    }
+  ],
+  "receipt": {
+    "lines": [
+      {
+        "n": 1,
+        "checkId": "render_desktop",
+        "label": "Desktop render (1280 px)",
+        "vendorHost": "web.cyberwarex.com",
+        "endpoint": "/screenshot",
+        "quotedUsd": 0.005,
+        "requestUrl": "https://web.cyberwarex.com/screenshot?url=https%3A%2F%2Ftendr-ecru.vercel.app%2F&fullpage=false&width=1280",
+        "paidUsd": 0.005,
+        "source": "allowance",
+        "status": "paid",
+        "httpStatus": 200,
+        "txHash": "0xa4c1fa429c26613dcc68bba9b7955a9b3f00d5ceb31acdf61a51f89f838a888e",
+        "explorerUrl": "https://basescan.org/tx/0xa4c1fa429c26613dcc68bba9b7955a9b3f00d5ceb31acdf61a51f89f838a888e",
+        "idempotencyKeyShort": "ktop",
+        "at": "2026-11-06T11:15:52.218Z",
+        "substitutedFor": null
+      },
+      {
+        "n": 2,
+        "checkId": "render_narrow",
+        "label": "Narrow render (390 px)",
+        "vendorHost": "web.cyberwarex.com",
+        "endpoint": "/screenshot",
+        "quotedUsd": 0.005,
+        "requestUrl": "https://web.cyberwarex.com/screenshot?url=https%3A%2F%2Ftendr-ecru.vercel.app%2F&fullpage=true&width=390",
+        "paidUsd": 0.005,
+        "source": "allowance",
+        "status": "paid",
+        "httpStatus": 200,
+        "txHash": "0xbb5b28d3209407ca79454c6db36a8e858cf00a6e09658a3407bdf548b4e6fb0c",
+        "explorerUrl": "https://basescan.org/tx/0xbb5b28d3209407ca79454c6db36a8e858cf00a6e09658a3407bdf548b4e6fb0c",
+        "idempotencyKeyShort": "rrow",
+        "at": "2026-11-06T11:15:58.982Z",
+        "substitutedFor": null
+      }
+    ],
+    "totalPaidUsd": 0.01,
+    "budgetUsd": 0.05,
+    "stoppedBy": null,
+    "freeChecks": 7
+  },
+  "agent": {
+    "kiteAgentId": "…d523",
+    "agentType": "claude",
+    "ownerMasked": "co***@…",
+    "network": "Base mainnet (eip155:8453)",
+    "asset": "USDC"
+  },
+  "audit": [
+    {
+      "step": "plan",
+      "model": "gpt-6-luna",
+      "promptVersion": "launchcheck-plan.v1",
+      "requestId": "557430b4-a424-4d9e-9709-c36e38b3d8e4",
+      "consoleUrl": "https://console.openserv.ai/usage",
+      "inputHash": "376f455a7e528ef94044709c8f47049d394b0e45c44e6e11d267e3f4da228b23",
+      "costUsd": 0.00024336,
+      "droppedItems": 0,
+      "refused": false
+    },
+    {
+      "step": "explain",
+      "model": "gpt-6-luna",
+      "promptVersion": "launchcheck-explain.v1",
+      "requestId": "efce102b-76cd-4e5b-8203-b14839c4683c",
+      "consoleUrl": "https://console.openserv.ai/usage",
+      "inputHash": "86e60dc38afbf3e64d57f543f941cf3dc3835a631377849695e255580a514b66",
+      "costUsd": 0.0002951,
+      "droppedItems": 0,
+      "refused": false
+    }
+  ],
+  "notChecked": [
+    "Rendering speed",
+    "Accessibility in a real browser",
+    "Real phones and tablets",
+    "Security beyond the listed headers",
+    "Pages other than the one you entered",
+    "Links beyond the first 10"
+  ],
+  "diff": null,
+  "error": null
+}

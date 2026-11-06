@@ -57,6 +57,12 @@ describe("normalizeAudit", () => {
   it("reports nothing found when the vendor lists no issues", () => {
     expect(normalizeAudit({ items: [{ ...body.items[0], issues: [] }] }, "ev_audit")!.findings).toEqual([]);
   });
+  it("accepts a single audit object and refuses malformed replies rather than inventing a clear result", () => {
+    expect(normalizeAudit(body.items[0],"ev_audit")?.findings).toHaveLength(1);
+    expect(normalizeAudit({items:[{error:"failed"}]},"ev_audit")).toBeNull();
+    expect(normalizeAudit({httpStatus:200,issues:[{message:"unknown schema"}]},"ev_audit")).toBeNull();
+    expect(normalizeAudit({httpStatus:200},"ev_audit")).toBeNull();
+  });
 });
 
 describe("receiptStatusFor", () => {

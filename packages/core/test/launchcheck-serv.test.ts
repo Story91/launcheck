@@ -5,6 +5,15 @@ import { PAID_CHECKS } from "../src/launchcheck/paid";
 import type { ChatResult } from "../src/llm/types";
 const response = (value: unknown): ChatResult => ({ content: JSON.stringify(value), refusal: null, guardRefused: false, usage: { promptTokens: 100, completionTokens: 50 }, requestId: "serv_test", durationMs: 10, model: "test-model", costUsd: .001 });
 describe("LaunchCheck SERV reasoning", () => {
+  it("preserves conditional mail-DNS explanations when mail use was not established", async () => {
+    const report = launchCheckFixtureReport("fx_problems");
+    report.findings[0].checkId = "email_dns";
+    report.findings[0].explanation = "Mail use was not established; this may not apply.";
+    const chat = vi.fn().mockResolvedValue(response({ explanations: [{findingId:report.findings[0].id,evidenceIds:report.findings[0].evidenceIds,explanation:"Your signup emails will be blocked.",fix:"Change the DNS now."}] }));
+    const result = await launchCheckReasoning({chat},"test").explain(report);
+    expect(result.findings[0]).toEqual(report.findings[0]); expect(result.audit.droppedItems).toBe(1);
+    expect(JSON.parse(chat.mock.calls[0][0].user).findings.some((f: {findingId:string}) => f.findingId === report.findings[0].id)).toBe(false);
+  });
   it("rejects invented services, duplicate calls, verdicts and spending above the supplied budget", async () => {
     const chat = vi.fn().mockResolvedValue(response({ buy: [{ checkId: "html_audit", reason: "Second opinion" }, { checkId: "render_desktop", reason: "Browser evidence" }, { checkId: "render_desktop", reason: "Duplicate" }, { checkId: "invented", reason: "Unknown" }, { checkId: "render_narrow", reason: "Guaranteed" }] }));
     const report = launchCheckFixtureReport("fx_problems"); report.budgetUsd = .01;

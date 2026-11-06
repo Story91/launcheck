@@ -1,0 +1,60 @@
+[
+  {
+    "width": 390,
+    "route": "/",
+    "overflow": false,
+    "missingImages": 0,
+    "violations": [],
+    "heading": "Launch with the receipts.",
+    "disabled": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/check/lc_KpScNuw45vmP",
+    "overflow": false,
+    "missingImages": 0,
+    "violations": [],
+    "heading": "We ran 10 checks. Found 4 problems. 1 couldn’t run.",
+    "fixedHeading": "Fixed 6 of 10 problems LaunchCheck found",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/gallery",
+    "overflow": false,
+    "missingImages": 0,
+    "violations": [],
+    "heading": "Small checks. Visible progress.",
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "/",
+    "overflow": false,
+    "missingImages": 0,
+    "violations": [],
+    "heading": "Launch with the receipts.",
+    "disabled": false,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "/check/lc_KpScNuw45vmP",
+    "overflow": false,
+    "missingImages": 0,
+    "violations": [],
+    "heading": "We ran 10 checks. Found 4 problems. 1 couldn’t run.",
+    "fixedHeading": "Fixed 6 of 10 problems LaunchCheck found",
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "/gallery",
+    "overflow": false,
+    "missingImages": 0,
+    "violations": [],
+    "heading": "Small checks. Visible progress.",
+    "errors": []
+  }
+]

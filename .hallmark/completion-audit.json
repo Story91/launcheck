@@ -3,26 +3,27 @@
   "applicationAcceptancePassed": true,
   "scope": "SERV planning/explanation, Kite purchases, evidence persistence, owner rerun, receipt sharing and compact UI",
   "validation": {
-    "coreTests": 219,
+    "coreTests": 221,
     "webTests": 170,
     "typecheck": "passed",
     "productionBuild": "passed",
     "browser": "390px/1280px, no detected WCAG A/AA violations, overflow, missing images or page errors in reviewed screens",
     "liveBefore": "lc_9b00787167ca2371f7ac07a3",
     "liveAfter": "lc_KpScNuw45vmP",
-    "settledUsdc": 0.035,
-    "paidTransactions": 5,
-    "servRequests": 4,
+    "settledUsdc": 0.045,
+    "paidTransactions": 7,
+    "servRequests": 6,
     "fixed": 6,
     "previousFindings": 10,
     "pngHashChecks": 5,
-    "integrityArtifact": ".hallmark/acceptance-integrity.json"
+    "integrityArtifact": ".hallmark/acceptance-integrity.json",
+    "publicForm": "lc_2gV1xiNI53ZM"
   },
   "publicExecution": {
     "ownerApproved": true,
     "dailyVendorCapUsd": 1.5,
     "expiresAt": "2026-11-15T23:59:00Z",
-    "activation": "final deployment; verify /api/agent and actual public form after deployment"
+    "activation": "Confirmed on production: /api/agent liveRuns=true; public form created and completed a real Quick run"
   },
   "boundaries": [
     "One public browser navigation, not full app coverage",

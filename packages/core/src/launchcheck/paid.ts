@@ -98,8 +98,8 @@ const str = (v: unknown) => (typeof v === "string" ? v : null);
 /** kadec0 website-audit reply → fixed evidence fields (vendor score removed) and at most one FYI finding. */
 export function normalizeAudit(body: unknown, evidenceId: string): { fields: Record<string, unknown>; findings: LaunchCheckFinding[] } | null {
   const items = obj(body).items;
-  const item = Array.isArray(items) ? obj(items[0]) : null;
-  if (!item || Object.keys(item).length === 0) return null;
+  const item = Array.isArray(items) ? obj(items[0]) : obj(body);
+  if (typeof item.httpStatus !== "number" || !Number.isInteger(item.httpStatus) || item.httpStatus < 100 || item.httpStatus > 599 || !Array.isArray(item.issues) || item.issues.some(i => typeof i !== "string")) return null;
   const images = obj(item.images);
   const issues = Array.isArray(item.issues) ? item.issues.filter((i): i is string => typeof i === "string").map((i) => i.slice(0, 200)).slice(0, 20) : [];
   const fields: Record<string, unknown> = {
