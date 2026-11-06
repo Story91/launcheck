@@ -15,7 +15,7 @@ Ta sekcja zastępuje starsze wpisy o brakującym deployu, bazie i kluczu Reppo p
 - [x] Weryfikacja lokalna: 198 testów (core 114, web 72, x402 12), TypeScript we wszystkich trzech pakietach i build produkcyjny Next.js przechodzą.
 - [x] Sprzedaż wymaga zakończonego werdyktu Reppo zgodnego ze statusem raportu; zadania cron odmawiają uruchomienia również przy brakującym CRON_SECRET.
 - [x] Produkcyjny paywall zwraca HTTP 402, a cron Reppo bez autoryzacji HTTP 401. Cztery raporty USA widoczne na stronie mają rzeczywiste werdykty SETTLED/revise; kolejny ma PENDING.
-- [ ] Wdrożyć poprawki z tej kontroli i powtórzyć test publicznego API.
+- [x] Poprawki wdrożone 6 XI: commit `d6e6de1`, Vercel success. Na produkcji potwierdzono HTTP 200 strony, dokumentacji i raportu NBP, HTTP 400 dla nieprawidłowego JSON (`null`, liczbowy noticeId), HTTP 401 cron bez autoryzacji oraz HTTP 402 z warunkami płatności dla identyfikatora SAM.gov. Zakup i rozliczenie nadal wymagają osobnego testu z passkey.
 - [ ] Potwierdzić rzeczywisty zakup przez `kpass` na testnecie z konta właściciela (passkey); działające HTTP 402 nie dowodzi rozliczenia płatności.
 - [ ] Potwierdzić komplet pięciu raportów referencyjnych z aktualnymi werdyktami; nie uruchamiano dodatkowych płatnych analiz podczas kontroli.
 - [ ] Wideo, publikacja na X i wysłanie zgłoszenia. Pliki w `docs/submission/` są materiałami roboczymi, nie dowodem publikacji.
