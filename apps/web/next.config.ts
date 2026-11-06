@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
     "/api/admin/kpass-probe": ["./.kpass-bin/**"],
     "/api/internal/launchcheck/**": ["./.kpass-bin/**"],
     "/api/agent": ["./.kpass-bin/**"],
+    "/api/checks": ["./.kpass-bin/**"],
   },
   turbopack: {
     rules: {

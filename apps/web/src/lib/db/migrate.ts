@@ -44,6 +44,31 @@ export const MIGRATION_SQL: readonly string[] = [
     "imported_at" timestamptz not null default now()
   )`,
   `create index if not exists "sam_notices_posted_at_idx" on "sam_notices" ("posted_at" desc)`,
+  `create table if not exists "lc_runs" (
+    "id" text primary key,
+    "url" text not null,
+    "origin" text not null,
+    "tier" text not null,
+    "status" text not null,
+    "report" jsonb not null,
+    "ip_hash" text not null,
+    "creator_hash" text not null,
+    "spent_usd" numeric(12, 6) not null default 0,
+    "created_at" timestamptz not null default now(),
+    "updated_at" timestamptz not null default now()
+  )`,
+  `create index if not exists "lc_runs_origin_idx" on "lc_runs" ("origin", "created_at" desc)`,
+  `create index if not exists "lc_runs_ip_idx" on "lc_runs" ("ip_hash", "created_at" desc)`,
+  `create table if not exists "lc_images" (
+    "id" text primary key,
+    "run_id" text not null,
+    "png_base64" text not null,
+    "created_at" timestamptz not null default now()
+  )`,
+  `create table if not exists "lc_daily_spend" (
+    "day" date primary key,
+    "spent_usd" numeric(12, 6) not null default 0
+  )`,
 ];
 
 export interface SqlRunner {
