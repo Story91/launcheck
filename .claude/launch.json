@@ -6,6 +6,12 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "@tendr/web", "dev"],
       "port": 3000
+    },
+    {
+      "name": "teaser",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "docs/submission/video"],
+      "port": 8765
     }
   ]
 }
