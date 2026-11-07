@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en" style="overflow:hidden; margin:0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>LaunCheck teaser</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hyperframes/core/dist/hyperframe.runtime.iife.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hyperframes/shader-transitions/dist/index.global.js"></script>
+    <style>
+      @font-face { font-family: "Manrope"; font-weight: 400 800; font-style: normal; font-display: block; src: url(data:font/woff2;base64,{{FONT_MANROPE}}) format("woff2"); }
+      @font-face { font-family: "DM Sans"; font-weight: 400 700; font-style: normal; font-display: block; src: url(data:font/woff2;base64,{{FONT_DMSANS}}) format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url(data:font/woff2;base64,{{FONT_MONO}}) format("woff2"); }
+
+      :root {
+        --bg: #183c31;
+        --green: #275d45;
+        --paper: #f5f7f3;
+        --paper-2: #eaf0e8;
+        --ink: #203b33;
+        --muted: #c1d2c6;
+        --red: #943e2d;
+        --red-bg: #fbece5;
+        --ok: #285c41;
+        --ok-bg: #e3eee4;
+        --gray: #59666b;
+        --font-display: "Manrope", system-ui, sans-serif;
+        --font-body: "DM Sans", system-ui, sans-serif;
+        --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: #fff; font-family: var(--font-body); }
+
+      .scene { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+      .scene.light { background: var(--paper); color: var(--ink); }
+      .scene-content { position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 28px; }
+      .display { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .kicker { font-family: var(--font-body); font-weight: 700; font-size: 30px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+      .mono { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+      /* decor */
+      .grid { position: absolute; inset: -120px; z-index: 0; opacity: 0.16;
+        background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px);
+        background-size: 80px 80px; }
+      .light .grid { opacity: 0.5; background-image: linear-gradient(#dbe6d9 1px, transparent 1px), linear-gradient(90deg, #dbe6d9 1px, transparent 1px); }
+      .glow { position: absolute; width: 1100px; height: 1100px; border-radius: 50%; z-index: 0;
+        background: radial-gradient(circle, rgba(64,140,104,.55) 0%, rgba(24,60,49,0) 65%); }
+      .wipe { position: absolute; inset: 0; z-index: 5; background: var(--green); }
+      .wipe.paper { background: var(--paper); }
+      .grain { position:absolute; inset:0; pointer-events:none; z-index:50; opacity:0.16; mix-blend-mode:overlay;
+        background-image: radial-gradient(rgba(255,255,255,.08) 1px, transparent 1.2px), radial-gradient(rgba(0,0,0,.18) 1px, transparent 1.2px);
+        background-size: 3px 3px, 5px 5px; background-position: 0 0, 1px 2px; }
+
+      /* s1 hook */
+      #s1-quote { font-size: 150px; position: relative; color: #fff; }
+      #s1-strike { position: absolute; left: -2%; top: 52%; height: 18px; width: 104%; background: var(--red); transform-origin: left center; border-radius: 9px; }
+      #s1-punch { font-size: 170px; color: #fff; }
+      #s1-punch .hl { color: #9fd9b7; }
+
+      /* s2 url */
+      .urlbar { display: flex; align-items: center; gap: 22px; background: var(--paper); border-radius: 22px; padding: 22px 22px 22px 44px; width: 1240px; box-shadow: 0 40px 120px rgba(0,0,0,.35); }
+      .urlbar .field { flex: 1; font-family: var(--font-mono); font-size: 56px; color: var(--ink); white-space: nowrap; overflow: hidden; }
+      .urlbar .field .proto { color: #7c8f84; }
+      .caret { display: inline-block; width: 5px; height: 58px; background: var(--green); vertical-align: middle; margin-left: 4px; }
+      .btn { font-family: var(--font-display); font-weight: 800; font-size: 44px; color: #fff; background: var(--green); border-radius: 14px; padding: 26px 40px; white-space: nowrap; }
+      .badge { display: inline-flex; align-items: center; gap: 18px; font-family: var(--font-body); font-weight: 700; font-size: 36px; color: var(--paper); border: 2px solid rgba(255,255,255,.35); border-radius: 999px; padding: 16px 34px; }
+      .dot { width: 18px; height: 18px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 8px rgba(111,211,155,.2); }
+
+      /* s3 receipt */
+      #s3 .scene-content { flex-direction: row; gap: 110px; }
+      .s3-left { width: 700px; display: flex; flex-direction: column; gap: 26px; }
+      .s3-left .display { font-size: 108px; color: #fff; }
+      .chip { align-self: flex-start; font-family: var(--font-body); font-weight: 700; font-size: 30px; color: var(--bg); background: #9fd9b7; border-radius: 999px; padding: 12px 26px; }
+      .receipt { width: 820px; background: var(--paper); color: var(--ink); border-radius: 10px; padding: 46px 52px 40px; box-shadow: 0 50px 140px rgba(0,0,0,.4); position: relative;
+        -webkit-mask: radial-gradient(14px at 50% 100%, transparent 98%, #000) 0 0 / 40px 100% repeat-x; }
+      .receipt h3 { font-family: var(--font-display); font-weight: 800; font-size: 40px; display: flex; justify-content: space-between; }
+      .receipt .sub { font-family: var(--font-mono); font-size: 22px; color: #5b6c62; margin-top: 6px; }
+      .rule { border-top: 3px dashed #cbd6cb; margin: 26px 0; }
+      .line { display: grid; grid-template-columns: 1fr auto; row-gap: 6px; padding: 18px 0; position: relative; }
+      .line .name { font-family: var(--font-body); font-weight: 700; font-size: 34px; }
+      .line .price { font-family: var(--font-mono); font-size: 36px; text-align: right; }
+      .line .hash { font-family: var(--font-mono); font-size: 22px; color: #5b6c62; }
+      .stamp { position: absolute; right: 150px; top: 14px; font-family: var(--font-display); font-weight: 800; font-size: 30px; color: var(--ok); border: 4px solid var(--ok); border-radius: 8px; padding: 2px 14px; transform: rotate(-8deg); }
+      .total { display: flex; justify-content: space-between; font-family: var(--font-display); font-weight: 800; font-size: 46px; }
+      .total .mono { font-weight: 500; }
+
+      /* s4 findings */
+      #s4 .scene-content { flex-direction: row; gap: 120px; }
+      .s4-left { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+      #s4-count { font-family: var(--font-display); font-weight: 800; font-size: 380px; line-height: .9; color: #ff9b84; font-variant-numeric: tabular-nums; }
+      .s4-left .display { font-size: 84px; color: #fff; }
+      .cards { display: flex; flex-direction: column; gap: 26px; width: 860px; }
+      .card { display: flex; align-items: center; gap: 26px; background: var(--red-bg); color: var(--red); border-left: 0; border-radius: 14px; padding: 30px 36px; font-family: var(--font-body); font-weight: 700; font-size: 42px; box-shadow: 0 30px 80px rgba(0,0,0,.3); }
+      .card .tag { font-family: var(--font-mono); font-weight: 500; font-size: 22px; color: #fff; background: var(--red); border-radius: 6px; padding: 6px 12px; white-space: nowrap; }
+      .card.more { background: transparent; color: var(--muted); box-shadow: none; padding: 6px 36px; font-size: 34px; }
+
+      /* s5 fixed */
+      .s5-wrap { position: relative; width: 1920px; height: 1080px; }
+      .browser { position: absolute; left: 110px; top: 190px; width: 1010px; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 50px 140px rgba(24,60,49,.28); }
+      .browser .bar { height: 46px; background: #e3eee4; display: flex; align-items: center; gap: 12px; padding: 0 20px; }
+      .browser .bar span { width: 14px; height: 14px; border-radius: 50%; background: #b6c9bb; }
+      .browser img { display: block; width: 1010px; height: auto; }
+      .phone { position: absolute; left: 1170px; top: 120px; width: 300px; height: 780px; border-radius: 40px; border: 12px solid var(--ink); overflow: hidden; background: #fff; box-shadow: 0 50px 140px rgba(24,60,49,.28); }
+      .phone img { display: block; width: 276px; height: auto; }
+      .phone-label { position: absolute; left: 1150px; top: 925px; width: 340px; text-align: center; font-family: var(--font-mono); font-size: 22px; color: var(--gray); }
+      .scope { position: absolute; left: 110px; top: 905px; font-family: var(--font-mono); font-size: 22px; color: var(--gray); }
+      .s5-right { position: absolute; left: 1540px; top: 210px; width: 340px; display: flex; flex-direction: column; gap: 22px; }
+      .s5-right .kicker { color: var(--green); }
+      #s5-fixed { font-family: var(--font-display); font-weight: 800; font-size: 120px; line-height: .95; color: var(--ink); letter-spacing: -0.03em; }
+      #s5-fixed .of { display: block; font-size: 56px; color: var(--gray); font-weight: 700; letter-spacing: 0; margin-top: 8px; }
+      .ticks { display: grid; grid-template-columns: repeat(5, 48px); gap: 14px; }
+      .tick { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+      .tick.ok { background: var(--ok); }
+      .tick.still { background: #e9eeef; border: 3px solid #b8c4c7; }
+      .spent { font-family: var(--font-mono); font-size: 34px; color: var(--ink); background: var(--ok-bg); border-radius: 10px; padding: 14px 20px; }
+      .s5-title { position: absolute; left: 110px; top: 70px; font-family: var(--font-display); font-weight: 800; font-size: 84px; color: var(--ink); letter-spacing: -0.03em; }
+
+      /* s6 end */
+      .logo { display: flex; align-items: center; gap: 34px; }
+      .logo .word { font-family: var(--font-display); font-weight: 800; font-size: 190px; letter-spacing: -0.04em; color: #fff; }
+      #s6-tag { font-family: var(--font-display); font-weight: 800; font-size: 76px; color: #9fd9b7; letter-spacing: -0.02em; }
+      #s6-url { font-family: var(--font-mono); font-size: 44px; color: var(--paper); background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.25); border-radius: 14px; padding: 16px 34px; }
+      #s6-built { font-family: var(--font-body); font-weight: 700; font-size: 30px; color: var(--muted); letter-spacing: 0.06em; }
+    </style>
+  </head>
+  <body>
+    <div id="main" data-composition-id="main" data-width="1920" data-height="1080" data-start="0" data-duration="20">
+
+      <!-- S1 0–2.6 hook -->
+      <div class="scene clip" id="s1" data-start="0" data-duration="2.6" data-track-index="0">
+        <div class="grid" id="s1-grid"></div>
+        <div class="glow" id="s1-glow" style="left:410px; top:-10px;"></div>
+        <div class="scene-content">
+          <div id="s1-quote" class="display">“Works on my laptop”<div id="s1-strike"></div></div>
+          <div id="s1-punch" class="display">isn't a <span class="hl">launch test.</span></div>
+        </div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- S2 2.6–5.2 url -->
+      <div class="scene clip" id="s2" data-start="2.6" data-duration="2.6" data-track-index="0" style="visibility:hidden;">
+        <div class="grid" id="s2-grid"></div>
+        <div class="glow" id="s2-glow" style="left:820px; top:180px;"></div>
+        <div class="scene-content">
+          <div class="kicker" id="s2-kicker">Paste a URL</div>
+          <div class="urlbar" id="s2-bar">
+            <div class="field"><span class="proto">https://</span><span id="s2-type"></span><span class="caret" id="s2-caret"></span></div>
+            <div class="btn" id="s2-btn">Check your launch</div>
+          </div>
+          <div class="badge" id="s2-badge"><span class="dot"></span>Kite Passport agent · budget you set</div>
+        </div>
+        <div class="wipe" id="s2-wipe"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- S3 5.2–9.0 plan + receipt -->
+      <div class="scene clip" id="s3" data-start="5.2" data-duration="3.8" data-track-index="0" style="visibility:hidden;">
+        <div class="grid" id="s3-grid"></div>
+        <div class="glow" id="s3-glow" style="left:-200px; top:100px;"></div>
+        <div class="scene-content">
+          <div class="s3-left">
+            <div class="chip" id="s3-chip">Planned with OpenServ SERV</div>
+            <div class="display" id="s3-title">The agent buys the checks.</div>
+            <div class="kicker" id="s3-k">USDC on Base · Kite Passport</div>
+          </div>
+          <div class="receipt" id="s3-receipt">
+            <h3><span>Launch receipt</span><span class="mono" style="font-size:28px;font-weight:500;color:#5b6c62;">acme-launch</span></h3>
+            <div class="sub">observed 6 Nov 2026 · paid by an AI agent</div>
+            <div class="rule"></div>
+            <div class="line" id="s3-l1"><span class="name">Public navigation in a browser</span><span class="price">$0.010</span><span class="hash">tx 0x68a6f89a3e…</span><span class="stamp" id="s3-st1">PAID</span></div>
+            <div class="line" id="s3-l2"><span class="name">Desktop render (1280 px)</span><span class="price">$0.005</span><span class="hash">tx 0xcc875b9d86…</span><span class="stamp" id="s3-st2">PAID</span></div>
+            <div class="line" id="s3-l3"><span class="name">Narrow render (390 px)</span><span class="price">$0.005</span><span class="hash">tx 0x41b819ff3c…</span><span class="stamp" id="s3-st3">PAID</span></div>
+            <div class="rule"></div>
+            <div class="total" id="s3-total"><span>Spent</span><span class="mono" id="s3-sum">$0.000</span></div>
+          </div>
+        </div>
+        <div class="wipe paper" id="s3-wipe"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- S4 9.0–12.4 findings -->
+      <div class="scene clip" id="s4" data-start="9.0" data-duration="3.4" data-track-index="0" style="visibility:hidden;">
+        <div class="grid" id="s4-grid"></div>
+        <div class="glow" id="s4-glow" style="left:-150px; top:-50px; background: radial-gradient(circle, rgba(148,62,45,.45) 0%, rgba(24,60,49,0) 65%);"></div>
+        <div class="scene-content">
+          <div class="s4-left">
+            <div class="kicker" id="s4-k">First check</div>
+            <div id="s4-count">0</div>
+            <div class="display" id="s4-label">problems found</div>
+          </div>
+          <div class="cards">
+            <div class="card" id="s4-c1"><span class="tag">fix before launch</span>Link preview has no image</div>
+            <div class="card" id="s4-c2"><span class="tag">fix before launch</span>Broken link: /pricing</div>
+            <div class="card" id="s4-c3"><span class="tag">fix before launch</span>No viewport tag</div>
+            <div class="card more" id="s4-c4">+ 7 more, each with its evidence</div>
+          </div>
+        </div>
+        <div class="wipe" id="s4-wipe" style="background:#943e2d;"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- S5 12.4–16.2 fixed (first shader anchor) -->
+      <div class="scene clip light" id="s5" data-start="12.4" data-duration="3.8" data-track-index="0" style="opacity:0;">
+        <div class="grid" id="s5-grid"></div>
+        <div class="scene-content">
+          <div class="s5-wrap">
+            <div class="s5-title" id="s5-title">Fix. Re-check.</div>
+            <div class="browser" id="s5-browser"><div class="bar"><span></span><span></span><span></span></div><img alt="Desktop render bought by the agent" src="data:image/png;base64,{{IMG_DESKTOP}}" /></div>
+            <div class="scope" id="s5-scope">desktop render 1280 px · bought by the agent</div>
+            <div class="phone" id="s5-phone"><img id="s5-phone-img" alt="390 px render bought by the agent" src="data:image/png;base64,{{IMG_NARROW}}" /></div>
+            <div class="phone-label" id="s5-plabel">390px window, not a phone</div>
+            <div class="s5-right">
+              <div class="kicker" id="s5-k">Second check</div>
+              <div id="s5-fixed">Fixed <span id="s5-n">0</span><span class="of">of 10</span></div>
+              <div class="ticks" id="s5-ticks">
+                <div class="tick ok"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div class="tick ok"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div class="tick ok"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div class="tick ok"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div class="tick ok"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div class="tick ok"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div class="tick still"></div><div class="tick still"></div><div class="tick still"></div><div class="tick still"></div>
+              </div>
+              <div class="kicker" style="font-size:22px; color:#59666b; letter-spacing:.12em;" id="s5-still">4 still there</div>
+              <div class="spent" id="s5-spent">Spent $0.020</div>
+            </div>
+          </div>
+        </div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- S6 16.2–20 end card (second shader anchor) -->
+      <div class="scene clip" id="s6" data-start="16.2" data-duration="3.8" data-track-index="0" style="opacity:0;">
+        <div class="grid" id="s6-grid"></div>
+        <div class="glow" id="s6-glow" style="left:410px; top:-10px;"></div>
+        <div class="scene-content">
+          <div class="logo" id="s6-logo">
+            <svg id="s6-mark" width="170" height="170" viewBox="0 0 64 64"><rect x="6" y="10" width="44" height="44" rx="6" fill="none" stroke="#fff" stroke-width="6"/><path id="s6-check" d="M17 31l11 11L58 8" fill="none" stroke="#9fd9b7" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="80" stroke-dashoffset="80"/></svg>
+            <div class="word" id="s6-word">LaunCheck</div>
+          </div>
+          <div id="s6-tag">AI buys the checks. You get the receipts.</div>
+          <div id="s6-url">launcheck.vercel.app</div>
+          <div id="s6-built">Built with OpenServ SERV + Kite Passport</div>
+        </div>
+        <div class="grain"></div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      // --- visibility: non-anchor scenes use autoAlpha; s5 is the first shader anchor ---
+      tl.set("#s1", { autoAlpha: 0 }, 2.6);
+      tl.set("#s2", { autoAlpha: 1 }, 2.6); tl.set("#s2", { autoAlpha: 0 }, 5.2);
+      tl.set("#s3", { autoAlpha: 1 }, 5.2); tl.set("#s3", { autoAlpha: 0 }, 9.0);
+      tl.set("#s4", { autoAlpha: 1 }, 9.0); tl.set("#s4", { autoAlpha: 0 }, 12.4);
+      tl.set("#s5", { opacity: 1 }, 12.4);
+
+      // === S1 0–2.6: quote, strike, punch ===
+      tl.from("#s1-quote", { scale: 1.35, autoAlpha: 0, filter: "blur(18px)", duration: 0.5, ease: "expo.out" }, 0.1);
+      tl.from("#s1-strike", { scaleX: 0, duration: 0.3, ease: "power4.out" }, 0.75);
+      tl.to("#s1-quote", { y: -170, scale: 0.62, opacity: 0.45, duration: 0.45, ease: "power3.inOut" }, 1.1);
+      tl.from("#s1-punch", { yPercent: 90, autoAlpha: 0, duration: 0.45, ease: "back.out(1.7)" }, 1.25);
+      tl.to("#s1-punch", { scale: 1.06, duration: 0.6, ease: "sine.inOut" }, 1.8);
+      tl.to("#s1-glow", { x: 120, y: 40, duration: 2.4, ease: "sine.inOut" }, 0.1);
+      tl.to("#s1-grid", { x: -60, y: -40, duration: 2.5, ease: "none" }, 0.05);
+
+      // === S2 2.6–5.2: wipe in, type URL, press button, badge ===
+      tl.to("#s2-wipe", { xPercent: 100, duration: 0.45, ease: "power4.inOut" }, 2.6);
+      tl.from("#s2-kicker", { y: 30, autoAlpha: 0, duration: 0.4, ease: "power2.out" }, 2.85);
+      tl.from("#s2-bar", { y: 80, scale: 0.92, autoAlpha: 0, duration: 0.55, ease: "expo.out" }, 2.8);
+      var lcTyped = { n: 0 };
+      tl.to(lcTyped, { n: 11, duration: 0.7, ease: "none", onUpdate: function () { document.getElementById("s2-type").textContent = "acme-launch".slice(0, Math.round(lcTyped.n)); } }, 3.15);
+      tl.to("#s2-caret", { opacity: 0, duration: 0.15, ease: "none", yoyo: true, repeat: 5 }, 3.1);
+      tl.to("#s2-btn", { scale: 0.9, duration: 0.12, ease: "power2.in" }, 4.1);
+      tl.to("#s2-btn", { scale: 1.08, backgroundColor: "#1d4a37", duration: 0.25, ease: "back.out(2.5)" }, 4.22);
+      tl.from("#s2-badge", { y: 40, autoAlpha: 0, duration: 0.45, ease: "back.out(1.6)" }, 4.3);
+      tl.to("#s2-glow", { x: -180, duration: 2.4, ease: "sine.inOut" }, 2.7);
+      tl.to("#s2-grid", { x: 60, duration: 2.5, ease: "none" }, 2.65);
+
+      // === S3 5.2–9.0: paper wipe out, plan chip, receipt prints ===
+      tl.to("#s3-wipe", { yPercent: -100, duration: 0.45, ease: "power4.inOut" }, 5.2);
+      tl.from("#s3-chip", { x: -60, autoAlpha: 0, duration: 0.4, ease: "back.out(1.8)" }, 5.5);
+      tl.from("#s3-title", { y: 60, autoAlpha: 0, duration: 0.5, ease: "expo.out" }, 5.55);
+      tl.from("#s3-k", { autoAlpha: 0, duration: 0.4, ease: "power2.out" }, 5.85);
+      tl.from("#s3-receipt", { yPercent: -60, rotation: -3, autoAlpha: 0, duration: 0.6, ease: "power4.out" }, 5.45);
+      ["#s3-l1", "#s3-l2", "#s3-l3"].forEach(function (sel, i) {
+        tl.from(sel, { x: 60, autoAlpha: 0, duration: 0.35, ease: "power3.out" }, 6.0 + i * 0.45);
+      });
+      ["#s3-st1", "#s3-st2", "#s3-st3"].forEach(function (sel, i) {
+        tl.from(sel, { scale: 2.4, autoAlpha: 0, duration: 0.25, ease: "back.out(2)" }, 6.25 + i * 0.45);
+      });
+      tl.from("#s3-total", { autoAlpha: 0, y: 20, duration: 0.35, ease: "power2.out" }, 7.4);
+      var sum = { v: 0 };
+      tl.to(sum, { v: 0.02, duration: 0.7, ease: "power2.out", onUpdate: function () { document.getElementById("s3-sum").textContent = "$" + sum.v.toFixed(3); } }, 7.45);
+      tl.to("#s3-receipt", { y: -12, rotation: 0.6, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 7.3);
+      tl.to("#s3-glow", { x: 200, duration: 3.6, ease: "sine.inOut" }, 5.3);
+      tl.to("#s3-grid", { y: -80, duration: 3.7, ease: "none" }, 5.25);
+
+      // === S4 9.0–12.4: red flash, counter to 10, cards slam in ===
+      tl.to("#s4-wipe", { xPercent: -100, duration: 0.4, ease: "power4.inOut" }, 9.0);
+      tl.from("#s4-k", { autoAlpha: 0, y: 20, duration: 0.35, ease: "power2.out" }, 9.3);
+      tl.from("#s4-count", { scale: 0.4, autoAlpha: 0, duration: 0.45, ease: "back.out(1.8)" }, 9.25);
+      var cnt = { v: 0 };
+      tl.to(cnt, { v: 10, duration: 0.9, ease: "power2.out", onUpdate: function () { document.getElementById("s4-count").textContent = Math.round(cnt.v); } }, 9.3);
+      tl.from("#s4-label", { x: -40, autoAlpha: 0, duration: 0.4, ease: "power3.out" }, 9.55);
+      ["#s4-c1", "#s4-c2", "#s4-c3", "#s4-c4"].forEach(function (sel, i) {
+        tl.from(sel, { x: 220, rotation: 4, autoAlpha: 0, duration: 0.4, ease: "back.out(1.6)" }, 9.55 + i * 0.28);
+      });
+      tl.to("#s4-count", { scale: 1.05, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 10.6);
+      tl.to(".cards", { y: -14, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 10.7);
+      tl.to("#s4-glow", { scale: 1.2, duration: 3.2, ease: "sine.inOut" }, 9.1);
+      tl.to("#s4-grid", { x: -70, duration: 3.3, ease: "none" }, 9.05);
+
+      // === S5 12.4–16.2: fixed screenshots, counter, ticks (anchor: no exit tweens) ===
+      tl.from("#s5-title", { y: 50, autoAlpha: 0, duration: 0.45, ease: "expo.out" }, 12.5);
+      tl.from("#s5-browser", { x: -260, rotation: -4, autoAlpha: 0, duration: 0.6, ease: "power4.out" }, 12.55);
+      tl.from("#s5-phone", { y: 260, rotation: 6, autoAlpha: 0, duration: 0.6, ease: "back.out(1.4)" }, 12.75);
+      tl.from("#s5-scope", { autoAlpha: 0, duration: 0.4, ease: "power2.out" }, 13.1);
+      tl.from("#s5-plabel", { autoAlpha: 0, duration: 0.4, ease: "power2.out" }, 13.2);
+      tl.from("#s5-k", { autoAlpha: 0, x: 30, duration: 0.35, ease: "power2.out" }, 13.0);
+      tl.from("#s5-fixed", { scale: 0.6, autoAlpha: 0, duration: 0.5, ease: "back.out(1.8)" }, 13.1);
+      var fx = { v: 0 };
+      tl.to(fx, { v: 6, duration: 0.8, ease: "power2.out", onUpdate: function () { document.getElementById("s5-n").textContent = Math.round(fx.v); } }, 13.2);
+      tl.from("#s5-ticks .tick", { scale: 0, autoAlpha: 0, duration: 0.3, ease: "back.out(2.4)", stagger: { each: 0.07, from: "start" } }, 13.3);
+      tl.from("#s5-still", { autoAlpha: 0, duration: 0.3, ease: "power2.out" }, 14.0);
+      tl.from("#s5-spent", { y: 30, autoAlpha: 0, duration: 0.4, ease: "back.out(1.6)" }, 14.1);
+      tl.to("#s5-phone-img", { y: -97, duration: 2.6, ease: "sine.inOut" }, 13.4);
+      tl.to("#s5-browser", { y: -10, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1 }, 14.0);
+      tl.to("#s5-grid", { x: 50, duration: 3.6, ease: "none" }, 12.45);
+
+      // === S6 16.2–20: logo draw, tagline, url ===
+      tl.from("#s6-mark", { scale: 0.3, rotation: -20, autoAlpha: 0, duration: 0.5, ease: "back.out(1.8)" }, 16.35);
+      tl.to("#s6-check", { strokeDashoffset: 0, duration: 0.5, ease: "power3.out" }, 16.6);
+      tl.from("#s6-word", { x: -60, autoAlpha: 0, filter: "blur(12px)", duration: 0.55, ease: "expo.out" }, 16.45);
+      tl.from("#s6-tag", { y: 40, autoAlpha: 0, duration: 0.5, ease: "power3.out" }, 16.9);
+      tl.from("#s6-url", { scale: 0.85, autoAlpha: 0, duration: 0.45, ease: "back.out(1.7)" }, 17.25);
+      tl.from("#s6-built", { autoAlpha: 0, duration: 0.45, ease: "power2.out" }, 17.55);
+      tl.to("#s6-logo", { scale: 1.04, duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 1 }, 17.6);
+      tl.to("#s6-glow", { x: 160, y: 60, duration: 3.6, ease: "sine.inOut" }, 16.3);
+      tl.to("#s6-grid", { y: 60, duration: 3.7, ease: "none" }, 16.25);
+
+      // --- one shader moment: the fixed report zooms into the end card ---
+      window.HyperShader.init({
+        bgColor: "#183c31",
+        scenes: ["s5", "s6"],
+        timeline: tl,
+        transitions: [{ time: 15.95, shader: "cinematic-zoom", duration: 0.5 }],
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
