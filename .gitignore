@@ -37,3 +37,10 @@ scratch/
 
 # Kite Passport CLI fetched at build time
 .kpass-bin/
+
+# Video render outputs and scratch
+docs/submission/video/*.mp4
+docs/submission/video/frames/
+docs/submission/video/*.log
+docs/submission/video/check.json
+docs/submission/video/launcheck-teaser/.hyperframes/
