@@ -44,3 +44,15 @@ docs/submission/video/frames/
 docs/submission/video/*.log
 docs/submission/video/check.json
 docs/submission/video/launcheck-teaser/.hyperframes/
+
+# Nested video projects: renders and tool state stay local; sources/credits remain reviewable.
+docs/submission/video/**/*.mp4
+docs/submission/video/**/*.webm
+docs/submission/video/**/.hyperframes/
+docs/submission/video/**/frames/
+docs/submission/video/**/check.json
+
+# LaunCheck v2 teaser build outputs
+docs/submission/video/launcheck-v2/landscape/
+docs/submission/video/launcheck-v2/portrait/
+docs/submission/video/launcheck-v2/*.mp4

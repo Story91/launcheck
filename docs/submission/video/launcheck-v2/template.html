@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width={{W}}, height={{H}}" />
+    <title>LaunCheck v2 {{AR}}</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hyperframes/core/dist/hyperframe.runtime.iife.js"></script>
+    <style>
+      @font-face { font-family: "Manrope"; src: url(assets/fonts/manrope.woff2) format("woff2"); font-weight: 200 800; }
+      @font-face { font-family: "DM Sans"; src: url(assets/fonts/dmsans.woff2) format("woff2"); font-weight: 100 1000; }
+      @font-face { font-family: "Plex Mono"; src: url(assets/fonts/plexmono.woff2) format("woff2"); font-weight: 400 700; }
+      :root { --navy: #17243b; --ink: #0d1626; --blue: #3457cf; --blue-soft: #6f8cf0; --sky: #eef3fb; --sun: #f2c94c; --red: #ff5a5f; --green: #3ccf91; }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: {{W}}px; height: {{H}}px; overflow: hidden; background: var(--ink); }
+      body { font-family: "DM Sans", sans-serif; color: #fff; }
+      #main { position: relative; width: {{W}}px; height: {{H}}px; overflow: hidden; background: var(--ink); }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,22,38,.15) 0%, rgba(13,22,38,.25) 55%, rgba(13,22,38,.85) 100%); }
+      .grid { position: absolute; inset: -120px; background-image: linear-gradient(rgba(111,140,240,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(111,140,240,.09) 1px, transparent 1px); background-size: 72px 72px; }
+      .glow { position: absolute; width: 1300px; height: 1300px; border-radius: 50%; background: radial-gradient(circle, rgba(52,87,207,.55), rgba(52,87,207,0) 65%); }
+      .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .display { font-family: "Manrope", sans-serif; font-weight: 800; letter-spacing: -0.03em; line-height: .95; }
+      .mono { font-family: "Plex Mono", monospace; }
+      .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+
+      /* captions */
+      .capline { position: absolute; left: 0; right: 0; bottom: 60px; width: fit-content; max-width: 1700px; margin: 0 auto; background: rgba(13,22,38,.8); border-radius: 24px; padding: 8px 40px 18px; text-align: center; font-family: "Manrope", sans-serif; font-weight: 800; font-size: 76px; letter-spacing: -0.02em; line-height: 1.05; text-shadow: 0 6px 30px rgba(0,0,0,.55); }
+      .capline .w { display: inline-block; margin: 0 .12em; }
+      .capline .hl { color: var(--sun); }
+      .port .capline { bottom: auto; top: 1440px; font-size: 80px; max-width: 980px; }
+
+      /* S2 chips */
+      .chips { position: absolute; right: 90px; top: 150px; display: flex; flex-direction: column; gap: 22px; }
+      .port .chips { right: 70px; left: 70px; top: 260px; }
+      .chip { display: flex; align-items: center; justify-content: space-between; gap: 40px; min-width: 620px; padding: 22px 30px; border-radius: 18px; background: rgba(13,22,38,.72); border: 2px solid rgba(111,140,240,.6); backdrop-filter: blur(8px); font-size: 34px; font-weight: 600; }
+      .chip b { font-family: "Plex Mono", monospace; color: var(--sun); font-weight: 700; }
+      .chip i { font-style: normal; display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: var(--blue-soft); margin-right: 18px; box-shadow: 0 0 18px var(--blue-soft); }
+
+      /* S3 receipt */
+      .receipt { position: relative; width: 860px; background: #fbfaf6; color: var(--ink); border-radius: 10px; padding: 46px 52px 40px; box-shadow: 0 40px 120px rgba(0,0,0,.6); font-family: "Plex Mono", monospace; }
+      .port .receipt { width: 960px; }
+      .receipt::after { content: ""; position: absolute; left: 0; right: 0; bottom: -18px; height: 18px; background: radial-gradient(circle at 18px -2px, transparent 16px, #fbfaf6 17px) 0 0 / 36px 18px repeat-x; }
+      .r-head { display: flex; justify-content: space-between; font-size: 24px; color: #5b6478; border-bottom: 3px dashed #c9cede; padding-bottom: 18px; margin-bottom: 18px; }
+      .r-title { font-family: "Manrope", sans-serif; font-weight: 800; font-size: 46px; letter-spacing: -0.02em; margin-bottom: 8px; }
+      .r-line { display: grid; grid-template-columns: 1fr auto; gap: 6px 20px; padding: 16px 0; border-bottom: 2px dotted #d5d9e4; font-size: 26px; }
+      .r-line .tx { grid-column: 1 / 3; font-size: 21px; color: var(--blue); }
+      .r-line .ok { color: #1c8a5a; font-weight: 700; }
+      .r-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 20px; font-size: 30px; font-weight: 700; }
+      .r-total b { font-family: "Manrope", sans-serif; font-size: 64px; }
+      .r-foot { margin-top: 12px; font-size: 21px; color: #5b6478; }
+      .stamp { position: absolute; right: 36px; top: 20px; border: 8px solid var(--green); color: var(--green); font-family: "Manrope", sans-serif; font-weight: 800; font-size: 74px; padding: 4px 26px; border-radius: 14px; transform: rotate(-12deg); letter-spacing: .04em; }
+
+      /* S4 3D cards */
+      .stage3d { position: absolute; inset: 0; perspective: 1800px; }
+      .card { position: absolute; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 50px 120px rgba(0,0,0,.65), 0 0 0 2px rgba(255,255,255,.12); }
+      .card img { display: block; width: 100%; }
+      .card .bar { height: 36px; background: #e8ecf5; display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+      .card .bar i { width: 12px; height: 12px; border-radius: 50%; background: #c3cad9; }
+      .label { position: absolute; font-family: "Plex Mono", monospace; font-size: 30px; color: var(--sun); background: rgba(13,22,38,.85); border: 2px solid rgba(242,201,76,.6); padding: 8px 16px; border-radius: 10px; white-space: nowrap; }
+      #lb1 { left: 150px; top: 110px; } #lb2 { left: 1180px; top: 40px; } .port #lb1 { left: 70px; top: 90px; } .port #lb2 { left: 90px; top: 1340px; }
+      #c-desk { left: 150px; top: 170px; width: 900px; }
+      #c-phone { left: 1180px; top: 90px; width: 300px; border-radius: 34px; border: 10px solid #0b1220; }
+      #c-nav { left: 560px; top: 300px; width: 820px; }
+      .port #c-desk { left: 70px; top: 150px; width: 760px; }
+      .port #c-phone { left: 700px; top: 330px; width: 320px; }
+      .port #c-nav { left: 90px; top: 760px; width: 900px; }
+
+      /* S5 numbers */
+      .big { font-family: "Manrope", sans-serif; font-weight: 800; letter-spacing: -0.05em; line-height: .85; }
+      #n10 { font-size: 520px; color: #fff; text-shadow: 0 0 80px rgba(255,90,95,.45); }
+      #n10-l { font-size: 64px; font-weight: 800; font-family: "Manrope", sans-serif; color: var(--red); letter-spacing: .12em; margin-top: 10px; }
+      #cost { font-size: 300px; color: var(--sun); }
+      #cost-l { font-size: 54px; font-family: "Manrope", sans-serif; font-weight: 800; color: #fff; letter-spacing: .08em; margin-top: 16px; }
+      .port #n10 { font-size: 600px; } .port #cost { font-size: 250px; }
+
+      /* S6 fixed */
+      #fixcard { position: absolute; left: 210px; top: 90px; width: 1500px; }
+      .port #fixcard { left: 60px; top: 380px; width: 960px; }
+      #sixgone { position: absolute; font-family: "Manrope", sans-serif; font-weight: 800; font-size: 150px; color: #fff; background: var(--blue); padding: 6px 46px 16px; border-radius: 26px; box-shadow: 0 30px 90px rgba(52,87,207,.7); left: 1180px; top: 560px; transform: rotate(-6deg); }
+      .port #sixgone { left: 300px; top: 940px; }
+
+      /* S7 end card */
+      #logo { display: flex; align-items: center; gap: 34px; }
+      #logo svg { width: 150px; height: 150px; }
+      #word { font-size: 170px; }
+      .tagl { font-family: "Manrope", sans-serif; font-weight: 800; font-size: 72px; letter-spacing: -0.02em; margin-top: 34px; text-align: center; }
+      #tag2 { color: var(--blue-soft); }
+      #url { margin-top: 44px; font-family: "Plex Mono", monospace; font-size: 54px; background: var(--blue); padding: 14px 38px; border-radius: 16px; }
+      #built { margin-top: 30px; font-size: 32px; color: #b9c4e0; font-weight: 600; }
+      .port #word { font-size: 140px; } .port #logo svg { width: 120px; height: 120px; } .port .tagl { font-size: 68px; padding: 0 60px; }
+    </style>
+  </head>
+  <body>
+    <div id="main" class="{{KIND}}" data-composition-id="main" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+{{AUDIO}}
+      <video id="v-pay1" class="fill clip" src="assets/gen/pay-{{AR}}.mp4" muted playsinline data-start="0" data-duration="3.75" data-media-start="0" data-track-index="1"></video>
+      <video id="v-scan" class="fill clip" src="assets/gen/scan-{{AR}}.mp4" muted playsinline data-start="3.75" data-duration="1.45" data-media-start="0.7" data-track-index="1"></video>
+      <video id="v-pay2" class="fill clip" src="assets/gen/pay-{{AR}}.mp4" muted playsinline data-start="5.2" data-duration="3.25" data-media-start="1.7" data-track-index="1" style="filter: blur(6px) brightness(.55);"></video>
+
+      <!-- S1 0–3.75: AI hand presses PAY (generated) -->
+      <div class="scene clip" id="s1" data-start="0" data-duration="3.75" data-track-index="0">
+        <div class="shade"></div>
+      </div>
+
+      <!-- S2 3.75–5.2: scan + the checks it picked -->
+      <div class="scene clip" id="s2" data-start="3.75" data-duration="1.45" data-track-index="0">
+        <div class="shade"></div>
+        <div class="chips">
+          <div class="chip" id="ch1"><span><i></i>Desktop render</span><b>$0.005</b></div>
+          <div class="chip" id="ch2"><span><i></i>Phone render 390 px</span><b>$0.005</b></div>
+          <div class="chip" id="ch3"><span><i></i>Real browser session</span><b>$0.010</b></div>
+          <div class="chip" id="ch4"><span><i></i>HTML audit</span><b>$0.080</b></div>
+        </div>
+        <div class="flash" id="f2"></div>
+      </div>
+
+      <!-- S3 5.2–8.45: the receipt prints over the coins -->
+      <div class="scene clip" id="s3" data-start="5.2" data-duration="3.25" data-track-index="0">
+        <div class="center"><div id="rcpt-wrap">
+          <div class="receipt" id="rcpt">
+            <div class="r-head"><span>LAUNCHECK · RECEIPT</span><span>NOV 6 2026</span></div>
+            <div class="r-title">Agent purchases</div>
+            <div class="r-line" id="rl1"><span>Real browser session · vaaya.ai</span><span class="ok">$0.010 paid</span><span class="tx">tx 0xa4c37b95…0d428d451 · Base</span></div>
+            <div class="r-line" id="rl2"><span>Phone render 390 px · cyberwarex</span><span class="ok">$0.005 paid</span><span class="tx">tx 0xe4d8f635…1214b3780 · Base</span></div>
+            <div class="r-total" id="rtot"><span>TOTAL · USDC</span><b>$0.015</b></div>
+            <div class="r-foot" id="rfoot">Budget $0.25 · paid through Kite Passport · 7 free checks</div>
+            <div class="stamp" id="stamp">PAID</div>
+          </div>
+        </div></div>
+        <div class="flash" id="f3"></div>
+      </div>
+
+      <!-- S4 8.45–10.95: screenshots the agent bought, in 3D -->
+      <div class="scene clip" id="s4" data-start="8.45" data-duration="2.5" data-track-index="0" style="background: var(--navy);">
+        <div class="grid" id="g4"></div>
+        <div class="glow" style="left:300px; top:-300px;"></div>
+        <div class="stage3d">
+          <div class="card" id="c-desk"><div class="bar"><i></i><i></i><i></i></div><img alt="Desktop render bought by the agent" src="assets/img/render_desktop.png" /></div>
+          <div class="card" id="c-phone"><img alt="Phone render bought by the agent" src="assets/img/render_narrow.png" /></div>
+          <div class="card" id="c-nav"><div class="bar"><i></i><i></i><i></i></div><img alt="Real browser session bought by the agent" src="assets/img/browser_navigation_screen.png" /></div>
+        </div>
+        <div class="label" id="lb1">desktop render · $0.005</div>
+        <div class="label" id="lb2">real browser · $0.010</div>
+        <div class="flash" id="f4"></div>
+      </div>
+
+      <!-- S5 10.95–14.0: 10 problems, $0.015 -->
+      <div class="scene clip" id="s5" data-start="10.95" data-duration="3.05" data-track-index="0" style="background: var(--ink);">
+        <div class="grid" id="g5"></div>
+        <div class="glow" id="gl5" style="left:310px; top:-110px; background: radial-gradient(circle, rgba(255,90,95,.35), rgba(255,90,95,0) 65%);"></div>
+        <div class="center" id="p10"><div class="big" id="n10">10</div><div id="n10-l">PROBLEMS FOUND</div></div>
+        <div class="center" id="pcost" style="opacity:0;"><div class="big" id="cost">$0.015</div><div id="cost-l">SPENT ON THE CHECKS</div></div>
+        <div class="flash" id="f5"></div>
+      </div>
+
+      <!-- S6 14.0–17.0: fixed, ran again, six gone (real report) -->
+      <div class="scene clip" id="s6" data-start="14.0" data-duration="3.0" data-track-index="0" style="background: var(--sky);">
+        <div class="stage3d"><div class="card" id="fixcard"><div class="bar"><i></i><i></i><i></i></div><img alt="Real report: Fixed 6 of 10 findings" src="assets/img/fixed.png" /></div></div>
+        <div id="sixgone">6 gone</div>
+        <div class="flash" id="f6"></div>
+      </div>
+
+      <!-- S7 17.0–23.0: end card -->
+      <div class="scene clip" id="s7" data-start="17.0" data-duration="6.0" data-track-index="0" style="background: var(--navy);">
+        <div class="grid" id="g7"></div>
+        <div class="glow" id="gl7" style="left:-100px; top:-200px;"></div>
+        <div class="center">
+          <div id="logo">
+            <svg viewBox="0 0 64 64"><rect x="6" y="10" width="44" height="44" rx="10" fill="none" stroke="#6f8cf0" stroke-width="6"/><path id="chk" d="M17 32l10 10 26-28" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" stroke-dashoffset="60"/></svg>
+            <div class="display" id="word">LaunCheck</div>
+          </div>
+          <div class="tagl" id="tag1">AI buys the checks.</div>
+          <div class="tagl" id="tag2">You get the receipts.</div>
+          <div id="url">launcheck.xyz</div>
+          <div id="built">Built with OpenServ SERV + Kite Passport</div>
+        </div>
+        <div class="flash" id="f7"></div>
+      </div>
+
+      <!-- captions (voiceover words) -->
+{{CAPTIONS}}
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var P = document.getElementById("main").classList.contains("port");
+
+      // S1: slow push on the generated shot, punch on the hook
+      tl.fromTo("#v-pay1", { scale: 1.12 }, { scale: 1.0, duration: 3.75, ease: "power1.out" }, 0);
+
+      // S2: chips land one by one
+      tl.fromTo("#f2", { opacity: 0.9 }, { opacity: 0, duration: 0.25, ease: "power2.out" }, 3.75);
+      tl.fromTo("#v-scan", { scale: 1.25 }, { scale: 1.05, duration: 1.45, ease: "power2.out" }, 3.75);
+      ["#ch1", "#ch2", "#ch3", "#ch4"].forEach(function (id, i) {
+        tl.from(id, { x: P ? 0 : 500, y: P ? -60 : 0, opacity: 0, scale: 0.85, duration: 0.3, ease: "back.out(1.8)" }, 4.05 + i * 0.25);
+      });
+
+      // S3: receipt prints, lines tick, stamp slams on "Base"
+      tl.fromTo("#f3", { opacity: 0.85 }, { opacity: 0, duration: 0.25 }, 5.2);
+      tl.fromTo("#rcpt", { clipPath: "inset(0 0 100% 0)", y: -260 }, { clipPath: "inset(0 0 0% 0)", y: 0, duration: 1.0, ease: "power2.out" }, 5.25);
+      tl.from("#rl1", { opacity: 0, x: -40, duration: 0.25 }, 5.6);
+      tl.from("#rl2", { opacity: 0, x: -40, duration: 0.25 }, 6.0);
+      tl.from("#rtot", { opacity: 0, y: 20, duration: 0.25 }, 6.55);
+      tl.from("#rfoot", { opacity: 0, duration: 0.25 }, 6.8);
+      tl.fromTo("#stamp", { scale: 3, opacity: 0, rotation: -30 }, { scale: 1, opacity: 1, rotation: -12, duration: 0.22, ease: "power4.in" }, 7.65);
+      tl.to("#rcpt-wrap", { x: 8, y: -6, duration: 0.05, yoyo: true, repeat: 3 }, 7.87);
+      tl.to("#rcpt-wrap", { scale: 1.06, rotation: -2, duration: 0.6, ease: "sine.inOut" }, 7.9);
+
+      // S4: 3D cards swing in
+      tl.fromTo("#f4", { opacity: 0.8 }, { opacity: 0, duration: 0.25 }, 8.45);
+      tl.fromTo("#c-desk", { rotationY: 55, rotationX: 10, x: -300, opacity: 0 }, { rotationY: P ? -10 : 18, rotationX: 4, x: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, 8.55);
+      tl.fromTo("#c-phone", { rotationY: -60, y: 300, opacity: 0 }, { rotationY: P ? -14 : -16, y: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, 8.75);
+      tl.from("#lb1", { opacity: 0, y: -20, duration: 0.25 }, 8.9);
+      tl.fromTo("#c-nav", { rotationX: -70, z: 400, y: 200, opacity: 0 }, { rotationX: 6, z: 0, y: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, 9.62);
+      tl.from("#lb2", { opacity: 0, y: 20, duration: 0.25 }, 9.9);
+      tl.to("#g4", { y: 72, duration: 2.5, ease: "none" }, 8.45);
+      tl.to(".stage3d", { scale: 1.06, duration: 2.5, ease: "sine.inOut" }, 8.45);
+
+      // S5: slam the numbers
+      tl.fromTo("#f5", { opacity: 1 }, { opacity: 0, duration: 0.3 }, 11.05);
+      tl.fromTo("#n10", { scale: 2.6, opacity: 0, filter: "blur(18px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.28, ease: "power4.in" }, 10.98);
+      tl.to("#p10", { x: 14, duration: 0.04, yoyo: true, repeat: 5 }, 11.26);
+      tl.from("#n10-l", { opacity: 0, scaleX: 1.6, duration: 0.4, ease: "expo.out" }, 11.3);
+      tl.to("#gl5", { scale: 1.3, duration: 1.4, ease: "sine.inOut" }, 11.0);
+      tl.to("#p10", { y: -260, opacity: 0, scale: 0.6, duration: 0.3, ease: "power3.in" }, 12.35);
+      tl.fromTo("#pcost", { opacity: 0, y: 260 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.6)" }, 12.5);
+      tl.to("#cost", { scale: 1.08, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 1 }, 12.9);
+      tl.to("#g5", { y: 72, x: -72, duration: 3.05, ease: "none" }, 10.95);
+
+      // S6: real "Fixed 6 of 10", then the stamp
+      tl.fromTo("#f6", { opacity: 0.9 }, { opacity: 0, duration: 0.25 }, 14.0);
+      tl.fromTo("#fixcard", { rotationX: 30, rotationY: P ? 0 : -20, y: 400, opacity: 0 }, { rotationX: 6, rotationY: P ? 0 : -6, y: 0, opacity: 1, duration: 0.7, ease: "expo.out" }, 14.0);
+      tl.to("#fixcard", { scale: P ? 1.03 : 1.08, rotationX: 0, rotationY: 0, duration: 1.9, ease: "sine.inOut" }, 14.7);
+      tl.fromTo("#sixgone", { scale: 3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.22, ease: "power4.in" }, 15.9);
+      tl.to("#fixcard", { x: 12, duration: 0.04, yoyo: true, repeat: 3 }, 16.12);
+
+      // S7: end card
+      tl.fromTo("#f7", { opacity: 1 }, { opacity: 0, duration: 0.35 }, 17.0);
+      tl.from("#logo", { scale: 0.4, opacity: 0, duration: 0.45, ease: "back.out(1.8)" }, 17.05);
+      tl.to("#chk", { strokeDashoffset: 0, duration: 0.45, ease: "power3.out" }, 17.3);
+      tl.from("#tag1", { y: 50, opacity: 0, duration: 0.4, ease: "power3.out" }, 18.15);
+      tl.from("#tag2", { y: 50, opacity: 0, duration: 0.4, ease: "power3.out" }, 19.75);
+      tl.from("#url", { scale: 0.8, opacity: 0, duration: 0.4, ease: "back.out(1.7)" }, 20.55);
+      tl.from("#built", { opacity: 0, duration: 0.4 }, 20.7);
+      tl.to("#gl7", { x: 500, y: 200, duration: 6, ease: "sine.inOut" }, 17.0);
+      tl.to("#g7", { y: 72, duration: 6, ease: "none" }, 17.0);
+      tl.to("#logo", { scale: 1.04, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 1 }, 20.6);
+
+      // captions
+      {{CAPTIONS_JS}}
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
