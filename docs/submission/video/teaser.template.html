@@ -12,7 +12,7 @@
       @font-face { font-family: "DM Sans"; font-weight: 400 700; font-style: normal; font-display: block; src: url(data:font/woff2;base64,{{FONT_DMSANS}}) format("woff2"); }
       @font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url(data:font/woff2;base64,{{FONT_MONO}}) format("woff2"); }
 
-      /* Palette read from the live app (launcheck.vercel.app) */
+      /* Palette read from the live app (launcheck.xyz) */
       :root {
         --navy: #17243b;
         --navy-2: #22355a;
@@ -81,6 +81,25 @@
   </head>
   <body>
     <div id="main" data-composition-id="main" data-width="1920" data-height="1080" data-start="0" data-duration="20">
+      <!-- SFX: bundled HyperFrames media-use library -->
+      <audio id="sfx-00-impact-bass-1" class="clip" src="launcheck-teaser/assets/sfx/impact-bass-1.mp3" data-start="0.0" data-track-index="10" data-volume="0.55"></audio>
+      <audio id="sfx-01-whoosh-short" class="clip" src="launcheck-teaser/assets/sfx/whoosh-short.mp3" data-start="2.32" data-track-index="11" data-volume="0.45"></audio>
+      <audio id="sfx-02-pop" class="clip" src="launcheck-teaser/assets/sfx/pop.mp3" data-start="3.0" data-track-index="12" data-volume="0.3"></audio>
+      <audio id="sfx-03-click" class="clip" src="launcheck-teaser/assets/sfx/click.mp3" data-start="4.25" data-track-index="13" data-volume="0.55"></audio>
+      <audio id="sfx-04-whoosh-short" class="clip" src="launcheck-teaser/assets/sfx/whoosh-short.mp3" data-start="4.92" data-track-index="14" data-volume="0.45"></audio>
+      <audio id="sfx-05-pop" class="clip" src="launcheck-teaser/assets/sfx/pop.mp3" data-start="5.4" data-track-index="15" data-volume="0.3"></audio>
+      <audio id="sfx-06-ping" class="clip" src="launcheck-teaser/assets/sfx/ping.mp3" data-start="6.6" data-track-index="16" data-volume="0.25"></audio>
+      <audio id="sfx-07-whoosh-short" class="clip" src="launcheck-teaser/assets/sfx/whoosh-short.mp3" data-start="8.32" data-track-index="17" data-volume="0.45"></audio>
+      <audio id="sfx-08-pop" class="clip" src="launcheck-teaser/assets/sfx/pop.mp3" data-start="8.55" data-track-index="18" data-volume="0.3"></audio>
+      <audio id="sfx-09-glitch-3" class="clip" src="launcheck-teaser/assets/sfx/glitch-3.mp3" data-start="9.75" data-track-index="19" data-volume="0.22"></audio>
+      <audio id="sfx-10-pop" class="clip" src="launcheck-teaser/assets/sfx/pop.mp3" data-start="10.15" data-track-index="20" data-volume="0.3"></audio>
+      <audio id="sfx-11-whoosh-short" class="clip" src="launcheck-teaser/assets/sfx/whoosh-short.mp3" data-start="11.92" data-track-index="21" data-volume="0.45"></audio>
+      <audio id="sfx-12-chime" class="clip" src="launcheck-teaser/assets/sfx/chime.mp3" data-start="12.3" data-track-index="22" data-volume="0.35"></audio>
+      <audio id="sfx-13-pop" class="clip" src="launcheck-teaser/assets/sfx/pop.mp3" data-start="13.95" data-track-index="23" data-volume="0.3"></audio>
+      <audio id="sfx-14-click" class="clip" src="launcheck-teaser/assets/sfx/click.mp3" data-start="14.45" data-track-index="24" data-volume="0.55"></audio>
+      <audio id="sfx-15-impact-bass-2" class="clip" src="launcheck-teaser/assets/sfx/impact-bass-2.mp3" data-start="15.45" data-track-index="25" data-volume="0.5"></audio>
+      <audio id="sfx-16-sparkle" class="clip" src="launcheck-teaser/assets/sfx/sparkle.mp3" data-start="16.2" data-track-index="26" data-volume="0.3"></audio>
+      <audio id="sfx-17-pop" class="clip" src="launcheck-teaser/assets/sfx/pop.mp3" data-start="16.85" data-track-index="27" data-volume="0.25"></audio>
 
       <!-- S1 0–2.4 hook -->
       <div class="scene clip" id="s1" data-start="0" data-duration="2.4" data-track-index="0">
@@ -98,7 +117,7 @@
         <div class="grid"></div>
         <div class="glow" id="s2-glow" style="left:700px; top:100px;"></div>
         <div class="frame" id="s2-frame">
-          <div class="chrome"><i></i><i></i><i></i><div class="addr">launcheck.vercel.app</div></div>
+          <div class="chrome"><i></i><i></i><i></i><div class="addr">launcheck.xyz</div></div>
           <div class="view"><div class="cam" id="s2-cam"><img alt="LaunCheck landing page" src="data:image/png;base64,{{IMG_HOME}}" /></div></div>
         </div>
         <div class="ring" id="s2-ring" style="left:445px; top:547px;"></div>
@@ -113,7 +132,7 @@
         <div class="grid"></div>
         <div class="glow" id="s3-glow" style="left:-200px; top:200px;"></div>
         <div class="frame" id="s3-frame">
-          <div class="chrome"><i></i><i></i><i></i><div class="addr">launcheck.vercel.app/check</div></div>
+          <div class="chrome"><i></i><i></i><i></i><div class="addr">launcheck.xyz/check</div></div>
           <div class="view"><div class="cam" id="s3-cam"><img alt="Check form with budget tiers" src="data:image/png;base64,{{IMG_CHECK}}" /></div></div>
         </div>
         <div class="cap" id="s3-cap" style="left:120px; top:34px;">You set the budget.</div>
@@ -127,7 +146,7 @@
         <div class="grid"></div>
         <div class="glow" id="s4-glow" style="left:900px; top:-100px;"></div>
         <div class="frame" id="s4-frame">
-          <div class="chrome"><i></i><i></i><i></i><div class="addr">launcheck.vercel.app/check/lc_KpScNuw45vmP</div></div>
+          <div class="chrome"><i></i><i></i><i></i><div class="addr">launcheck.xyz/check/lc_KpScNuw45vmP</div></div>
           <div class="view"><div class="cam" id="s4-cam"><img alt="Real LaunCheck report" src="data:image/png;base64,{{IMG_REPORT}}" /></div></div>
         </div>
         <div class="cap" id="s4-cap1" style="left:120px; top:34px;">The agent buys the checks.</div>
@@ -143,7 +162,7 @@
         <div class="grid"></div>
         <div class="glow" id="s5-glow" style="left:200px; top:-200px;"></div>
         <div class="frame" id="s5-frame">
-          <div class="chrome"><i></i><i></i><i></i><div class="addr">launcheck.vercel.app/check/lc_KpScNuw45vmP</div></div>
+          <div class="chrome"><i></i><i></i><i></i><div class="addr">launcheck.xyz/check/lc_KpScNuw45vmP</div></div>
           <div class="view"><div class="cam" id="s5-cam"><img alt="Fixed 6 of 10 comparison" src="data:image/png;base64,{{IMG_REPORT}}" /></div></div>
         </div>
         <div class="cap blue" id="s5-cap1" style="left:120px; top:34px;">Fix. Check again.</div>
@@ -162,7 +181,7 @@
             <div class="word" id="s6-word">LaunCheck</div>
           </div>
           <div id="s6-tag">AI buys the checks. You get the receipts.</div>
-          <div id="s6-url">launcheck.vercel.app</div>
+          <div id="s6-url">launcheck.xyz</div>
           <div id="s6-built">Built with OpenServ SERV + Kite Passport</div>
         </div>
         <div class="grain"></div>
