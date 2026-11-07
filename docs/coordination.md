@@ -28,6 +28,10 @@ Zasady: każdy commituje tylko swoje pliki. Conventional Commits po angielsku, a
 
 ## Requests from Codex
 
+- 7 XI, wynik sprzątania: zachowane media v2 z 5ebe312; usunięte origin/feat/tendr, origin/claude/ecstatic-meitner-s6snh7 i lokalne feat/tendr (wszystko scalone, brak PR/worktree). Został tylko główny worktree. Usunięte 9 starych plików eksperymentalnego QA i folder pobranych fixtures w scratch. Sekrety .env pozostają ignorowane, nie są publiczne. Skan wzorców 89 commitów nie wykrył rozpoznawanych sekretów; nie jest pełnym audytem. Nowe źródło prawdy: docs/launchcheck/methodology.md + docs/README.md. 223 core / 182 web, typecheck i build przechodzą.
+
+- 7 XI, przed publikacją na prośbę właściciela: audyt rzetelności + dokumentacja zgodna z kodem + sprzątanie. Nie dotykam aktywnego docs/submission/video/launcheck-v2 ani mediów Claude. Poprawiam free checks: HTTP 403/429 jako brak rozstrzygnięcia, bez oceniania HTML strony błędu; opis odpowiedzi dotyczy naszego obserwatora, nie wszystkich użytkowników. Dopisuję metodologię, usuwam wyłącznie scalone nieaktywne gałęzie; bez czyszczenia sekretów potrzebnych lokalnemu uruchomieniu, bez rewrite historii. Proszę przy filmie zachować prawdziwy zakres: agent proponuje poprawki, sam nie naprawia kodu.
+
 - 6 XI, po kolejnym feedbacku właściciela: usunięte odłączone logo/process sekcje i duplikat galerii z home; jeden launch desk łączy kroki, formularz i rzeczywisty wynik demo. Nowa lokalna funkcja w /tools/link-preview generuje PNG 1200×630 (3 kolory), bez uploadu i zewnętrznych requestów. Chrome 390/1440: 0 overflow/pageerror/WCAG A-AA, pobrany PNG ma właściwe wymiary; 182 testy web i typecheck OK. Zasady SERV Hackathon 02 ponownie sprawdzone; repo PUBLIC. Stare materiały zgłoszenia Tendr zachowane w docs/archive/tendr-submission, bieżący checklist i szkic posta odnoszą się do LaunCheck. Nie publikowano posta ani formularza; limit/expiry płatności bez zmian.
 
 
@@ -126,5 +130,7 @@ Zasady: każdy commituje tylko swoje pliki. Conventional Commits po angielsku, a
 - 6 XI, wykonawca gotowy (S2): `POST /api/checks` jest prawdziwy: walidacja, ochrona SSRF (403 `blocked_url`), limit 3 runy/h na IP (429), cache 24 h dla tej samej strony (200 `cached:true`), dzienny limit (503 `daily_cap`), cookie `lc_creator` (HttpOnly) ustala `isRequester`. Run idzie w `after()`: darmowe checki (page_fetch, security_headers, tls_cert, share_tags, og_image_fetch, email_dns, link_status), plan wg poziomu (`chosenBy: "rules"`, SERV dojdzie później), zakupy przez Kite: render_desktop $0.005, render_narrow $0.005, html_audit $0.08. Screenshoty: `evidence[].blobUrl` = `/api/evidence/<runId>_ev_<checkId>` (PNG). Paragon ma `txHash` i `explorerUrl` (basescan) z historii kpass. `DELETE /api/checks/[id]` tylko dla requestera (403 inaczej). `/api/catalog` pokazuje tylko usługi z potwierdzoną ceną (bez vaaya/underscoredone/outside_probe). `/api/agent` czyta prawdziwy allowance z kpass (cache 60 s). Live runs włącza właściciel (`LAUNCHCHECK_LIVE=1`); do tego czasu 503 `paused`. `NEXT_PUBLIC_APP_URL` ustawione w Vercel: LaunchCheck wykrył na naszym landingu, że og:image wskazywał na chroniony URL wdrożenia (302 do logowania).
 
 ## Status
+
+- 7 XI: prawdziwy wykonawca i UI działają; źródła filmu v2 w 5ebe312, nowa domena HTTPS działa, poprawki rzetelności w 7c7618c. Obowiązuje metodologia docs/launchcheck/methodology.md. Finalna publikacja X i formularza nie jest potwierdzona. Poniższy wpis jest historyczny.
 
 - 6 XI: spec i brief zapisane (niezacommitowane, czekają na decyzje właściciela). Brief v0 z czatu (typy `CheckRun`) jest nieaktualny: obowiązuje kontrakt z `docs/launchcheck/codex-tasks.md` (`Report`).

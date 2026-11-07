@@ -2,21 +2,26 @@
 
 **Catch the oops. Before the launch.** Check a public launch page, understand what needs attention, and prepare fixes for your coding agent. OpenServ plans the checks; Kite Passport purchases outside evidence with an owner-controlled allowance. Each report includes observations and payment records.
 
-[Application](https://launcheck.vercel.app) · [Source](https://github.com/Story91/launcheck) · [Example receipt](https://launcheck.vercel.app/check/fx_problems) · [Design](docs/superpowers/specs/2026-11-06-launchcheck-design.md)
+[Application](https://launcheck.xyz) · [Source](https://github.com/Story91/launcheck) · [Real demo receipt](https://launcheck.xyz/check/lc_KpScNuw45vmP) · [Design](docs/superpowers/specs/2026-11-06-launchcheck-design.md)
 
 Built for SERV Hackathon 02, Kite track. The earlier Tendr prototype remains at `/tendr`; its scheduled jobs are disabled. Historical Tendr evaluation figures do not describe LaunCheck.
 
 ## What works
 
-- Deterministic public-page checks: response, selected headers, certificate, sharing metadata/image, mail DNS and selected links.
-- **OpenServ SERV Reasoning** chooses useful paid checks and explains existing findings. Code validates the catalogue, budget and evidence references. Reports record request IDs, prompt versions and input hashes. Failed model calls use a labelled rules/template fallback.
-- **Kite Passport** purchases 1280px and 390px browser screenshots, an independent static HTML audit, and (Full tier) a browser session that clicks one eligible public navigation link.
-- Receipts distinguish settled USDC amounts and Base transactions from quotes, refusals, unknown payments and charges without results.
-- Select findings and copy or download an evidence-backed fix pack, check again, and inspect **Fixed X of Y**. An unperformed follow-up check does not establish a fix.
-- Create a 1200×630 share cover locally, download it, and generate HTML or Next.js link-preview metadata at `/tools/link-preview`. Applying the code and hosting the image are the user’s steps.
-- Download receipt PNG/evidence JSON, copy a badge, and share a report link. Gallery publication is curated and restricted to our own demo pages.
+- Check one public page: its response, selected headers, TLS certificate, link-preview metadata/image, mail DNS and selected links.
+- Let OpenServ plan optional paid checks and explain existing findings; rules validate purchases and evidence references. A labelled fallback is available if reasoning fails.
+- Buy outside browser screenshots, a static HTML second opinion and, in Full mode when applicable, one public link navigation through Kite Passport.
+- Inspect observations, sources, timestamps, screenshots and payment receipts. Screenshots alone do not prove that interactions work.
+- Export proposed fixes for a coding agent, then rerun and compare findings. LaunCheck does not edit or deploy the user's code.
+- Create a link-preview snippet and cover image locally in the browser. The owner must upload and apply them.
 
-Reports are unlisted and excluded from search indexing. Anyone with the link can see the submitted URL, screenshots and evidence. Avoid private data and URLs containing secrets. The creator cookie permits follow-up checks and deletion; active runs and unresolved payments must be settled before deletion.
+## What a report means
+
+An observation is a result from a particular observer at a particular time. A failed server request does not establish that every visitor sees the same failure. FYI recommendations may be intentional configuration. Missing checks remain unknown; there is no whole-site score or certification. AI explanations and proposed fixes need review even when their evidence references validate.
+
+Reports are unlisted and accessible to anyone with their link; they are not authenticated private documents. Example IDs beginning with `fx_` are illustrative. Base USDC sales to other agents are planned, not active.
+
+Read the [report methodology and limits](docs/launchcheck/methodology.md), [documentation map](docs/README.md), and [publication checklist](docs/hackathon-checklist.md). Older specs describe design intent, not proof of implemented functionality.
 
 ## Prices and boundaries
 
