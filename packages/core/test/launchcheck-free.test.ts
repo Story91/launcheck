@@ -306,13 +306,32 @@ describe("page_fetch", () => {
     expect(page.check.state).toBe("problem");
     expectValid(r.outcomes);
   });
-  it("flags a non-2xx page status and still runs the other checks", async () => {
+  it("records an error response without evaluating its HTML as the intended page", async () => {
     const { deps } = makeDeps(goodWorld({}, { "https://example.com/": htmlResponse(html(GOOD_BODY), GOOD_HEADERS, 503) }));
     const r = await runFreeChecks("https://example.com/", deps);
     expect(r.unreachable).toBe(false);
     expect(rules(byId(r.outcomes, "page_fetch"))).toEqual(["page_status_error"]);
     expect(byId(r.outcomes, "page_fetch").findings[0]!.severity).toBe("fix_before_launch");
     expect(r.outcomes).toHaveLength(7);
+    for (const id of ["security_headers", "share_tags", "og_image_fetch", "link_status"]) {
+      expect(byId(r.outcomes, id).check.state).toBe("not_checked");
+      expect(byId(r.outcomes, id).findings).toEqual([]);
+    }
+    expect(byId(r.outcomes, "tls_cert").check.state).not.toBe("not_checked");
+  });
+  it.each([403, 429])("keeps HTTP %s access failures unknown instead of reporting broken page content", async (status) => {
+    const { deps, calls } = makeDeps(goodWorld({}, { "https://example.com/": htmlResponse('<a href="/challenge">Challenge</a>', {}, status) }));
+    const r = await runFreeChecks("https://example.com/", deps);
+    const page = byId(r.outcomes, "page_fetch");
+    expect(page.check).toMatchObject({ state: "not_checked", notCheckedReason: "blocked_from_our_server" });
+    expect(page.evidence[0]!.fields.status).toBe(status);
+    expect(page.findings).toEqual([]);
+    for (const id of ["security_headers", "share_tags", "og_image_fetch", "link_status"]) {
+      expect(byId(r.outcomes, id).check.state).toBe("not_checked");
+      expect(byId(r.outcomes, id).findings).toEqual([]);
+    }
+    expect(calls.some(c => c.url.includes("/challenge"))).toBe(false);
+    expectValid(r.outcomes);
   });
   it("records the redirect chain from http to https when the user enters http", async () => {
     const { deps } = makeDeps(goodWorld());

@@ -66,14 +66,23 @@ export async function runFreeChecks(url: string, deps: FreeCheckDeps): Promise<F
     return { unreachable: true, error: unreachableMessage(err, url, deps), finalUrl: null, outcomes: [], blockedLinks: [], linksFound: 0 };
   }
   let blockedLinks: string[] = [];
+  // An error/challenge page is not evidence about the intended page's HTML or headers.
+  const pageContentAvailable = page.response.status >= 200 && page.response.status < 300;
+  const pageContentCheck = (checkId: LaunchCheckFreeCheckId, run: () => Promise<CheckOutcome>): Promise<CheckOutcome> => {
+    if (pageContentAvailable) return guarded(checkId, deps, run);
+    return Promise.resolve({
+      check: { checkId, label: LAUNCHCHECK_FREE_CHECK_LABELS[checkId], kind: "free", state: "not_checked", notCheckedReason: "not_applicable", evidenceIds: [], scopeNote: `Not evaluated: the page request returned HTTP ${page.response.status}; its response may be an error or access-challenge page.` },
+      evidence: [], findings: [],
+    });
+  };
   const outcomes = await Promise.all([
     guarded("page_fetch", deps, () => freeCheckPageFetch(page, deps)),
-    guarded("security_headers", deps, () => freeCheckSecurityHeaders(page, deps)),
+    pageContentCheck("security_headers", () => freeCheckSecurityHeaders(page, deps)),
     guarded("tls_cert", deps, () => freeCheckTlsCert(page, deps)),
-    guarded("share_tags", deps, () => freeCheckShareTags(page, deps)),
-    guarded("og_image_fetch", deps, () => freeCheckOgImageFetch(page, deps)),
+    pageContentCheck("share_tags", () => freeCheckShareTags(page, deps)),
+    pageContentCheck("og_image_fetch", () => freeCheckOgImageFetch(page, deps)),
     guarded("email_dns", deps, () => freeCheckEmailDns(page, deps)),
-    guarded("link_status", deps, async () => {
+    pageContentCheck("link_status", async () => {
       const { blockedLinks: blocked, ...outcome } = await freeCheckLinkStatus(page, deps);
       blockedLinks = blocked;
       return outcome;

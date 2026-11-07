@@ -314,11 +314,14 @@ export async function freeCheckPageFetch(page: LaunchCheckFreePage, deps: FreeCh
   const scope = fromVercel(deps);
   const ev = makeEvidence("page_fetch", deps, "Homepage response", fields, scope);
   const drafts: Draft[] = [];
+  if (r.status === 403 || r.status === 429) {
+    return assemble("page_fetch", [ev], [], `${scope}; HTTP ${r.status} prevented this observer from checking the page`, "blocked_from_our_server");
+  }
   if (r.status < 200 || r.status > 299) {
     drafts.push(draft("page_status_error", "fix_before_launch", `The page returns HTTP ${r.status}`,
       `GET ${r.finalUrl} answered HTTP ${r.status} from Vercel ${deps.region}.`,
-      "Visitors and link preview crawlers receive this status instead of the page content.",
-      "Make the URL answer with a 2xx status, or point your launch link to a URL that does."));
+      "Our server received an error response. This does not establish what every visitor receives; access rules or a temporary failure may affect this request.",
+      "Reproduce the response in a browser and review server logs. If the public destination is failing, repair it or update the launch URL."));
   }
   if (httpProbe.redirectsToHttps === false) {
     drafts.push(draft("http_not_redirected", "fix_soon", "Plain HTTP does not redirect to HTTPS",
@@ -352,12 +355,12 @@ export async function freeCheckSecurityHeaders(page: LaunchCheckFreePage, deps: 
     drafts.push(draft("hsts_missing", "fix_soon", "No HSTS header on the homepage response",
       `The response from ${page.response.finalUrl} has no Strict-Transport-Security header.`,
       "Without HSTS, browsers may make the first request of a visit over plain HTTP before following your redirect.",
-      "Send Strict-Transport-Security: max-age=31536000; includeSubDomains on HTTPS responses."));
+      "Review an HSTS policy for this hostname after confirming HTTPS works. Include subdomains only if all affected subdomains support HTTPS."));
   }
   if (!csp) {
     drafts.push(draft("csp_missing", "fyi", "No Content-Security-Policy header on the homepage response",
       `The response from ${page.response.finalUrl} has no Content-Security-Policy header.`,
-      "A Content-Security-Policy tells browsers which scripts, styles and frames the page may load. Without it, browsers apply no such limits.",
+      "No enforcing CSP header was observed on this response. This check does not assess policies in HTML meta tags or establish an exploitable vulnerability.",
       "Add a Content-Security-Policy header; start with a report-only policy to see what it would block."));
   }
   if (!fields["x-content-type-options"]) {
@@ -568,8 +571,8 @@ export async function freeCheckEmailDns(page: LaunchCheckFreePage, deps: FreeChe
       "If mail is sent from this domain, review its applicable DMARC policy with the owner and mail provider before changing DNS."));
   } else if (policy === "none") {
     drafts.push(draft("dmarc_p_none", "fyi", "The DMARC policy is p=none", `DMARC record at ${dmarcName}: "${dmarcRecord}".`,
-      "With p=none, receiving servers only report failures and take no action on mail that fails the check.",
-      "After reviewing DMARC reports, move the policy to p=quarantine or p=reject."));
+      "This DMARC record requests monitoring rather than quarantine or rejection. Receivers may still apply their own filtering; this is not evidence of a delivery failure.",
+      "If this domain sends mail, review alignment and reports with its mail provider before considering a stricter policy. Monitoring may be intentional."));
   }
   return assemble("email_dns", [ev], drafts, scope);
 }
@@ -654,12 +657,12 @@ export async function freeCheckLinkStatus(page: LaunchCheckFreePage, deps: FreeC
     if (r.result === "broken") {
       drafts.push(draft("link_broken", "fix_before_launch", `A link on the page returns HTTP ${r.status}`,
         `${r.method} ${r.url} answered HTTP ${r.status}${r.finalUrl && r.finalUrl !== r.url ? ` at ${r.finalUrl}` : ""}.`,
-        "Visitors who click this link reach an error page instead of the destination.",
-        "Publish the missing page, or update the link to an existing destination."));
+        "Our link probe received an error response. A browser visit may differ because of request method, access rules or a temporary failure.",
+        "Open the exact destination in a browser and reproduce the issue. If it is failing, repair the destination or update the link."));
     } else if (r.result === "redirect_loop") {
       drafts.push(draft("link_redirect_loop", "fix_before_launch", `A link on the page redirects more than ${LAUNCHCHECK_MAX_REDIRECTS} times`,
         `${r.method} ${r.url} was still redirecting after ${LAUNCHCHECK_MAX_REDIRECTS} hops.`,
-        "Browsers stop after too many redirects and show an error instead of the destination.",
+        "Our probe stopped at its redirect limit. This does not prove a loop or that a browser with a different limit will fail.",
         "Check the redirect rules for this path so that it reaches a final page in one or two hops."));
     }
   }
