@@ -11,7 +11,7 @@ Track: **Kite**. Legacy Tendr drafts are archived under `docs/archive/tendr-subm
 | --- | --- |
 | SERV Reasoning in the build | Implemented: plan and evidence-based explanations through ServClient; Shadow Agent marker, schema/evidence checks, request IDs. Actual deployed report `lc_KpScNuw45vmP` retains two successful request IDs. |
 | Public code repository | Confirmed PUBLIC via GitHub on 6 XI: https://github.com/Story91/launcheck. A private repository does not meet the published requirement. |
-| Demo link **or** video | Live app: https://launcheck.vercel.app. Existing reports remain inspectable. A recorded video is recommended, not an additional mandatory item when a demo link is supplied. |
+| Demo link **or** video | Live app: https://launcheck.xyz. Existing reports remain inspectable. A recorded video is recommended, not an additional mandatory item when a demo link is supplied. |
 | Short write-up explaining the product, SERV use and chosen track | Current fact outline in `docs/submission/write-up.md`; owner still needs to write/review the final submission answers. |
 | Post on X by the deadline and its URL in the submission | Current draft in `docs/submission/x-post.md`. No confirmed publication URL; not marked complete. |
 | Send submission through the form | No confirmation of final submission. Deployment is not submission. |
@@ -34,3 +34,11 @@ A public beta announcement is supported by the working application and real paym
 Public runs have an owner-approved vendor cap of 1.50 USD/day and expire at **2026-11-15 23:59 UTC**. Current checks can exhaust the shared budget; callers see a paused state. After expiry, live starts stop. Recorded reports remain useful to judges; a recording is especially helpful because judging may be after expiry. Extending spending requires a new owner decision, not an implicit budget increase.
 
 Still separate from this audit: final X publication, final submission, confirmation of account registration/terms in the form, and checking SERV credit availability before a live recording. Do not count old Tendr registrations or a report's historical successful model call as current account/credit verification.
+
+## Publication review — 7 November 2026
+
+- Code-based report methodology: `docs/launchcheck/methodology.md`. Access failures remain unknown; error-page HTML is not evaluated as the intended page. Report copy distinguishes observations from interpretations and proposed fixes.
+- Current checks: 223 core tests, 182 web tests, web typecheck and production build pass. These are controlled checks, not proof of a public-web accuracy percentage.
+- Claude committed v2 video sources in `5ebe312`; local landscape and portrait MP4 files exist. This is not confirmation that a film was published or a final submission was sent.
+- Repository cleanup removed fully merged obsolete branches and superseded local QA scratch. Historical Tendr documentation remains explicitly historical rather than being silently reused as LaunCheck claims.
+- A scan of 89 Git revisions found no recognized credential patterns; this is a limited pattern check. Local environment files remain ignored. No history rewrite or credential rotation was performed.
