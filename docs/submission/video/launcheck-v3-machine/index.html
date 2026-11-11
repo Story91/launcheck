@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>LaunCheck: Here's your receipt</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hyperframes/core/dist/hyperframe.runtime.iife.js"></script>
+    <style>
+      @font-face { font-family: "Manrope"; src: url(assets/fonts/manrope.woff2) format("woff2"); font-weight: 200 800; }
+      @font-face { font-family: "DM Sans"; src: url(assets/fonts/dmsans.woff2) format("woff2"); font-weight: 100 1000; }
+      @font-face { font-family: "Plex Mono"; src: url(assets/fonts/plexmono.woff2) format("woff2"); font-weight: 400 700; }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0d1626; }
+      body { font-family: "DM Sans", sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }
+      #main { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #0d1626; }
+      .vid { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; transform-origin: 1500px 230px; }
+      .ov { position: absolute; inset: 0; transform-origin: 1500px 230px; }
+      /* the machine's small screen sits at about x 1440–1564, y 172–290 in every clip */
+      .scr { position: absolute; left: 1442px; top: 174px; width: 120px; height: 114px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: "Plex Mono", monospace; font-weight: 700; opacity: 0; }
+      .scr b { font-size: 30px; line-height: 1; letter-spacing: -0.02em; }
+      .scr i { font-style: normal; font-size: 15px; letter-spacing: 0.12em; margin-top: 8px; }
+      .scr.sun { background: #f2c94c; color: #17243b; box-shadow: 0 0 40px rgba(242,201,76,.7); }
+      .scr.red { background: #1a0d10; color: #ff5a5f; box-shadow: 0 0 40px rgba(255,90,95,.6); }
+      .scr.red b { font-size: 46px; }
+      .scr.grn { background: #3ccf91; color: #08281b; box-shadow: 0 0 40px rgba(60,207,145,.7); }
+      .scr.grn b { font-size: 46px; }
+      .cap { position: absolute; left: 0; right: 0; bottom: 64px; text-align: center; z-index: 5; opacity: 0; }
+      .cap span { display: inline-block; max-width: 1500px; padding: 14px 36px 20px; border-radius: 20px; background: rgba(13,22,38,.82); font-family: "Manrope", sans-serif; font-weight: 800; font-size: 68px; line-height: 1.08; letter-spacing: -0.03em; }
+      .cap b { display: block; font-family: "Plex Mono", monospace; font-weight: 700; font-size: 28px; letter-spacing: 0.1em; margin-bottom: 6px; }
+      .cap.robot b { color: #b9c4e0; }
+      .cap.mach b { color: #f2c94c; }
+      .cap.mach span { color: #ffe9a8; }
+      #hook { position: absolute; left: 0; right: 0; top: 60px; text-align: center; z-index: 5; }
+      #hook span { display: inline-block; padding: 12px 32px 18px; background: #fff; color: #0d1626; border-radius: 16px; font-family: "Manrope", sans-serif; font-weight: 800; font-size: 60px; letter-spacing: -0.04em; }
+      .scene { position: absolute; inset: 0; }
+      #endc { background: #17243b; }
+      #grid { position: absolute; inset: -80px; background-image: linear-gradient(rgba(111,140,240,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(111,140,240,.08) 1px, transparent 1px); background-size: 72px 72px; }
+      #glow { position: absolute; left: 310px; top: -300px; width: 1300px; height: 1300px; border-radius: 50%; background: radial-gradient(circle, rgba(52,87,207,.55), rgba(52,87,207,0) 65%); }
+      #punch { position: absolute; left: 0; right: 0; top: 300px; text-align: center; font-family: "Manrope", sans-serif; font-weight: 800; font-size: 136px; letter-spacing: -0.055em; line-height: 1; }
+      #punch .y { color: #f2c94c; }
+      #lock { position: absolute; left: 0; right: 0; top: 560px; display: flex; align-items: center; justify-content: center; gap: 28px; opacity: 0; }
+      #lock svg { width: 120px; height: 120px; }
+      #lock div { font-family: "Manrope", sans-serif; font-weight: 800; font-size: 112px; letter-spacing: -0.05em; line-height: 1; }
+      #url { position: absolute; left: 0; right: 0; top: 760px; text-align: center; opacity: 0; }
+      #url span { display: inline-block; font-family: "Plex Mono", monospace; font-size: 52px; background: #3457cf; color: #fff; padding: 14px 38px 16px; border-radius: 14px; }
+      #built { position: absolute; left: 0; right: 0; top: 880px; text-align: center; font-size: 34px; font-weight: 600; color: #b9c4e0; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="main" data-composition-id="main" data-width="1920" data-height="1080" data-start="0" data-duration="21">
+      <audio id="music" class="clip" src="assets/gen/music.mp3" data-start="0" data-duration="21" data-track-index="9" data-volume="1" data-fade-out="0.8" data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.3},{"t":14.8,"v":0.3},{"t":15.2,"v":0.75}]}]}'></audio>
+      <audio id="r1" class="clip" src="assets/vo/r1.mp3" data-start="0.45" data-track-index="10" data-volume="1"></audio>
+      <audio id="m1" class="clip" src="assets/vo/m1.mp3" data-start="2.45" data-track-index="11" data-volume="1"></audio>
+      <audio id="r2" class="clip" src="assets/vo/r2.mp3" data-start="5.2" data-track-index="20" data-volume="1"></audio>
+      <audio id="m2" class="clip" src="assets/vo/m2.mp3" data-start="8.75" data-track-index="21" data-volume="1"></audio>
+      <audio id="r3" class="clip" src="assets/vo/r3.mp3" data-start="10.65" data-track-index="12" data-volume="1"></audio>
+      <audio id="m3" class="clip" src="assets/vo/m3.mp3" data-start="12.55" data-track-index="13" data-volume="1"></audio>
+      <audio id="fx-coin" class="clip" src="assets/sfx/coin.mp3" data-start="1.7" data-track-index="14" data-volume="0.55"></audio>
+      <audio id="fx-card" class="clip" src="assets/sfx/card.mp3" data-start="3.1" data-track-index="15" data-volume="0.5"></audio>
+      <audio id="fx-alarm" class="clip" src="assets/sfx/alarm.mp3" data-start="8.7" data-track-index="16" data-volume="0.45"></audio>
+      <audio id="fx-rc1" class="clip" src="assets/sfx/receipt.mp3" data-start="10.9" data-track-index="17" data-volume="0.55"></audio>
+      <audio id="fx-rc2" class="clip" src="assets/sfx/receipt.mp3" data-start="11.85" data-track-index="18" data-volume="0.55"></audio>
+      <audio id="fx-imp" class="clip" src="assets/sfx/impact.mp3" data-start="15.08" data-track-index="19" data-volume="0.6"></audio>
+
+      <video class="vid clip" id="k1" src="assets/gen/k1.mp4" muted playsinline data-start="0" data-duration="5" data-media-start="0" data-track-index="1"></video>
+      <video class="vid clip" id="k2" src="assets/gen/k2.mp4" muted playsinline data-start="5" data-duration="5" data-media-start="0" data-track-index="1"></video>
+      <video class="vid clip" id="k3" src="assets/gen/k3.mp4" muted playsinline data-start="10" data-duration="5.04" data-media-start="0" data-track-index="1"></video>
+
+      <div class="scene clip" id="o1" data-start="0" data-duration="15.04" data-track-index="2">
+        <div class="ov" id="ov">
+          <div class="scr sun" id="s1"><b>$0.005</b><i>PAID</i></div>
+          <div class="scr red" id="s2"><b>10</b><i>FOUND</i></div>
+          <div class="scr grn" id="s3"><b>6</b><i>GONE</i></div>
+        </div>
+        <div id="hook"><span>POV: you gave your AI agent a budget before launch</span></div>
+        <div class="cap robot" id="c1"><span><b>AGENT</b>One phone screenshot, please!</span></div>
+        <div class="cap mach" id="c2"><span><b>CHECK MACHINE</b>Half a cent. Paid on Base.</span></div>
+        <div class="cap robot" id="c3"><span><b>AGENT</b>Wait. My link preview is… blank?!</span></div>
+        <div class="cap mach" id="c4"><span><b>CHECK MACHINE</b>Ten problems found.</span></div>
+        <div class="cap robot" id="c5"><span><b>AGENT</b>Fixed it! Check again!</span></div>
+        <div class="cap mach" id="c6"><span><b>CHECK MACHINE</b>Six gone. Here's your receipt.</span></div>
+      </div>
+
+      <div class="scene clip" id="endc" data-start="15.04" data-duration="5.96" data-track-index="3">
+        <div id="grid"></div>
+        <div id="glow"></div>
+        <div id="punch">AI buys the checks.<br /><span class="y">You get the receipts.</span></div>
+        <div id="lock"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#3457cf"/><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 17h22M14 17v34h38V30"/><path d="m26 30 9 9 19-25"/></g></svg><div>LaunCheck</div></div>
+        <div id="url"><span>launcheck.xyz</span></div>
+        <div id="built">Built with OpenServ SERV + Kite Passport · USDC on Base</div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      function on(s, t) { tl.set(s, { opacity: 1 }, t); }
+      function off(s, t) { tl.set(s, { opacity: 0 }, t); }
+      function pop(s, t) { tl.fromTo(s, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.12, ease: "back.out(2)", immediateRender: false }, t); }
+      function shake(s, t) { tl.fromTo(s, { x: -7 }, { x: 7, duration: 0.05, yoyo: true, repeat: 5, immediateRender: false }, t); }
+
+      // camera: gentle push toward the machine screen on each clip
+      tl.fromTo(["#k1", "#ov"], { scale: 1 }, { scale: 1.12, duration: 5, ease: "sine.inOut" }, 0);
+      tl.fromTo("#k2", { scale: 1.06 }, { scale: 1.2, duration: 5, ease: "sine.inOut" }, 5);
+      tl.fromTo("#ov", { scale: 1.06 }, { scale: 1.2, duration: 5, ease: "sine.inOut", immediateRender: false }, 5);
+      tl.fromTo("#k3", { scale: 1.0 }, { scale: 1.08, duration: 5.04, ease: "sine.inOut" }, 10);
+      tl.fromTo("#ov", { scale: 1.0 }, { scale: 1.08, duration: 5.04, ease: "sine.inOut", immediateRender: false }, 10);
+
+      off("#hook", 2.7);
+      pop("#c1", 0.45); off("#c1", 2.4);
+      pop("#s1", 2.35); off("#s1", 4.9);
+      pop("#c2", 2.45); off("#c2", 5.15);
+      pop("#c3", 5.2); off("#c3", 9.0);
+      pop("#s2", 8.75); shake("#s2", 8.75); off("#s2", 10.0);
+      pop("#c4", 9.0); off("#c4", 10.6);
+      pop("#c5", 10.65); off("#c5", 12.5);
+      pop("#s3", 12.55);
+      pop("#c6", 12.55);
+
+      // end card
+      tl.fromTo("#punch", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.16, ease: "power4.in" }, 15.08);
+      tl.to("#punch", { y: -160, scale: 0.7, duration: 0.4, ease: "power3.inOut" }, 16.9);
+      pop("#lock", 17.2); pop("#url", 17.6); tl.to("#built", { opacity: 1, duration: 0.3 }, 17.9);
+      tl.to("#glow", { x: 260, duration: 5.96, ease: "sine.inOut" }, 15.04);
+      tl.to("#grid", { y: 72, duration: 5.96, ease: "none" }, 15.04);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
