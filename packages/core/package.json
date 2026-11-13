@@ -11,6 +11,7 @@
     "./launchcheck/types": "./src/launchcheck/types.ts",
     "./launchcheck/fixtures": "./src/launchcheck/fixtures.ts",
     "./launchcheck/wording": "./src/launchcheck/wording.ts",
+    "./launchcheck/fix-area": "./src/launchcheck/fix-area.ts",
     "./ted/client": "./src/ted/client.ts"
   },
   "scripts": {

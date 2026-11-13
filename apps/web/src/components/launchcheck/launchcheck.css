@@ -149,6 +149,7 @@ html, body { overflow-x: clip; }
 .lc-severity { color: var(--lc-error); font-size: 13px !important; font-family: var(--font-body) !important; letter-spacing: 0; }
 .lc-severity-fix_soon { color: var(--lc-warning); }
 .lc-severity-fyi { color: var(--color-muted); }
+.lc-fix-area { display: inline-block; margin: 2px 0 6px; padding: 2px 8px; border: 1px solid currentColor; border-radius: 999px; color: var(--color-muted); font-size: 12px; line-height: 1.5; }
 .lc-finding { border: 1px solid var(--color-rule); padding: var(--space-md); margin-top: var(--space-xs); background: var(--lc-white); }
 .lc-finding h4 { margin-bottom: var(--space-sm); }
 .lc-finding>p { font-size: 14px; margin: var(--space-sm) 0; overflow-wrap: anywhere; }

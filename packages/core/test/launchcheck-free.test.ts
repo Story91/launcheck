@@ -446,6 +446,26 @@ describe("email_dns", () => {
     const r = await runFreeChecks("https://www.example.com/", deps);
     expect(rules(byId(r.outcomes, "email_dns"))).toEqual([]);
   });
+  it("does not look up mail records on a hosting platform subdomain", async () => {
+    const asked: string[] = [];
+    const { deps } = makeDeps(goodWorld({}, {
+      "https://demo.vercel.app/": htmlResponse(html(GOOD_BODY), GOOD_HEADERS),
+      "http://demo.vercel.app/": redirect("https://demo.vercel.app/"),
+      "https://demo.vercel.app/og.png": png(),
+      "https://demo.vercel.app/pricing": ok(), "https://demo.vercel.app/docs": ok(), "https://demo.vercel.app/about": ok(),
+    }));
+    const resolveTxt = deps.resolveTxt;
+    deps.resolveTxt = async (name) => { asked.push(name); return resolveTxt(name); };
+    const r = await runFreeChecks("https://demo.vercel.app/", deps);
+    const email = byId(r.outcomes, "email_dns");
+    expect(email.check.state).toBe("not_checked");
+    expect(email.check.notCheckedReason).toBe("not_applicable");
+    expect(email.findings).toEqual([]);
+    expect(email.check.scopeNote).toContain("vercel.app");
+    expect(email.evidence[0]!.fields).toMatchObject({ host: "demo.vercel.app", sharedHostingSuffix: "vercel.app" });
+    expect(asked).toEqual([]);
+    expectValid(r.outcomes);
+  });
   it("is not checked on SERVFAIL", async () => {
     const { deps } = makeDeps(goodWorld({ txt: { "example.com": Object.assign(new Error("queryTxt ESERVFAIL example.com"), { code: "ESERVFAIL" }) } }));
     const r = await runFreeChecks("https://example.com/", deps);

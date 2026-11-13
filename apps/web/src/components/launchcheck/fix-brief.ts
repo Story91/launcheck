@@ -1,6 +1,7 @@
 import type { Report } from "./contract";
 import { copy } from "./copy";
 import { timestamp, safeWebUrl, isFixture } from "./format";
+import { launchCheckFixArea } from "@tendr/core/launchcheck/fix-area";
 
 // A JSON data block keeps page/provider text distinct from the brief's instructions.
 export function fixBrief(report: Report, reportUrl: string) {
@@ -12,6 +13,7 @@ export function fixBrief(report: Report, reportUrl: string) {
     status: report.status,
     findings: report.findings.map(finding => ({
       ruleId: finding.ruleId,
+      fixArea: launchCheckFixArea(finding.ruleId),
       severity: finding.severity,
       title: finding.title,
       observed: finding.observed,

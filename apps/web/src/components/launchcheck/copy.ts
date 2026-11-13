@@ -2,6 +2,7 @@
 export const copy = {
   realReceipt: "See a real receipt", liveObservation: "Recorded observation", demoFixedNotice: "Demo page in its fixed configuration, used for LaunCheck’s before-and-after demonstration.",
   couldNotRecheck: "Couldn’t recheck",
+  fixAreas: { page: "Change in the page", server: "Change in hosting or server settings", dns: "Change in DNS", certificate: "Change at the certificate" },
   browserSteps: "Browser actions", browserActions: { open: "Open page", click: "Click link" },
   inferenceCostNote: "Vendor payments are recorded here. Model token estimates appear in the reasoning log; SERV add-on fees are not included in those estimates.",
   allChecks: "All checks", inProgress: "In progress", filterChecks: "Filter checks by outcome", noChecksInFilter: "No checks currently have this outcome.",
@@ -44,6 +45,10 @@ sellerAction: `# Example: kpass must already be installed and authenticated.\n- 
   demoTitle: "Acme", demoNotice: "Demo page with deliberate problems, used by LaunCheck’s demo.", demoHeading: "A little less busywork.", demoText: "A fictional workspace for planning your next launch.", demoAction: "Explore the launch plan", demoPricing: "Pricing", demoLearn: "Learn more", badgeReceipt: "see receipt", oldBadge: "Results older than 30 days", ogTitle: "Launch receipt", ogPaid: "Paid for by an AI agent", ogFixture: "Example receipt / illustrative data", notFoundBody: "Check the address or start a new website check.",
 } as const;
 export const reportHeadline = (n: number, problems: number, unknown: number) => `We ran ${n} checks. Recorded ${problems} findings. ${unknown} couldn’t run.`;
+/** Shown under "Still present" when some of those findings cannot be removed by editing the page. */
+export const remainingOutsidePage = (outside: number, total: number) => outside === total
+  ? `${total === 1 ? "This finding is" : `All ${total} of these are`} changed outside the page: in hosting settings, DNS or the certificate. Editing the page does not remove ${total === 1 ? "it" : "them"}.`
+  : `${outside} of these ${total} ${outside === 1 ? "is" : "are"} changed outside the page: in hosting settings, DNS or the certificate.`;
 export const fixedHeadline = (fixed: number, original: number) => `Fixed ${fixed} of ${original} findings LaunCheck recorded`;
 export function shareText(r: { budgetUsd: number; spentUsd: number; problems: number; paidCalls: number; fixed?: number; original?: number; fixture?: boolean; paymentUnknown?: boolean; status?: keyof typeof copy.stages }) {
   if (r.fixture) return "An example LaunCheck receipt: observations, scope and the cost of each check.";

@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { isIP } from "node:net";
 import type { CheckOutcome, FreeCheckDeps } from "../engine";
 import type { LaunchCheckCheck, LaunchCheckEvidence, LaunchCheckFinding } from "../types";
+import { launchCheckSharedHostingSuffix } from "../fix-area";
 import {
   LAUNCHCHECK_FETCH_TIMEOUT_MS,
   LAUNCHCHECK_MAX_REDIRECTS,
@@ -542,6 +543,13 @@ export async function freeCheckEmailDns(page: LaunchCheckFreePage, deps: FreeChe
   const scope = fromVercel(deps);
   const host = new URL(page.response.finalUrl).hostname.replace(/^\[|\]$/g, "");
   if (isIP(host)) return assemble("email_dns", [], [], scope, "not_applicable");
+  // A platform subdomain cannot carry the owner's SPF or DMARC records, so a missing record there says nothing.
+  const sharedSuffix = launchCheckSharedHostingSuffix(host);
+  if (sharedSuffix) {
+    const note = `${host} is a ${sharedSuffix} hosting subdomain; mail records there belong to the platform`;
+    const ev = makeEvidence("email_dns", deps, "Hosting platform subdomain", { host, sharedHostingSuffix: sharedSuffix, lookedUp: false }, note);
+    return assemble("email_dns", [ev], [], note, "not_applicable");
+  }
   const domain = launchCheckMailDomain(host);
   const dmarcName = `_dmarc.${domain}`;
   const [apex, dmarc] = await Promise.allSettled([deps.resolveTxt(domain), deps.resolveTxt(dmarcName)]);
