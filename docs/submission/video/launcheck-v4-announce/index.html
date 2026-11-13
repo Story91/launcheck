@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>LaunCheck: our SERV Hackathon entry</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hyperframes/core/dist/hyperframe.runtime.iife.js"></script>
+    <style>
+      @font-face { font-family: "Manrope"; src: url(assets/fonts/manrope.woff2) format("woff2"); font-weight: 200 800; }
+      @font-face { font-family: "DM Sans"; src: url(assets/fonts/dmsans.woff2) format("woff2"); font-weight: 100 1000; }
+      @font-face { font-family: "Plex Mono"; src: url(assets/fonts/plexmono.woff2) format("woff2"); font-weight: 400 700; }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0d1626; }
+      body { font-family: "DM Sans", sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }
+      #main { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #0d1626; }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .grid { position: absolute; inset: -80px; background-image: linear-gradient(rgba(111,140,240,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(111,140,240,.09) 1px, transparent 1px); background-size: 72px 72px; }
+      .glow { position: absolute; left: 310px; top: -300px; width: 1300px; height: 1300px; border-radius: 50%; background: radial-gradient(circle, rgba(52,87,207,.55), rgba(52,87,207,0) 65%); }
+      .h { position: absolute; left: 0; right: 0; text-align: center; font-family: "Manrope", sans-serif; font-weight: 800; letter-spacing: -0.055em; line-height: 1; }
+      .y { color: #f2c94c; }
+      .g { color: #3ccf91; }
+      .mono { font-family: "Plex Mono", monospace; letter-spacing: 0.1em; }
+
+      /* scene 1: the hackathon */
+      #s1 { background: #17243b; }
+      #chip { position: absolute; left: 0; right: 0; top: 250px; text-align: center; }
+      #chip span { display: inline-block; padding: 14px 34px 16px; border-radius: 999px; background: #f2c94c; color: #17243b; font-family: "Plex Mono", monospace; font-weight: 700; font-size: 40px; letter-spacing: 0.1em; }
+      #h1a { top: 390px; font-size: 150px; }
+      #h1b { top: 580px; font-size: 150px; opacity: 0; }
+
+      /* scene 2: the idea, over the machine still */
+      #s2 { background: #0d1626; }
+      #still { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; transform-origin: 1300px 420px; }
+      #shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,22,38,.94) 0%, rgba(13,22,38,.82) 46%, rgba(13,22,38,.15) 78%); }
+      .l { position: absolute; left: 120px; font-family: "Manrope", sans-serif; font-weight: 800; letter-spacing: -0.05em; line-height: 1.02; opacity: 0; }
+      #l1 { top: 250px; font-size: 118px; width: 1000px; }
+      #l2 { top: 560px; font-size: 80px; width: 980px; color: #ffe9a8; }
+      #l3 { top: 820px; font-size: 34px; color: #b9c4e0; font-family: "Plex Mono", monospace; font-weight: 600; letter-spacing: 0.06em; }
+
+      /* scene 3: the receipt */
+      #s3 { background: #17243b; }
+      #paper { position: absolute; left: 110px; top: 170px; width: 900px; padding: 50px 56px 58px; background: #fdfaf2; color: #17243b; border-radius: 10px; box-shadow: 0 40px 120px rgba(0,0,0,.45); font-family: "Plex Mono", monospace; }
+      #paper h3 { font-size: 40px; letter-spacing: 0.12em; padding-bottom: 20px; border-bottom: 3px dashed #17243b; }
+      .row { display: flex; justify-content: space-between; align-items: baseline; font-size: 42px; padding: 30px 0 0; opacity: 0; }
+      .row small { display: block; font-size: 28px; color: #5b6a86; margin-top: 6px; letter-spacing: 0; }
+      .row b { font-size: 48px; }
+      #tot { margin-top: 34px; padding-top: 28px; border-top: 3px dashed #17243b; font-size: 50px; font-weight: 700; }
+      #big { position: absolute; left: 1100px; top: 200px; width: 740px; }
+      #big .n { font-family: "Manrope", sans-serif; font-weight: 800; font-size: 330px; letter-spacing: -0.07em; line-height: .9; color: #ff5a5f; opacity: 0; }
+      #big .t { font-family: "Manrope", sans-serif; font-weight: 800; font-size: 84px; letter-spacing: -0.05em; line-height: 1; margin-top: 10px; opacity: 0; }
+      #big .s { font-size: 34px; font-weight: 600; color: #b9c4e0; margin-top: 30px; line-height: 1.3; opacity: 0; }
+
+      /* scene 4: the re-check */
+      #s4 { background: #0d1626; }
+      #h4a { top: 180px; font-size: 96px; color: #b9c4e0; opacity: 0; }
+      #h4b { top: 320px; font-size: 250px; opacity: 0; }
+      #tags { position: absolute; left: 0; right: 0; top: 660px; display: flex; justify-content: center; gap: 22px; }
+      .tag { padding: 14px 28px 16px; border-radius: 999px; border: 3px solid #6f8cf0; color: #dfe6fb; font-family: "Plex Mono", monospace; font-weight: 600; font-size: 32px; opacity: 0; }
+      #h4c { top: 800px; font-size: 54px; letter-spacing: -0.03em; color: #ffe9a8; opacity: 0; }
+
+      /* scene 5: end card */
+      #s5 { background: #17243b; }
+      #punch { top: 300px; font-size: 136px; opacity: 0; }
+      #lock { position: absolute; left: 0; right: 0; top: 560px; display: flex; align-items: center; justify-content: center; gap: 28px; opacity: 0; }
+      #lock svg { width: 120px; height: 120px; }
+      #lock div { font-family: "Manrope", sans-serif; font-weight: 800; font-size: 112px; letter-spacing: -0.05em; line-height: 1; }
+      #url { position: absolute; left: 0; right: 0; top: 760px; text-align: center; opacity: 0; }
+      #url span { display: inline-block; font-family: "Plex Mono", monospace; font-size: 52px; background: #3457cf; color: #fff; padding: 14px 38px 16px; border-radius: 14px; }
+      #built { position: absolute; left: 0; right: 0; top: 880px; text-align: center; font-size: 34px; font-weight: 600; color: #b9c4e0; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="main" data-composition-id="main" data-width="1920" data-height="1080" data-start="0" data-duration="20.5">
+      <audio id="music" class="clip" src="assets/gen/music.mp3" data-start="0" data-duration="20.5" data-track-index="9" data-volume="0.9" data-fade-out="1"></audio>
+      <audio id="fx-i1" class="clip" src="assets/sfx/impact.mp3" data-start="0.9" data-track-index="10" data-volume="0.55"></audio>
+      <audio id="fx-coin" class="clip" src="assets/sfx/coin.mp3" data-start="4.1" data-track-index="11" data-volume="0.5"></audio>
+      <audio id="fx-r1" class="clip" src="assets/sfx/receipt.mp3" data-start="7.25" data-track-index="12" data-volume="0.55"></audio>
+      <audio id="fx-r2" class="clip" src="assets/sfx/receipt.mp3" data-start="7.95" data-track-index="13" data-volume="0.55"></audio>
+      <audio id="fx-alarm" class="clip" src="assets/sfx/alarm.mp3" data-start="8.8" data-track-index="14" data-volume="0.35"></audio>
+      <audio id="fx-card" class="clip" src="assets/sfx/card.mp3" data-start="12.1" data-track-index="15" data-volume="0.45"></audio>
+      <audio id="fx-i2" class="clip" src="assets/sfx/impact.mp3" data-start="15.64" data-track-index="16" data-volume="0.6"></audio>
+
+      <div class="scene clip" id="s1" data-start="0" data-duration="3" data-track-index="1">
+        <div class="grid" id="g1"></div><div class="glow" id="gl1"></div>
+        <div id="chip"><span>SERV HACKATHON · EDITION 02</span></div>
+        <div class="h" id="h1a">We built an agent</div>
+        <div class="h" id="h1b">that <span class="y">shops for checks.</span></div>
+      </div>
+
+      <div class="scene clip" id="s2" data-start="3" data-duration="4" data-track-index="2">
+        <img id="still" src="assets/gen/still-16x9.png" alt="" />
+        <div id="shade"></div>
+        <div class="l" id="l1">Give it a budget before launch.</div>
+        <div class="l" id="l2">It buys the checks your page needs.</div>
+        <div class="l" id="l3">SERV PLANS · KITE PASSPORT PAYS</div>
+      </div>
+
+      <div class="scene clip" id="s3" data-start="7" data-duration="5" data-track-index="3">
+        <div class="grid" id="g3"></div>
+        <div id="paper">
+          <h3>LAUNCHECK RECEIPT</h3>
+          <div class="row" id="r1"><span>Phone render<small>USDC on Base · tx link</small></span><b>$0.005</b></div>
+          <div class="row" id="r2"><span>Browser session<small>USDC on Base · tx link</small></span><b>$0.010</b></div>
+          <div class="row" id="tot"><span>Total paid</span><b>$0.015</b></div>
+        </div>
+        <div id="big">
+          <div class="n" id="n10">10</div>
+          <div class="t" id="t10">findings, with evidence.</div>
+          <div class="s" id="s10">Recorded on our demo page.</div>
+        </div>
+      </div>
+
+      <div class="scene clip" id="s4" data-start="12" data-duration="3.6" data-track-index="4">
+        <div class="grid" id="g4"></div><div class="glow" id="gl4"></div>
+        <div class="h" id="h4a">Fix the page. Check again.</div>
+        <div class="h" id="h4b"><span class="g">6</span> of 10 gone.</div>
+        <div id="tags">
+          <div class="tag" id="tg1">Change in the page</div>
+          <div class="tag" id="tg2">Change in hosting settings</div>
+          <div class="tag" id="tg3">Change in DNS</div>
+        </div>
+        <div class="h" id="h4c">Every finding says where it gets changed.</div>
+      </div>
+
+      <div class="scene clip" id="s5" data-start="15.6" data-duration="4.9" data-track-index="5">
+        <div class="grid" id="g5"></div><div class="glow" id="gl5"></div>
+        <div class="h" id="punch">AI buys the checks.<br /><span class="y">You get the receipts.</span></div>
+        <div id="lock"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#3457cf"/><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 17h22M14 17v34h38V30"/><path d="m26 30 9 9 19-25"/></g></svg><div>LaunCheck</div></div>
+        <div id="url"><span>launcheck.xyz</span></div>
+        <div id="built">Built with OpenServ SERV + Kite Passport · USDC on Base</div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      function pop(s, t) { tl.fromTo(s, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.14, ease: "back.out(2)", immediateRender: false }, t); }
+      function rise(s, t, d) { tl.fromTo(s, { opacity: 0, y: 46 }, { opacity: 1, y: 0, duration: d || 0.32, ease: "power3.out", immediateRender: false }, t); }
+      function slam(s, t) { tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power4.in", immediateRender: false }, t); }
+      function shake(s, t) { tl.fromTo(s, { x: -8 }, { x: 8, duration: 0.05, yoyo: true, repeat: 5, immediateRender: false }, t); }
+
+      // 1: the hackathon (chip and first line are on screen from frame 0)
+      slam("#h1b", 0.9);
+      tl.to("#g1", { y: 72, duration: 3, ease: "none" }, 0);
+      tl.to("#gl1", { x: 200, duration: 3, ease: "sine.inOut" }, 0);
+
+      // 2: the idea
+      tl.fromTo("#still", { scale: 1.02 }, { scale: 1.16, duration: 4, ease: "sine.inOut" }, 3);
+      rise("#l1", 3.15);
+      rise("#l2", 4.1);
+      tl.to("#l3", { opacity: 1, duration: 0.3 }, 4.8);
+
+      // 3: the receipt
+      tl.fromTo("#paper", { y: 900 }, { y: 0, duration: 0.5, ease: "power3.out" }, 7);
+      rise("#r1", 7.3, 0.22);
+      rise("#r2", 8.0, 0.22);
+      rise("#tot", 8.5, 0.22);
+      slam("#n10", 8.85); shake("#n10", 9.0);
+      rise("#t10", 9.15);
+      tl.to("#s10", { opacity: 1, duration: 0.3 }, 9.6);
+      tl.to("#g3", { y: 72, duration: 5, ease: "none" }, 7);
+
+      // 4: the re-check
+      rise("#h4a", 12.1);
+      slam("#h4b", 12.55);
+      pop("#tg1", 13.1); pop("#tg2", 13.25); pop("#tg3", 13.4);
+      tl.to("#h4c", { opacity: 1, duration: 0.3 }, 13.55);
+      tl.to("#g4", { y: 72, duration: 3.6, ease: "none" }, 12);
+      tl.to("#gl4", { x: -200, duration: 3.6, ease: "sine.inOut" }, 12);
+
+      // 5: end card
+      slam("#punch", 15.65);
+      tl.to("#punch", { y: -160, scale: 0.7, duration: 0.4, ease: "power3.inOut" }, 17.0);
+      pop("#lock", 17.25); pop("#url", 17.6); tl.to("#built", { opacity: 1, duration: 0.3 }, 17.9);
+      tl.to("#gl5", { x: 260, duration: 4.9, ease: "sine.inOut" }, 15.6);
+      tl.to("#g5", { y: 72, duration: 4.9, ease: "none" }, 15.6);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
