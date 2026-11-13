@@ -50,10 +50,13 @@ export const remainingOutsidePage = (outside: number, total: number) => outside 
   ? `${total === 1 ? "This finding is" : `All ${total} of these are`} changed outside the page: in hosting settings, DNS or the certificate. Editing the page does not remove ${total === 1 ? "it" : "them"}.`
   : `${outside} of these ${total} ${outside === 1 ? "is" : "are"} changed outside the page: in hosting settings, DNS or the certificate.`;
 export const fixedHeadline = (fixed: number, original: number) => `Fixed ${fixed} of ${original} findings LaunCheck recorded`;
-export function shareText(r: { budgetUsd: number; spentUsd: number; problems: number; paidCalls: number; fixed?: number; original?: number; fixture?: boolean; paymentUnknown?: boolean; status?: keyof typeof copy.stages }) {
+export function shareText(r: { budgetUsd: number; spentUsd: number; problems: number; paidCalls: number; fixed?: number; original?: number; fixture?: boolean; paymentUnknown?: boolean; outsidePage?: number; status?: keyof typeof copy.stages }) {
   if (r.fixture) return "An example LaunCheck receipt: observations, scope and the cost of each check.";
   if (r.status && r.status !== "done") return `${copy.stages[r.status]}. ${r.paymentUnknown ? copy.uncertainSpend : `${copy.confirmedSpend}: $${r.spentUsd.toFixed(3)}.`} Follow the evidence and receipt:`;
-  const result = r.fixed !== undefined ? fixedHeadline(r.fixed, r.original ?? r.fixed) : `LaunCheck recorded ${r.problems} findings in the completed checks`;
+  // Only when every finding still present is outside the page, so the sentence stays true for all of them.
+  const left = r.fixed !== undefined ? (r.original ?? r.fixed) - r.fixed : 0;
+  const outside = left > 0 && r.outsidePage === left ? `. The other ${left} ${left === 1 ? "is a hosting or DNS setting, not a page edit" : "are hosting or DNS settings, not page edits"}` : "";
+  const result = r.fixed !== undefined ? `${fixedHeadline(r.fixed, r.original ?? r.fixed)}${outside}` : `LaunCheck recorded ${r.problems} findings in the completed checks`;
   if (r.paymentUnknown) return `${result}. Confirmed paid: $${r.spentUsd.toFixed(3)}; another payment is unresolved. Receipts:`;
   if (r.fixed !== undefined) return `${result}. An AI agent paid $${r.spentUsd.toFixed(3)} for the checks. Receipts:`;
   return `I gave an AI agent a $${r.budgetUsd.toFixed(2)} check budget for my launch page. It bought ${r.paidCalls} checks for $${r.spentUsd.toFixed(3)} and recorded ${r.problems} findings. Receipts:`;

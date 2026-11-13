@@ -26,6 +26,15 @@ describe("fix workspace", () => {
     expect(data.illustrative).toBe(true);
     expect(JSON.stringify(report)).toBe(original);
   });
+  it("can select only the findings a page edit can change", () => {
+    const report = fixtureReport("fx_problems");
+    report.findings[0].ruleId = "csp_missing"; report.findings[1].ruleId = "og_image_missing";
+    render(<FixWorkspace report={report}/>);
+    fireEvent.click(screen.getByText(text.fixes.pageOnly));
+    const boxes = screen.getAllByRole("checkbox") as HTMLInputElement[];
+    expect(boxes.map(box => box.checked)).toEqual([false, true]);
+    expect(screen.getAllByText(/Change in/, { selector: ".lc-fix-area" })).toHaveLength(2);
+  });
   it("opens a manual copy fallback if clipboard permission is denied", async () => {
     Object.defineProperty(navigator, "clipboard", { value: { writeText: vi.fn().mockRejectedValue(new Error("denied")) }, configurable: true });
     render(<FixWorkspace report={fixtureReport("fx_problems")}/>);

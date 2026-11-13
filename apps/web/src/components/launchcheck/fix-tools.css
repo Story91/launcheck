@@ -13,7 +13,8 @@
 .lc-fix-choice input { margin-top: 4px; width: 17px; height: 17px; flex-shrink: 0; accent-color: #3457cf; }
 .lc-fix-choice strong { display: block; font-size: 14px; }
 .lc-fix-choice small { display: inline-block; color: #4e6080; font-size: 11px; margin: 4px 0; }
-.lc-fix-choice>span>span { display: block; font-size: 12px; line-height: 1.6; color: var(--color-muted); overflow-wrap: anywhere; }
+.lc-fix-choice>span>span.lc-fix-area { display: inline-block; margin: 0 0 4px 8px; font-size: 11px; line-height: 1.4; }
+.lc-fix-choice>span>span:not(.lc-fix-area) { display: block; font-size: 12px; line-height: 1.6; color: var(--color-muted); overflow-wrap: anywhere; }
 .lc-fix-handoff { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
 .lc-fix-handoff ol { list-style: decimal; padding-left: 20px; margin-bottom: 10px; }
 .lc-fix-handoff li { font-size: 13px; margin: 10px 0; padding-left: 5px; }

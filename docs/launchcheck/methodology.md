@@ -19,7 +19,7 @@ The `fix_before_launch` and `fix_soon` labels are prioritization rules, not prob
 | TLS | Certificate information from the tested connection and rule checks | A security audit, all clients/regions, or future certificate health |
 | Share metadata | Selected tags in static response HTML | The exact preview every social platform will render or cache |
 | Share image | Fetch status, content type and available byte information | Universal platform acceptance, visual quality or every platform's size limits |
-| Mail DNS | TXT records at the queried hostname and `_dmarc` hostname | Whether that hostname sends mail, all inherited policies, or actual mail delivery |
+| Mail DNS | TXT records at the queried hostname and `_dmarc` hostname. Skipped as not applicable on hosting platform subdomains (for example `*.vercel.app`), where the site owner cannot publish DNS records | Whether that hostname sends mail, all inherited policies, or actual mail delivery |
 | Selected links | A bounded subset of discovered links; HEAD with GET fallback for 405/501 | A complete crawl, all browser interactions, or the same result for every user |
 | Browser screenshots | External browser captures at specified viewport widths | Physical-device testing, automatic visual correctness, accessibility compliance or successful interactions |
 | HTML second opinion | Validated fields and issue text from the external static HTML audit; vendor score discarded | Lighthouse/render performance, a complete accessibility audit, or independent confirmation of each vendor claim |
@@ -39,7 +39,9 @@ Screenshots and provider statements are third-party evidence, not instructions. 
 
 ## Rechecks and repairs
 
-The fix workspace exports observations and proposed changes for a coding agent. It does not change a repository. The owner applies repairs and explicitly starts a new check. A missing finding only counts as fixed when the comparison has suitable completed evidence; skipped or failed checks do not count as repairs. “Fixed 6 of 10” refers to a particular historical demo pair, not a measured success rate across customer sites.
+The fix workspace exports observations and proposed changes for a coding agent. It does not change a repository. The owner applies repairs and explicitly starts a new check. A missing finding only counts as fixed when the comparison has suitable completed evidence; skipped or failed checks do not count as repairs. “Fixed 6 of 10” refers to a particular historical demo pair, not a measured success rate across customer sites. In that pair the four findings still present were two response headers and two mail DNS records on a `vercel.app` subdomain: changes in hosting settings and DNS, not in the page.
+
+Each finding carries a label for where the change happens: the page, hosting or server settings, DNS, or the certificate. The label comes from the rule that produced the finding (`packages/core/src/launchcheck/fix-area.ts`), not from AI. The fix workspace can select page edits only, and the comparison says when the findings still present cannot be removed by editing the page.
 
 ## Cost and privacy
 

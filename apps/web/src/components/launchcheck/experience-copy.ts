@@ -33,7 +33,7 @@ export const experience = {
   ],
   fixes: {
     title: "Let’s work on the fixes.", intro: "Pick what to tackle and give your coding agent the context. You stay in control of the changes.",
-    nav: "Fix workspace", select: "Choose findings to include", all: "Select all", none: "Clear selection", selected: "selected", ai: "Copy for my coding agent", download: "Download fix pack", copied: "Fix pack copied. Paste it into your project’s coding chat.", downloaded: "Fix pack downloaded.", empty: "Select at least one finding to prepare a fix pack.",
+    nav: "Fix workspace", select: "Choose findings to include", all: "Select all", pageOnly: "Page edits only", none: "Clear selection", selected: "selected", ai: "Copy for my coding agent", download: "Download fix pack", copied: "Fix pack copied. Paste it into your project’s coding chat.", downloaded: "Fix pack downloaded.", empty: "Select at least one finding to prepare a fix pack.",
     note: "This prepares instructions, not a code change. Review the proposed changes in your project, publish them, then check again. We only mark a finding fixed after a comparable new check.",
     preview: "Preview the fix pack", manual: "Clipboard unavailable. Select and copy the text below.",
     guide: ["Choose the findings", "Paste the pack into Codex, Claude or Cursor with your project open", "Review, publish and check again"],
